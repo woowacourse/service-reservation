@@ -6,6 +6,7 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -13,8 +14,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
+import com.google.api.services.calendar.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CalendarQuickStart {
     private static final Logger log = LoggerFactory.getLogger(CalendarQuickStart.class);
@@ -36,7 +35,7 @@ public class CalendarQuickStart {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     public static final String CALENDER_ID = "lrcmnt5smcksr6om6leb4qjfds@group.calendar.google.com";
 
@@ -48,7 +47,6 @@ public class CalendarQuickStart {
      * @throws IOException If the credentials.json file cannot be found.
      */
 
-    //자격(권한)가져오기
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
         InputStream in = CalendarQuickStart.class.getResourceAsStream(CREDENTIALS_FILE_PATH); //credential.json 파일 가져옴
@@ -78,11 +76,15 @@ public class CalendarQuickStart {
 
         getRecentEvents(service);
 
+        //회의실 전체 조회
         Events events = service.events().list(CALENDER_ID).execute();
         for (Event event : events.getItems()) {
             log.info("만든이 - {}, 제목 - {}, 설명 - {}, 위치 - {}, 시작:{}, 끝:{}",
                     event.getCreator(), event.getSummary(),event.getDescription(), event.getLocation(), event.getStart(), event.getEnd());
         }
+
+        //회의실 등록
+        addEvent(makeEvent());
 
     }
 
@@ -108,5 +110,59 @@ public class CalendarQuickStart {
                 System.out.printf("%s (%s)\n", event.getSummary(), start);
             }
         }
+    }
+
+    public static Event addEvent(Event event) throws IOException, GeneralSecurityException, GoogleJsonResponseException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+
+        return service.events().insert(CALENDER_ID, event).execute(); // TODO: 26/11/2019 insert 권한 안됨
+    }
+
+    /**
+     * 제목, 시작시간, 종료시간 입력해서 이벤트를 생성하는 메소드
+     */
+    public static Event makeEvent() throws IOException {
+        Event event = new Event()
+                .setSummary("회의실4/스터디/버디")
+                .setLocation("잠실 본동")
+                .setDescription("스터디할거에여");
+
+        DateTime startDateTime = new DateTime(new Date(), TimeZone.getDefault());
+
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDateTime)
+                .setTimeZone("Asia/Seoul");
+
+        event.setStart(start);
+
+        DateTime endDateTime = new DateTime(new Date(), TimeZone.getDefault());
+        EventDateTime end = new EventDateTime()
+                .setDateTime(endDateTime)
+                .setTimeZone("Asia/Seoul");
+
+        event.setEnd(end);
+
+        EventReminder[] reminderOverrides = new EventReminder[]{
+                new EventReminder().setMethod("popup").setMinutes(10),
+        };
+
+        Event.Reminders reminders = new Event.Reminders()
+                .setUseDefault(false)
+                .setOverrides(Arrays.asList(reminderOverrides));
+
+        event.setReminders(reminders);
+
+        try {
+            event = CalendarQuickStart.addEvent(event);
+            log.info("EVENT 생성 완료" + event.toPrettyString());
+        } catch (Exception ex) {
+            log.info("Calendar Exception in insert");
+        }
+
+        return event;
     }
 }
