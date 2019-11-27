@@ -35,7 +35,8 @@ public class CalendarQuickStart {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
+//    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
+    private static final Set<String> SCOPES = CalendarScopes.all();
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     public static final String CALENDER_ID = "lrcmnt5smcksr6om6leb4qjfds@group.calendar.google.com";
 
@@ -84,7 +85,7 @@ public class CalendarQuickStart {
         }
 
         //회의실 등록
-        addEvent(makeEvent());
+        makeEvent();
 
     }
 
@@ -119,7 +120,7 @@ public class CalendarQuickStart {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
-        return service.events().insert(CALENDER_ID, event).execute(); // TODO: 26/11/2019 insert 권한 안됨
+        return service.events().insert(CALENDER_ID, event).execute();
     }
 
     /**
