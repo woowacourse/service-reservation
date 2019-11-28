@@ -46,7 +46,7 @@ public class WebConfig {
     }
 
     public Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
-        InputStream inputStream = CalendarQuickStart.class.getResourceAsStream(credentialsFilePath);
+        InputStream inputStream = WebConfig.class.getResourceAsStream(credentialsFilePath);
         if (Objects.isNull(inputStream)) {
             throw new FileNotFoundException("Resource not found: " + credentialsFilePath);
         }

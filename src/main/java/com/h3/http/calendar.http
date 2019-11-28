@@ -8,7 +8,7 @@
 
 ### 전체 캘린더 일정 가져오기
 
-GET http://localhost:8080/find
+GET http://localhost:8080/find?fetchingDate=2019-11-28
 Accept: application/json
 
 ###
