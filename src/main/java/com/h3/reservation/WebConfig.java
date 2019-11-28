@@ -45,7 +45,7 @@ public class WebConfig {
                 .build();
     }
 
-    public Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
+    private Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
         InputStream inputStream = WebConfig.class.getResourceAsStream(credentialsFilePath);
         if (Objects.isNull(inputStream)) {
             throw new FileNotFoundException("Resource not found: " + credentialsFilePath);
