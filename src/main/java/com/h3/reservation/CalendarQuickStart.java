@@ -14,7 +14,10 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.EventReminder;
+import com.google.api.services.calendar.model.Events;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +26,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Set;
+import java.util.TimeZone;
 
 public class CalendarQuickStart {
     private static final Logger log = LoggerFactory.getLogger(CalendarQuickStart.class);
@@ -78,7 +84,7 @@ public class CalendarQuickStart {
         Events events = service.events().list(CALENDER_ID).execute();
         for (Event event : events.getItems()) {
             log.info("만든이 - {}, 제목 - {}, 설명 - {}, 위치 - {}, 시작:{}, 끝:{}",
-                    event.getCreator(), event.getSummary(),event.getDescription(), event.getLocation(), event.getStart(), event.getEnd());
+                    event.getCreator(), event.getSummary(), event.getDescription(), event.getLocation(), event.getStart(), event.getEnd());
         }
 
         //회의실 등록
