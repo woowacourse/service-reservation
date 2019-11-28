@@ -12,6 +12,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,40 +21,50 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.util.Objects;
 import java.util.Set;
 
 @Configuration
 public class WebConfig {
-    private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
+
+    private static final String APPLICATION_NAME = "Reservation By H3";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final Set<String> SCOPES = CalendarScopes.all();
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+
+    @Value("${tokens.filepath}")
+    private String tokensDirectoryPath;
+
+    @Value("${credential.filepath}")
+    private String credentialsFilePath;
 
     @Bean
     public Calendar calendar() throws GeneralSecurityException, IOException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        return new Calendar.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
 
-    public static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
-        InputStream in = CalendarQuickStart.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
-        if (in == null) {
-            throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+    public Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
+        InputStream inputStream = CalendarQuickStart.class.getResourceAsStream(credentialsFilePath);
+        if (Objects.isNull(inputStream)) {
+            throw new FileNotFoundException("Resource not found: " + credentialsFilePath);
         }
 
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, inputStreamReader);
 
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
+        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow
+                .Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
+                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(tokensDirectoryPath)))
                 .setAccessType("offline")
                 .build();
 
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+        LocalServerReceiver receiver = new LocalServerReceiver
+                .Builder()
+                .setPort(8888)
+                .build();
+
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
-
 }
