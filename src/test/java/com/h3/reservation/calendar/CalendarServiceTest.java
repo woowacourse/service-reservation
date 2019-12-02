@@ -4,35 +4,30 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@AutoConfigureWebTestClient
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CalendarControllerTest {
+@ExtendWith(SpringExtension.class)
+class CalendarServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CalendarControllerTest.class);
-
-    @Autowired
-    private WebTestClient webTestClient;
+    private static final Logger log = LoggerFactory.getLogger(CalendarServiceTest.class);
 
     @InjectMocks
-    private CalendarController calendarController;
+    private CalendarService calendarService;
 
-    @MockBean
+    @Mock
     private Calendar calendar;
 
     @Mock
@@ -59,12 +54,7 @@ class CalendarControllerTest {
 
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        webTestClient.get().uri("/find")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.items..summary").isEqualTo(summary)
-                .jsonPath("$.items..location").isEqualTo(location)
-                .jsonPath("$.items..description").isEqualTo(description);
+        List<Event> fetchedSchedule = calendarService.findReservation("2019-12-01");
+        assertThat(fetchedSchedule.get(0)).isEqualTo(event);
     }
 }
