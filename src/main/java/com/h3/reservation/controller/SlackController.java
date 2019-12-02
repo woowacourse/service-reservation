@@ -26,13 +26,14 @@ public class SlackController {
     @PostMapping("/slack/action")
     public ResponseEntity<Void> action(@RequestBody RequestDto req) {
         logger.error("ㅎㅇㅎㅇ: {}", req.getEvent().getChannel());
-        String body = generateBody();
+        String body = generateBody(req.getEvent().getChannel());
         responseService.action("https://slack.com/api/chat.postMessage", body);
         return ResponseEntity.ok().build();
     }
 
-    private String generateBody() {
+    private String generateBody(String channel) {
         return "{\n" +
+            "\t\"channel\": " + channel + "," +
             "\t\"blocks\": [\n" +
             "\t{\n" +
             "\t\t\"type\": \"actions\",\n" +
