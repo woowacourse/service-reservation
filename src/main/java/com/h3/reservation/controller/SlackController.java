@@ -26,66 +26,7 @@ public class SlackController {
     @PostMapping("/slack/action")
     public ResponseEntity<Void> action(@RequestBody RequestDto req) {
         logger.error("ㅎㅇㅎㅇ: {}", req.getEvent().getChannel());
-        String body = generateBody(req.getEvent().getChannel());
-        responseService.action("https://slack.com/api/chat.postMessage", body);
+        responseService.action("https://slack.com/api/chat.postMessage", req.getEvent().getChannel());
         return ResponseEntity.ok().build();
-    }
-
-    private String generateBody(String channel) {
-        return "{\n" +
-            "\t\"channel\": " + channel + "," +
-            "\t\"blocks\": [\n" +
-            "\t{\n" +
-            "\t\t\"type\": \"actions\",\n" +
-            "\t\t\"elements\": [\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":spiral_calendar_pad: 전체 조회\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"retrieve\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":pushpin: 회의실 예약\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"reserve\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":file_folder: 예약 확인\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"confirm\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":memo: 예약 변경\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"change\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":scissors: 예약 취소\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"cancel\"\n" +
-            "\t\t\t}\n" +
-            "\t\t]\n" +
-            "\t}\n" +
-            "]\n" +
-            "}";
     }
 }
