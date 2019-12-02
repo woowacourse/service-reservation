@@ -1,4 +1,4 @@
-package com.h3.reservation;
+package com.h3.reservation.calendar;
 
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
