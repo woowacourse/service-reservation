@@ -19,6 +19,7 @@ public class ResponseService {
 
     private static final String TOKEN = "xoxb-628979079522-857825073798-rZkXu22vIyUyVIgTZeKjwKkJ";
     private static final String AUTHORIZATION = "Bearer " + TOKEN;
+    
     public void action(String url, String channel) {
         WebClient webClient = WebClient
             .builder()
