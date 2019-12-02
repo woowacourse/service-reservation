@@ -19,7 +19,7 @@ public class SlackController {
 
     @PostMapping("/slack/action")
     public ResponseEntity<Void> action(@RequestBody RequestDto req) {
-        logger.debug("ㅎㅇㅎㅇ: {}", req.getEvent().getChannel());
+        logger.error("ㅎㅇㅎㅇ: {}", req.getEvent().getChannel());
         return ResponseEntity.ok().build();
     }
 }
