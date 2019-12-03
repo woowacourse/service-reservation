@@ -1,5 +1,7 @@
 package com.h3.reservation.slack.service;
 
+import com.h3.reservation.slack.dto.EventCallBackRequestDto;
+import com.h3.reservation.slack.dto.VerificationRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +22,16 @@ public class SlackService {
     private static final String TOKEN = "xoxb-628979079522-857825073798-rZkXu22vIyUyVIgTZeKjwKkJ";
     private static final String AUTHORIZATION = "Bearer " + TOKEN;
 
-    public void action(String url, String channel) {
+    public String verity(VerificationRequestDto dto) {
+        return dto.getChallenge();
+    }
+
+    public void eventCallBack(EventCallBackRequestDto dto) {
+        String postUrl = "https://slack.com/api/chat.postMessage";
+        action(postUrl, dto.getChannel());
+    }
+
+    private void action(String url, String channel) {
         WebClient webClient = WebClient
             .builder()
             .baseUrl(url)

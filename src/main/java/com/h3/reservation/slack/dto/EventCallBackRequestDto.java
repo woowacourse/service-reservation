@@ -1,13 +1,11 @@
-package com.h3.reservation.slack;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+package com.h3.reservation.slack.dto;
 
 /**
  * @author heebg
  * @version 1.0
  * @date 2019-12-02
  */
-public class RequestDto {
+public class EventCallBackRequestDto {
     class Event {
         private String channel;
 
@@ -25,10 +23,10 @@ public class RequestDto {
 
     private Event event;
 
-    public RequestDto() {
+    public EventCallBackRequestDto() {
     }
 
-    public RequestDto(Event event) {
+    public EventCallBackRequestDto(Event event) {
         this.event = event;
     }
 
