@@ -1,6 +1,7 @@
 package com.h3.reservation.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.h3.reservation.slack.RequestDto;
 import com.h3.reservation.slack.service.SlackService;
@@ -32,6 +33,7 @@ public class SlackController {
     @PostMapping("/slack/action")
     public ResponseEntity action(@RequestBody JSONObject req) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String type = req.getAsString("type");
         if ("url_verification".equals(type)) {
             return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(req.getAsString("challenge"));

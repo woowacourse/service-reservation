@@ -1,5 +1,7 @@
 package com.h3.reservation.slack;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * @author heebg
  * @version 1.0
