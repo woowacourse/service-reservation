@@ -1,6 +1,4 @@
-package com.h3.reservation.slack.dto;
-
-import com.h3.reservation.slack.dto.response.Block;
+package com.h3.reservation.slack.dto.response;
 
 import java.util.List;
 
@@ -9,14 +7,14 @@ import java.util.List;
  * @version 1.0
  * @date 2019-12-03
  */
-public class EventCallbackResponseDto {
+public class EventCallbackResponse {
     private String channel;
     private List<Block> blocks;
 
-    public EventCallbackResponseDto() {
+    public EventCallbackResponse() {
     }
 
-    public EventCallbackResponseDto(String channel, List<Block> blocks) {
+    public EventCallbackResponse(String channel, List<Block> blocks) {
         this.channel = channel;
         this.blocks = blocks;
     }

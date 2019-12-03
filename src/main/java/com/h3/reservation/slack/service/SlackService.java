@@ -1,10 +1,10 @@
 package com.h3.reservation.slack.service;
 
-import com.h3.reservation.slack.dto.EventCallbackRequestDto;
-import com.h3.reservation.slack.dto.EventCallbackResponseDto;
-import com.h3.reservation.slack.dto.VerificationRequestDto;
+import com.h3.reservation.slack.dto.request.EventCallbackRequest;
+import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.response.Block;
 import com.h3.reservation.slack.dto.response.Element;
+import com.h3.reservation.slack.dto.response.EventCallbackResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -29,11 +29,11 @@ public class SlackService {
     private static final String TOKEN = "xoxb-628979079522-857825073798-rZkXu22vIyUyVIgTZeKjwKkJ";
     private static final String AUTHORIZATION = "Bearer " + TOKEN;
 
-    public String verify(VerificationRequestDto dto) {
+    public String verify(VerificationRequest dto) {
         return dto.getChallenge();
     }
 
-    public void eventCallBack(EventCallbackRequestDto dto) {
+    public void eventCallBack(EventCallbackRequest dto) {
         String postUrl = "https://slack.com/api/chat.postMessage";
         action(postUrl, dto.getChannel());
     }
@@ -55,7 +55,7 @@ public class SlackService {
 
     }
 
-    private EventCallbackResponseDto generateBody(String channel) {
+    private EventCallbackResponse generateBody(String channel) {
         List<Element> elements = Arrays.asList(
             Element.textButton(":spiral_calendar_pad: 전체 조회", "retrieve"),
             Element.textButton(":pushpin: 회의실 예약", "reserve"),
@@ -65,6 +65,6 @@ public class SlackService {
 
         List<Block> blocks = Collections.singletonList(new Block("actions", elements));
 
-        return new EventCallbackResponseDto(channel, blocks);
+        return new EventCallbackResponse(channel, blocks);
     }
 }
