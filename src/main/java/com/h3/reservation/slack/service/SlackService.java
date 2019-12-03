@@ -1,4 +1,4 @@
-package com.h3.reservation.service;
+package com.h3.reservation.slack.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +14,12 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @date 2019-12-02
  */
 @Service
-public class ResponseService {
-    private static final Logger logger = LoggerFactory.getLogger(ResponseService.class);
+public class SlackService {
+    private static final Logger logger = LoggerFactory.getLogger(SlackService.class);
 
     private static final String TOKEN = "xoxb-628979079522-857825073798-rZkXu22vIyUyVIgTZeKjwKkJ";
     private static final String AUTHORIZATION = "Bearer " + TOKEN;
-    
+
     public void action(String url, String channel) {
         WebClient webClient = WebClient
             .builder()

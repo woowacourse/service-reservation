@@ -1,4 +1,4 @@
-package com.h3.reservation.controller;
+package com.h3.reservation.slack;
 
 /**
  * @author heebg
@@ -28,6 +28,10 @@ public class RequestDto {
 
     public RequestDto(Event event) {
         this.event = event;
+    }
+
+    public String getChannel() {
+        return event.getChannel();
     }
 
     public Event getEvent() {

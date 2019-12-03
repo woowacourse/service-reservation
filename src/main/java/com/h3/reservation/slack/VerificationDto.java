@@ -1,4 +1,4 @@
-package com.h3.reservation.controller;
+package com.h3.reservation.slack;
 
 /**
  * @author heebg
