@@ -55,7 +55,7 @@ class CalendarServiceTest {
         when(list.setTimeMax(any())).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.from("2019-12-01")
+        List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01")
                 , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(1);
