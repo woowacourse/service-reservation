@@ -43,6 +43,7 @@ class ReservationDateTimeTest {
     @Test
     void create_IllegalDateTimeFormatException() {
         assertThrows(DateTimeParseException.class, () -> ReservationDateTime.of(failedFetchingDate));
+        assertThrows(DateTimeParseException.class, () -> ReservationDateTime.of(successfulFetchingDate, "16-00", "17:00"));
     }
 
     @Test
