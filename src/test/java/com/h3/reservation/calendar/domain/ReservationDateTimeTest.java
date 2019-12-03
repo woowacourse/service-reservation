@@ -26,7 +26,16 @@ class ReservationDateTimeTest {
 
         assertThat(reservationDateTime).isNotNull();
         assertThat(reservationDateTime.getStartDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T00:00:00.000+09:00"));
-        assertThat(reservationDateTime.getEndDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T23:59:59.999+09:00"));
+        assertThat(reservationDateTime.getEndDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T23:59:59.000+09:00"));
+    }
+
+    @Test
+    void from_startTime_endTime() {
+        ReservationDateTime reservationDateTime = ReservationDateTime.from(successfulFetchingDate, "16:00", "18:00");
+
+        assertThat(reservationDateTime).isNotNull();
+        assertThat(reservationDateTime.getStartDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T16:00:00.000+09:00"));
+        assertThat(reservationDateTime.getEndDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T18:00:00.000+09:00"));
     }
 
     @Test
