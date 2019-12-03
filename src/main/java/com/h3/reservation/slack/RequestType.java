@@ -8,6 +8,7 @@ package com.h3.reservation.slack;
 public enum RequestType {
     URL_VERIFICATION,
     EVENT_CALLBACK,
+    BLOCK_ACTIONS,
     APP_MENTION,
     APP_HOME_OPENED
 }
