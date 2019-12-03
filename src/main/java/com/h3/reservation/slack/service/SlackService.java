@@ -22,7 +22,7 @@ public class SlackService {
     private static final String TOKEN = "xoxb-628979079522-857825073798-rZkXu22vIyUyVIgTZeKjwKkJ";
     private static final String AUTHORIZATION = "Bearer " + TOKEN;
 
-    public String verity(VerificationRequestDto dto) {
+    public String verify(VerificationRequestDto dto) {
         return dto.getChallenge();
     }
 
@@ -39,7 +39,10 @@ public class SlackService {
             .defaultHeader(HttpHeaders.AUTHORIZATION, AUTHORIZATION)
             .build();
 
-        String response = webClient.post().body(BodyInserters.fromValue(generateBody(channel))).exchange().block().bodyToMono(String.class).block();
+        String response = webClient.post()
+            .body(BodyInserters.fromValue(generateBody(channel)))
+            .exchange().block().bodyToMono(String.class)
+            .block();
         logger.error("webclient response 응답 : {}", response);
     }
 

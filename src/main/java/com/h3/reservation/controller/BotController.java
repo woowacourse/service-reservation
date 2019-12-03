@@ -36,7 +36,7 @@ public class BotController {
     public ResponseEntity action(@RequestBody JSONObject req) throws JsonProcessingException {
         RequestType type = RequestType.valueOf(req.getAsString("type").toUpperCase());
         if (RequestType.URL_VERIFICATION.equals(type)) {
-            return ResponseEntity.ok(service.verity(toDto(req, VerificationRequestDto.class)));
+            return ResponseEntity.ok(service.verify(toDto(req, VerificationRequestDto.class)));
         }
         if (RequestType.EVENT_CALLBACK.equals(type)) {
             service.eventCallBack(toDto(req, EventCallBackRequestDto.class));
