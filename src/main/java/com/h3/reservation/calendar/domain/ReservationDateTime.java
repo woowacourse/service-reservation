@@ -18,7 +18,7 @@ public class ReservationDateTime {
     private final DateTime endDateTime;
 
     private ReservationDateTime(final DateTime startDateTime, final DateTime endDateTime) {
-        if (isStartTimeBiggerThanOrEqualToEndTime(startDateTime, endDateTime)) {
+        if (isStartTimeLaterThanOrEqualToEndTime(startDateTime, endDateTime)) {
             throw new InvalidDateTimeRangeException();
         }
 
@@ -26,7 +26,7 @@ public class ReservationDateTime {
         this.endDateTime = endDateTime;
     }
 
-    private boolean isStartTimeBiggerThanOrEqualToEndTime(final DateTime startDateTime, final DateTime endDateTime) {
+    private boolean isStartTimeLaterThanOrEqualToEndTime(final DateTime startDateTime, final DateTime endDateTime) {
         return startDateTime.getValue() >= endDateTime.getValue();
     }
 
