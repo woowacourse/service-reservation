@@ -5,7 +5,7 @@ package com.h3.reservation.slack.dto;
  * @version 1.0
  * @date 2019-12-02
  */
-public class EventCallBackRequestDto {
+public class EventCallbackRequestDto {
     class Event {
         private String channel;
 
@@ -23,10 +23,10 @@ public class EventCallBackRequestDto {
 
     private Event event;
 
-    public EventCallBackRequestDto() {
+    public EventCallbackRequestDto() {
     }
 
-    public EventCallBackRequestDto(Event event) {
+    public EventCallbackRequestDto(Event event) {
         this.event = event;
     }
 

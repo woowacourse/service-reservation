@@ -1,7 +1,10 @@
 package com.h3.reservation.slack.service;
 
-import com.h3.reservation.slack.dto.EventCallBackRequestDto;
+import com.h3.reservation.slack.dto.EventCallbackRequestDto;
+import com.h3.reservation.slack.dto.EventCallbackResponseDto;
 import com.h3.reservation.slack.dto.VerificationRequestDto;
+import com.h3.reservation.slack.dto.response.Block;
+import com.h3.reservation.slack.dto.response.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author heebg
@@ -26,7 +33,7 @@ public class SlackService {
         return dto.getChallenge();
     }
 
-    public void eventCallBack(EventCallBackRequestDto dto) {
+    public void eventCallBack(EventCallbackRequestDto dto) {
         String postUrl = "https://slack.com/api/chat.postMessage";
         action(postUrl, dto.getChannel());
     }
@@ -37,6 +44,7 @@ public class SlackService {
             .baseUrl(url)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .defaultHeader(HttpHeaders.AUTHORIZATION, AUTHORIZATION)
+            .defaultHeader(HttpHeaders.ACCEPT_CHARSET, "UTF-8")
             .build();
 
         String response = webClient.post()
@@ -44,63 +52,19 @@ public class SlackService {
             .exchange().block().bodyToMono(String.class)
             .block();
         logger.error("webclient response 응답 : {}", response);
+
     }
 
-    private String generateBody(String channel) {
-        return "{\n" +
-            "\t\"channel\": \"" + channel + "\"," +
-            "\t\"blocks\": [\n" +
-            "\t{\n" +
-            "\t\t\"type\": \"actions\",\n" +
-            "\t\t\"elements\": [\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":spiral_calendar_pad: 전체 조회\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"retrieve\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":pushpin: 회의실 예약\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"reserve\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":file_folder: 예약 확인\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"confirm\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":memo: 예약 변경\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"change\"\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"type\": \"button\",\n" +
-            "\t\t\t\t\"text\": {\n" +
-            "\t\t\t\t\t\"type\": \"plain_text\",\n" +
-            "\t\t\t\t\t\"text\": \":scissors: 예약 취소\",\n" +
-            "\t\t\t\t\t\"emoji\": true\n" +
-            "\t\t\t\t},\n" +
-            "\t\t\t\t\"value\": \"cancel\"\n" +
-            "\t\t\t}\n" +
-            "\t\t]\n" +
-            "\t}\n" +
-            "]\n" +
-            "}";
+    private EventCallbackResponseDto generateBody(String channel) {
+        List<Element> elements = Arrays.asList(
+            Element.textButton(":spiral_calendar_pad: 전체 조회", "retrieve"),
+            Element.textButton(":pushpin: 회의실 예약", "reserve"),
+            Element.textButton(":file_folder: 예약 확인", "confirm"),
+            Element.textButton(":memo: 예약 변경", "change"),
+            Element.textButton(":scissors: 예약 취소", "cancel"));
+
+        List<Block> blocks = Collections.singletonList(new Block("actions", elements));
+
+        return new EventCallbackResponseDto(channel, blocks);
     }
 }

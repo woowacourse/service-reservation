@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.h3.reservation.slack.RequestType;
-import com.h3.reservation.slack.dto.EventCallBackRequestDto;
+import com.h3.reservation.slack.dto.EventCallbackRequestDto;
 import com.h3.reservation.slack.dto.VerificationRequestDto;
 import com.h3.reservation.slack.service.SlackService;
 import net.minidev.json.JSONObject;
@@ -39,7 +39,7 @@ public class BotController {
             return ResponseEntity.ok(service.verify(toDto(req, VerificationRequestDto.class)));
         }
         if (RequestType.EVENT_CALLBACK.equals(type)) {
-            service.eventCallBack(toDto(req, EventCallBackRequestDto.class));
+            service.eventCallBack(toDto(req, EventCallbackRequestDto.class));
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
