@@ -8,19 +8,19 @@ package com.h3.reservation.slack.dto.response;
 public class Text {
     private String type;
     private String text;
-    private String emoji;
+    private boolean emoji;
 
     public Text() {
     }
 
-    public Text(String type, String text, String emoji) {
+    public Text(String type, String text, boolean emoji) {
         this.type = type;
         this.text = text;
         this.emoji = emoji;
     }
 
     public Text(String text) {
-        this("plain_text", text, "true");
+        this("plain_text", text, true);
     }
 
     public String getType() {
@@ -31,7 +31,7 @@ public class Text {
         return text;
     }
 
-    public String getEmoji() {
+    public boolean getEmoji() {
         return emoji;
     }
 }
