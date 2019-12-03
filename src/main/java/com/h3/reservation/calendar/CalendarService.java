@@ -31,7 +31,8 @@ public class CalendarService {
         }
     }
 
-    private Calendar.Events.List restrictEventsWithFetchingDate(final ReservationDateTime fetchingDate, final CalendarId calendarId) throws IOException {
+    private Calendar.Events.List restrictEventsWithFetchingDate(final ReservationDateTime fetchingDate
+            , final CalendarId calendarId) throws IOException {
         Calendar.Events eventsInCalendar = calendar.events();
 
         return eventsInCalendar.list(calendarId.getId())

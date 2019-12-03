@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
@@ -24,16 +22,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class CalendarServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CalendarServiceTest.class);
-
     @InjectMocks
     private CalendarService calendarService;
 
     @Mock
     private Calendar calendar;
-
-    @Mock
-    private CalendarId calendarId;
 
     @Mock
     private Calendar.Events events;
@@ -62,8 +55,10 @@ class CalendarServiceTest {
         when(list.setTimeMax(any())).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.from("2019-12-01"), CalendarId.from(calendarId));
+        List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.from("2019-12-01")
+                , CalendarId.from(calendarId));
 
+        assertThat(fetchedSchedule.size()).isEqualTo(1);
         assertThat(fetchedSchedule.get(0)).isEqualTo(event);
     }
 }
