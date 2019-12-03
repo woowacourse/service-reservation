@@ -1,6 +1,7 @@
 package com.h3.reservation.calendar.domain;
 
 import com.google.api.client.util.DateTime;
+import com.h3.reservation.calendar.domain.exception.InvalidDateTimeRangeException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,15 +18,23 @@ public class ReservationDateTime {
     private final DateTime endDateTime;
 
     private ReservationDateTime(final DateTime startDateTime, final DateTime endDateTime) {
+        if (isStartTimeBiggerThanOrEqualToEndTime(startDateTime, endDateTime)) {
+            throw new InvalidDateTimeRangeException();
+        }
+
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+    }
+
+    private boolean isStartTimeBiggerThanOrEqualToEndTime(final DateTime startDateTime, final DateTime endDateTime) {
+        return startDateTime.getValue() >= endDateTime.getValue();
     }
 
     /**
      * @param fetchingDate The format of fetchingDate : yyyy-MM-dd
      */
-    public static ReservationDateTime from(final String fetchingDate) {
-        return from(fetchingDate, START_TIME_OF_DAY, END_TIME_OF_DAY);
+    public static ReservationDateTime of(final String fetchingDate) {
+        return of(fetchingDate, START_TIME_OF_DAY, END_TIME_OF_DAY);
     }
 
     /**
@@ -33,7 +42,7 @@ public class ReservationDateTime {
      * @param startTime    The format of fetchingDate : hh:mm(:ss)
      * @param endTime      The format of fetchingDate : hh:mm(:ss)
      */
-    public static ReservationDateTime from(final String fetchingDate, final String startTime, final String endTime) {
+    public static ReservationDateTime of(final String fetchingDate, final String startTime, final String endTime) {
         LocalDate localDate = LocalDate.parse(fetchingDate);
 
         LocalDateTime startOfEvent = LocalDateTime.of(localDate, LocalTime.parse(startTime));
