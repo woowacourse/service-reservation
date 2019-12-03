@@ -3,6 +3,8 @@ package com.h3.reservation.calendar;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+import com.h3.reservation.calendar.domain.CalendarId;
+import com.h3.reservation.calendar.domain.ReservationDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -31,6 +33,9 @@ class CalendarServiceTest {
     private Calendar calendar;
 
     @Mock
+    private CalendarId calendarId;
+
+    @Mock
     private Calendar.Events events;
 
     @Mock
@@ -42,8 +47,7 @@ class CalendarServiceTest {
         String location = "잠실 본동";
         String description = "스터디할거에여";
 
-        when(calendar.events()).thenReturn(events);
-        when(events.list(anyString())).thenReturn(list);
+        String calendarId = "example@group.calendar.google.com";
 
         Events eventsInCalendar = new Events();
         Event event = new Event()
@@ -52,9 +56,14 @@ class CalendarServiceTest {
                 .setDescription(description);
         eventsInCalendar.setItems(Collections.singletonList(event));
 
+        when(calendar.events()).thenReturn(events);
+        when(events.list(calendarId)).thenReturn(list);
+        when(list.setTimeMin(any())).thenReturn(list);
+        when(list.setTimeMax(any())).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        List<Event> fetchedSchedule = calendarService.findReservation("2019-12-01");
+        List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.from("2019-12-01"), CalendarId.from(calendarId));
+
         assertThat(fetchedSchedule.get(0)).isEqualTo(event);
     }
 }

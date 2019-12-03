@@ -3,9 +3,9 @@ package com.h3.reservation.calendar;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,18 +14,15 @@ import java.util.List;
 @Service
 public class CalendarService {
 
-    @Value("${calendar.id}")
-    private String calenderId;
-
     private Calendar calendar;
 
     public CalendarService(final Calendar calendar) {
         this.calendar = calendar;
     }
 
-    public List<Event> findReservation(String fetchingDate) {
+    public List<Event> findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
-            Calendar.Events.List eventList = restrictEventsWithFetchingDate(fetchingDate);
+            Calendar.Events.List eventList = restrictEventsWithFetchingDate(fetchingDate, calendarId);
             Events results = eventList.execute();
 
             return results.getItems();
@@ -34,13 +31,11 @@ public class CalendarService {
         }
     }
 
-    private Calendar.Events.List restrictEventsWithFetchingDate(final String fetchingDate) throws IOException {
+    private Calendar.Events.List restrictEventsWithFetchingDate(final ReservationDateTime fetchingDate, final CalendarId calendarId) throws IOException {
         Calendar.Events eventsInCalendar = calendar.events();
 
-        ReservationDateTime reservationDateTime = ReservationDateTime.from(fetchingDate);
-
-        return eventsInCalendar.list(calenderId)
-                .setTimeMin(reservationDateTime.getStartDateTime())
-                .setTimeMax(reservationDateTime.getEndDateTime());
+        return eventsInCalendar.list(calendarId.getId())
+                .setTimeMin(fetchingDate.getStartDateTime())
+                .setTimeMax(fetchingDate.getEndDateTime());
     }
 }
