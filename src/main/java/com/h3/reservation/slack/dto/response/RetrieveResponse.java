@@ -1,5 +1,7 @@
 package com.h3.reservation.slack.dto.response;
 
+import com.h3.reservation.slack.fragment.view.ModalView;
+
 /**
  * @author heebg
  * @version 1.0

@@ -1,6 +1,6 @@
 package com.h3.reservation.slack.dto.request;
 
-import com.h3.reservation.slack.dto.response.Action;
+import com.h3.reservation.slack.dto.request.action.Action;
 
 import java.util.List;
 
@@ -41,8 +41,8 @@ public class BlockActionRequest {
         return type;
     }
 
-    public String getValue() {
-        return actions.get(0).getValue();
+    public String getAction_id() {
+        return actions.get(0).getAction_id();
     }
 
     @Override

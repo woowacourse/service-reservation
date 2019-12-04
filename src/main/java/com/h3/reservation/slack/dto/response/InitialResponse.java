@@ -1,5 +1,7 @@
 package com.h3.reservation.slack.dto.response;
 
+import com.h3.reservation.slack.fragment.block.ActionsBlock;
+
 import java.util.List;
 
 /**
@@ -7,14 +9,14 @@ import java.util.List;
  * @version 1.0
  * @date 2019-12-03
  */
-public class EventCallbackResponse {
+public class InitialResponse {
     private String channel;
-    private List<Block> blocks;
+    private List<ActionsBlock> blocks;
 
-    public EventCallbackResponse() {
+    public InitialResponse() {
     }
 
-    public EventCallbackResponse(String channel, List<Block> blocks) {
+    public InitialResponse(String channel, List<ActionsBlock> blocks) {
         this.channel = channel;
         this.blocks = blocks;
     }
@@ -23,7 +25,7 @@ public class EventCallbackResponse {
         return channel;
     }
 
-    public List<Block> getBlocks() {
+    public List<ActionsBlock> getBlocks() {
         return blocks;
     }
 }

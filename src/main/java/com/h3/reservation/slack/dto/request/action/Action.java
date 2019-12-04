@@ -1,4 +1,7 @@
-package com.h3.reservation.slack.dto.response;
+package com.h3.reservation.slack.dto.request.action;
+
+
+import com.h3.reservation.slack.fragment.text.Text;
 
 /**
  * @author heebg

@@ -57,10 +57,8 @@ public class BotController {
     @PostMapping(value = "/slack/interaction", consumes = {"application/x-www-form-urlencoded"})
     public ResponseEntity interaction(@RequestParam Map<String, String> req, HttpServletRequest request) throws IOException, ParseException {
         printRequest(request);
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(req.get("payload"));
-        JSONObject jsonObj = (JSONObject) obj;
         logger.error("req : {}", req.toString());
+        JSONObject jsonObj = generateJsonObject(req);
         RequestType type = RequestType.valueOf(jsonObj.getAsString("type").toUpperCase());
         if (RequestType.BLOCK_ACTIONS.equals(type)) {
             service.viewModal(toDto(jsonObj, BlockActionRequest.class));
@@ -84,5 +82,11 @@ public class BotController {
 
     private <T> T toDto(JSONObject object, Class<T> clazz) throws JsonProcessingException {
         return objectMapper.readValue(object.toString(), clazz);
+    }
+
+    private JSONObject generateJsonObject(Map<String, String> req) throws ParseException {
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(req.get("payload"));
+        return (JSONObject) obj;
     }
 }
