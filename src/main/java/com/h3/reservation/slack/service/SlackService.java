@@ -4,8 +4,12 @@ import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.response.Block;
+import com.h3.reservation.slack.dto.response.DatePicker;
 import com.h3.reservation.slack.dto.response.Element;
 import com.h3.reservation.slack.dto.response.EventCallbackResponse;
+import com.h3.reservation.slack.dto.response.ModalView;
+import com.h3.reservation.slack.dto.response.RetrieveBlock;
+import com.h3.reservation.slack.dto.response.RetrieveResponse;
 import com.h3.reservation.slack.dto.response.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,14 +41,23 @@ public class SlackService {
 
     public void eventCallBack(EventCallbackRequest dto) {
         String postUrl = "https://slack.com/api/chat.postMessage";
-        action(postUrl, generateInitResponse(dto.getChannel()));
+        send(postUrl, generateInitResponse(dto.getChannel()));
     }
 
-    public void blockActions(BlockActionRequest dto) {
-        action(dto.getResponse_url(), new Text(dto.getValue()));
+    public void viewModal(BlockActionRequest dto) {
+        String postUrl = "https://slack.com/api/views.open";
+
+        send(postUrl, generateRetrieveResponse(dto.getTrigger_id()));
     }
 
-    private void action(String url, Object dto) {
+    private RetrieveResponse generateRetrieveResponse(String trigger_id) {
+        DatePicker datePicker = new DatePicker("datepicker", "2019-12-04", new Text("날짜를 선택하세요"));
+        ModalView modalView = new ModalView("modal", new Text("예약 조회하기"), new Text("조회"), new Text("취소"),
+            Arrays.asList(new RetrieveBlock("input", datePicker, new Text("조회할 날짜를 선택하세요"))));
+        return new RetrieveResponse(trigger_id, modalView);
+    }
+
+    private void send(String url, Object dto) {
         WebClient webClient = WebClient
             .builder()
             .baseUrl(url)

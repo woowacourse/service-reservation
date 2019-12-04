@@ -63,7 +63,7 @@ public class BotController {
         logger.error("req : {}", req.toString());
         RequestType type = RequestType.valueOf(jsonObj.getAsString("type").toUpperCase());
         if (RequestType.BLOCK_ACTIONS.equals(type)) {
-            service.blockActions(toDto(jsonObj, BlockActionRequest.class));
+            service.viewModal(toDto(jsonObj, BlockActionRequest.class));
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
