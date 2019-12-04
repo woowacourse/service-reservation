@@ -69,7 +69,7 @@ public class SlackService {
             .body(BodyInserters.fromValue(dto))
             .exchange().block().bodyToMono(String.class)
             .block();
-        logger.error("webclient response 응답 : {}", response);
+        logger.debug("webclient response 응답 : {}", response);
     }
 
     private InitialResponse generateInitResponse(String channel) {

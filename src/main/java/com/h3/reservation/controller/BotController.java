@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author heebg
@@ -55,9 +53,8 @@ public class BotController {
     }
 
     @PostMapping(value = "/slack/interaction", consumes = {"application/x-www-form-urlencoded"})
-    public ResponseEntity interaction(@RequestParam Map<String, String> req, HttpServletRequest request) throws IOException, ParseException {
-        printRequest(request);
-        logger.error("req : {}", req.toString());
+    public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException, ParseException {
+        logger.debug("req : {}", req.toString());
         JSONObject jsonObj = generateJsonObject(req);
         RequestType type = RequestType.valueOf(jsonObj.getAsString("type").toUpperCase());
         if (RequestType.BLOCK_ACTIONS.equals(type)) {
@@ -65,13 +62,6 @@ public class BotController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
-    }
-
-    private void printRequest(HttpServletRequest request) throws IOException {
-        if ("POST".equalsIgnoreCase(request.getMethod())) {
-            String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            System.out.println(">> request body : " + body);
-        }
     }
 
     private ObjectMapper initObjectMapper() {
