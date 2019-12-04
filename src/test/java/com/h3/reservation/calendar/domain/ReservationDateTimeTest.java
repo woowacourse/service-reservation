@@ -52,4 +52,22 @@ class ReservationDateTimeTest {
         assertThrows(InvalidDateTimeRangeException.class, () -> ReservationDateTime.of(successfulFetchingDate, "16:30", "16:30"));
         assertDoesNotThrow(() -> ReservationDateTime.of(successfulFetchingDate, "16:30", "16:31"));
     }
+
+    @Test
+    void isStartTimeEarlierThanOrEqualTo() {
+        ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate, "14:00", "18:00");
+
+        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T13:59:00.000+09:00"))).isFalse();
+        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T14:00:00.000+09:00"))).isFalse();
+        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T14:01:00.000+09:00"))).isTrue();
+    }
+
+    @Test
+    void isEndTimeEarlierThanOrEqualTo() {
+        ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate, "14:00", "18:00");
+
+        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T17:59:00.000+09:00"))).isFalse();
+        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T18:00:00.000+09:00"))).isFalse();
+        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T18:01:00.000+09:00"))).isTrue();
+    }
 }

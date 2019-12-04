@@ -18,7 +18,7 @@ public class ReservationDateTime {
     private final DateTime endDateTime;
 
     private ReservationDateTime(final DateTime startDateTime, final DateTime endDateTime) {
-        if (isStartTimeLaterThanOrEqualToEndTime(startDateTime, endDateTime)) {
+        if (isFirstTimeEarlierThanOrEqualToSecondTime(endDateTime, startDateTime)) {
             throw new InvalidDateTimeRangeException();
         }
 
@@ -26,8 +26,8 @@ public class ReservationDateTime {
         this.endDateTime = endDateTime;
     }
 
-    private boolean isStartTimeLaterThanOrEqualToEndTime(final DateTime startDateTime, final DateTime endDateTime) {
-        return startDateTime.getValue() >= endDateTime.getValue();
+    private boolean isFirstTimeEarlierThanOrEqualToSecondTime(final DateTime firstDateTime, final DateTime secondDateTime) {
+        return firstDateTime.getValue() <= secondDateTime.getValue();
     }
 
     /**
@@ -57,6 +57,18 @@ public class ReservationDateTime {
     private static DateTime createDateTime(final LocalDateTime localDateTime) {
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         return new DateTime(date);
+    }
+
+    public boolean isStartTimeEarlierThanOrEqualTo(DateTime dateTime) {
+        return isFirstTimeEarlierThanSecondTime(startDateTime, dateTime);
+    }
+
+    public boolean isEndTimeEarlierThanOrEqualTo(DateTime dateTime) {
+        return isFirstTimeEarlierThanSecondTime(endDateTime, dateTime);
+    }
+
+    private boolean isFirstTimeEarlierThanSecondTime(final DateTime firstDateTime, final DateTime secondDateTime) {
+        return firstDateTime.getValue() < secondDateTime.getValue();
     }
 
     public DateTime getStartDateTime() {
