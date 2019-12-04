@@ -3,16 +3,14 @@ package com.h3.reservation.calendar.domain;
 import com.google.api.client.util.DateTime;
 import com.h3.reservation.calendar.domain.exception.InvalidDateTimeRangeException;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Date;
-
 public class ReservationDateTime {
 
     private static final String START_TIME_OF_DAY = "00:00:00";
     private static final String END_TIME_OF_DAY = "23:59:59";
+    private static final String PREFIX_OF_TIME = "T";
+    private static final String TIME_DELIMITER = ":";
+    private static final String DEFAULT_SECONDS = "00";
+    private static final int MIN_COUNT_OF_TIME_TOKENS = 2;
 
     private final DateTime startDateTime;
     private final DateTime endDateTime;
@@ -43,20 +41,25 @@ public class ReservationDateTime {
      * @param endTime      The format of fetchingDate : hh:mm(:ss)
      */
     public static ReservationDateTime of(final String fetchingDate, final String startTime, final String endTime) {
-        LocalDate localDate = LocalDate.parse(fetchingDate);
+        String formattedStartTime = createFormattedTime(startTime);
+        String formattedEndTime = createFormattedTime(endTime);
 
-        LocalDateTime startOfEvent = LocalDateTime.of(localDate, LocalTime.parse(startTime));
-        LocalDateTime endOfEvent = LocalDateTime.of(localDate, LocalTime.parse(endTime));
-
-        DateTime startDateTime = createDateTime(startOfEvent);
-        DateTime endDateTime = createDateTime(endOfEvent);
+        DateTime startDateTime = DateTime.parseRfc3339(fetchingDate + formattedStartTime);
+        DateTime endDateTime = DateTime.parseRfc3339(fetchingDate + formattedEndTime);
 
         return new ReservationDateTime(startDateTime, endDateTime);
     }
 
-    private static DateTime createDateTime(final LocalDateTime localDateTime) {
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        return new DateTime(date);
+    private static String createFormattedTime(final String time) {
+        String[] tokens = time.split(TIME_DELIMITER);
+        if (notExistsSeconds(tokens)) {
+            return PREFIX_OF_TIME + time + TIME_DELIMITER + DEFAULT_SECONDS;
+        }
+        return PREFIX_OF_TIME + time;
+    }
+
+    private static boolean notExistsSeconds(final String[] tokens) {
+        return tokens.length == MIN_COUNT_OF_TIME_TOKENS;
     }
 
     public boolean isStartTimeEarlierThanOrEqualTo(DateTime dateTime) {
