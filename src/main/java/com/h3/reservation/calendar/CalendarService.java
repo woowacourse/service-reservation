@@ -27,7 +27,7 @@ public class CalendarService {
             Events results = eventList.execute();
 
             return results.getItems().stream()
-                    .filter(item -> fetchingDate.isStartTimeEarlierThanOrEqualTo(item.getEnd().getDateTime()))
+                    .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
                     .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
                     .collect(Collectors.toList());
 

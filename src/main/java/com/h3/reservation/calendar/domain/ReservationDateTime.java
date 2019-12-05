@@ -63,10 +63,18 @@ public class ReservationDateTime {
     }
 
     public boolean isStartTimeEarlierThanOrEqualTo(DateTime dateTime) {
-        return isFirstTimeEarlierThanSecondTime(startDateTime, dateTime);
+        return isFirstTimeEarlierThanOrEqualToSecondTime(startDateTime, dateTime);
     }
 
     public boolean isEndTimeEarlierThanOrEqualTo(DateTime dateTime) {
+        return isFirstTimeEarlierThanOrEqualToSecondTime(endDateTime, dateTime);
+    }
+
+    public boolean isStartTimeEarlierThan(DateTime dateTime) {
+        return isFirstTimeEarlierThanSecondTime(startDateTime, dateTime);
+    }
+
+    public boolean isEndTimeEarlierThan(DateTime dateTime) {
         return isFirstTimeEarlierThanSecondTime(endDateTime, dateTime);
     }
 
