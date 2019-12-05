@@ -5,7 +5,7 @@ package com.h3.reservation.slack.fragment.composition.text;
  * @version 1.0
  * @date 2019-12-03
  */
-public abstract class Text {
+public class Text {
     protected TextType type;
     protected String text;
 
