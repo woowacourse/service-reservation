@@ -1,7 +1,7 @@
 package com.h3.reservation.slack.fragment.view;
 
 import com.h3.reservation.slack.fragment.block.Block;
-import com.h3.reservation.slack.fragment.text.PlainText;
+import com.h3.reservation.slack.fragment.composition.text.PlainText;
 
 import java.util.List;
 

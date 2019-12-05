@@ -1,7 +1,7 @@
 package com.h3.reservation.slack.fragment.block;
 
 
-import com.h3.reservation.slack.fragment.text.Text;
+import com.h3.reservation.slack.fragment.composition.text.Text;
 
 /**
  * @author heebg

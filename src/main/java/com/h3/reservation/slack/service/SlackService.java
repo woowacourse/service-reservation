@@ -11,7 +11,7 @@ import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.element.ButtonElement;
 import com.h3.reservation.slack.fragment.element.DatepickerElement;
 import com.h3.reservation.slack.fragment.element.Element;
-import com.h3.reservation.slack.fragment.text.PlainText;
+import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.view.ModalView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

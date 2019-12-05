@@ -1,6 +1,6 @@
 package com.h3.reservation.slack.fragment.element;
 
-import com.h3.reservation.slack.fragment.text.PlainText;
+import com.h3.reservation.slack.fragment.composition.text.PlainText;
 
 /**
  * @author heebg
