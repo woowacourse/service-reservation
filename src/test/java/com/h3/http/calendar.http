@@ -11,6 +11,11 @@
 GET http://localhost:8080/find?fetchingDate=2019-11-28
 Accept: application/json
 
+### 특정 시간에 부합하는 일정 가져오기
+
+GET http://localhost:8080/events/filter?fetchingDate=2019-11-28&startTime=14:00&endTime=16:00
+Accept: application/json
+
 ###
 
 
