@@ -34,7 +34,7 @@ import java.util.List;
 public class SlackService {
     private static final Logger logger = LoggerFactory.getLogger(SlackService.class);
 
-    private static final String TOKEN = "xoxb-628979079522-857825073798-rZkXu22vIyUyVIgTZeKjwKkJ";
+    private static final String TOKEN = System.getenv("BOT_TOKEN");
     private static final String AUTHORIZATION = "Bearer " + TOKEN;
 
     public String verify(VerificationRequest dto) {

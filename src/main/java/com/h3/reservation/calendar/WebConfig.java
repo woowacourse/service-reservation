@@ -60,11 +60,6 @@ public class WebConfig {
                 .setAccessType("offline")
                 .build();
 
-        LocalServerReceiver receiver = new LocalServerReceiver
-                .Builder()
-                .setPort(8888)
-                .build();
-
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        return flow.loadCredential(System.getenv("CREDENTIAL_USER_ID"));
     }
 }
