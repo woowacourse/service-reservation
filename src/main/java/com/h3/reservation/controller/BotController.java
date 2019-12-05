@@ -7,6 +7,7 @@ import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.service.SlackService;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -61,6 +62,10 @@ public class BotController {
         if (RequestType.BLOCK_ACTIONS.equals(type)) {
             service.viewModal(toDto(jsonObj, BlockActionRequest.class));
             return ResponseEntity.ok().build();
+        }
+        if (RequestType.VIEW_SUBMISSION.equals(type)) {
+            ModalUpdateResponse response = service.updateModal();
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.badRequest().build();
     }
