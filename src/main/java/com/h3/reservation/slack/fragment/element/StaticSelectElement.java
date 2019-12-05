@@ -12,6 +12,7 @@ public class StaticSelectElement extends Element {
     private List<Option> options;
 
     public StaticSelectElement() {
+        super(ElementType.STATIC_SELECT);
     }
 
     public StaticSelectElement(PlainText placeholder, String action_id, Option initial_option, List<Option> options) {

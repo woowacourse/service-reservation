@@ -12,6 +12,7 @@ public class SectionBlock extends Block {
     private Text text;
 
     public SectionBlock() {
+        super(BlockType.SECTION);
     }
 
     public SectionBlock(Text text) {

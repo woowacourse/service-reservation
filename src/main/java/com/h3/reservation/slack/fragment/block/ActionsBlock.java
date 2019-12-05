@@ -13,6 +13,7 @@ public class ActionsBlock extends Block {
     private List<Element> elements;
 
     public ActionsBlock() {
+        super(BlockType.ACTIONS);
     }
 
     public ActionsBlock(List<Element> elements) {

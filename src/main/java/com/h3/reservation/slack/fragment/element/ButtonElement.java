@@ -12,6 +12,7 @@ public class ButtonElement extends Element {
     private String action_id;
 
     public ButtonElement() {
+        super(ElementType.BUTTON);
     }
 
     public ButtonElement(PlainText text, String action_id) {

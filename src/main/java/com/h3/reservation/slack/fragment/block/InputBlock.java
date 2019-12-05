@@ -14,6 +14,7 @@ public class InputBlock extends Block {
     private Element element;
 
     public InputBlock() {
+        super(BlockType.INPUT);
     }
 
     public InputBlock(Text label, Element element) {
