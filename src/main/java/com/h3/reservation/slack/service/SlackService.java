@@ -41,7 +41,7 @@ public class SlackService {
         return dto.getChallenge();
     }
 
-    public void eventCallBack(EventCallbackRequest dto) {
+    public void initMenu(EventCallbackRequest dto) {
         String postUrl = "https://slack.com/api/chat.postMessage";
         send(postUrl, generateInitResponse(dto.getChannel()));
     }
@@ -49,11 +49,11 @@ public class SlackService {
     public void viewModal(BlockActionRequest dto) {
         InitMenuType type = InitMenuType.valueOf(dto.getAction_id().toUpperCase());
         String postUrl = "https://slack.com/api/views.open";
-        Object response =  new PlainText(dto.getAction_id());
+        Object response = new PlainText(dto.getAction_id());
         if (InitMenuType.RETRIEVE == type) {
             response = generateRetrieveResponse(dto.getTrigger_id());
         }
-        send(postUrl,response);
+        send(postUrl, response);
     }
 
     private void send(String url, Object dto) {
@@ -69,7 +69,7 @@ public class SlackService {
             .body(BodyInserters.fromValue(dto))
             .exchange().block().bodyToMono(String.class)
             .block();
-        logger.error("webclient response 응답 : {}", response);
+        logger.debug("webclient response 응답 : {}", response);
     }
 
     private InitialResponse generateInitResponse(String channel) {
