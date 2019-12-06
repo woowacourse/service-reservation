@@ -26,11 +26,11 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webflux' //추가 한 것
-    compile 'org.springframework.boot:spring-boot-starter-tomcat' //추가 한 것
-    compile 'com.google.api-client:google-api-client:1.23.0'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
-    compile 'com.google.apis:google-api-services-calendar:v3-rev305-1.23.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation 'com.google.api-client:google-api-client:1.23.0'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+    implementation 'com.google.apis:google-api-services-calendar:v3-rev305-1.23.0'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
