@@ -26,6 +26,7 @@ public class SectionBlock extends Block {
     }
 
     public SectionBlock(Text text, List<Text> fields) {
+        super(BlockType.SECTION);
         this.text = text;
         this.fields = fields;
     }

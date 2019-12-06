@@ -115,6 +115,7 @@ public class SlackService {
                     new MrkdwnText("*회의실 2*")
                 )
             ),
+            new DividerBlock(),
             new SectionBlock(
                 new MrkdwnText("*스터디*"),
                 Arrays.asList(
