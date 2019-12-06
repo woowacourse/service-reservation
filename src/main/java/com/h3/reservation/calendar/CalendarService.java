@@ -32,11 +32,11 @@ public class CalendarService {
     }
 
     private Calendar.Events.List restrictEventsWithFetchingDate(final ReservationDateTime fetchingDate
-            , final CalendarId calendarId) throws IOException {
+        , final CalendarId calendarId) throws IOException {
         Calendar.Events eventsInCalendar = calendar.events();
 
         return eventsInCalendar.list(calendarId.getId())
-                .setTimeMin(fetchingDate.getStartDateTime())
-                .setTimeMax(fetchingDate.getEndDateTime());
+            .setTimeMin(fetchingDate.getStartDateTime())
+            .setTimeMax(fetchingDate.getEndDateTime());
     }
 }
