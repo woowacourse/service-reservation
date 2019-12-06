@@ -7,6 +7,7 @@ import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.service.SlackService;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -30,6 +31,7 @@ import java.util.Map;
 @RestController
 public class BotController {
     private static final Logger logger = LoggerFactory.getLogger(BotController.class);
+    private static final String TYPE = "type";
 
     private final SlackService service;
     private final ObjectMapper objectMapper;
@@ -56,10 +58,14 @@ public class BotController {
     public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException, ParseException {
         logger.debug("req : {}", req.toString());
         JSONObject jsonObj = generateJsonObject(req);
-        RequestType type = RequestType.valueOf(jsonObj.getAsString("type").toUpperCase());
+        RequestType type = RequestType.valueOf(jsonObj.getAsString(TYPE).toUpperCase());
         if (RequestType.BLOCK_ACTIONS.equals(type)) {
             service.viewModal(toDto(jsonObj, BlockActionRequest.class));
             return ResponseEntity.ok().build();
+        }
+        if (RequestType.VIEW_SUBMISSION.equals(type)) {
+            ModalUpdateResponse response = service.updateModal();
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.badRequest().build();
     }

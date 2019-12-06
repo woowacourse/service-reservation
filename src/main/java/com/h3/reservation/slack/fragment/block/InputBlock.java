@@ -2,7 +2,7 @@ package com.h3.reservation.slack.fragment.block;
 
 
 import com.h3.reservation.slack.fragment.element.Element;
-import com.h3.reservation.slack.fragment.text.Text;
+import com.h3.reservation.slack.fragment.composition.text.Text;
 
 /**
  * @author heebg
@@ -14,6 +14,7 @@ public class InputBlock extends Block {
     private Element element;
 
     public InputBlock() {
+        super(BlockType.INPUT);
     }
 
     public InputBlock(Text label, Element element) {

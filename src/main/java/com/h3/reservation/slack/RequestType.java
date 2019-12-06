@@ -9,6 +9,7 @@ public enum RequestType {
     URL_VERIFICATION,
     EVENT_CALLBACK,
     BLOCK_ACTIONS,
+    VIEW_SUBMISSION,
     APP_MENTION,
     APP_HOME_OPENED
 }

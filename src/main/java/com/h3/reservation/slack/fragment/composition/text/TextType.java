@@ -1,4 +1,4 @@
-package com.h3.reservation.slack.fragment.text;
+package com.h3.reservation.slack.fragment.composition.text;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

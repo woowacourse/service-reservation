@@ -9,6 +9,7 @@ public class DatepickerElement extends Element {
     private String action_id;
 
     public DatepickerElement() {
+        super(ElementType.DATEPICKER);
     }
 
     public DatepickerElement(String action_id) {

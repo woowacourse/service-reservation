@@ -1,6 +1,6 @@
 package com.h3.reservation.slack.fragment.element;
 
-import com.h3.reservation.slack.fragment.text.PlainText;
+import com.h3.reservation.slack.fragment.composition.text.PlainText;
 
 /**
  * @author heebg
@@ -12,6 +12,7 @@ public class ButtonElement extends Element {
     private String action_id;
 
     public ButtonElement() {
+        super(ElementType.BUTTON);
     }
 
     public ButtonElement(PlainText text, String action_id) {

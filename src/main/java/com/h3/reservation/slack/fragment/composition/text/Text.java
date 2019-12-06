@@ -1,4 +1,4 @@
-package com.h3.reservation.slack.fragment.text;
+package com.h3.reservation.slack.fragment.composition.text;
 
 /**
  * @author heebg
@@ -8,7 +8,6 @@ package com.h3.reservation.slack.fragment.text;
 public class Text {
     protected TextType type;
     protected String text;
-    private boolean emoji = true;
 
     public Text() {
     }
@@ -24,9 +23,5 @@ public class Text {
 
     public String getText() {
         return text;
-    }
-
-    public boolean getEmoji() {
-        return emoji;
     }
 }

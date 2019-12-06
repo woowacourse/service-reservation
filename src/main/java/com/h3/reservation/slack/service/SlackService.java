@@ -4,14 +4,15 @@ import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
-import com.h3.reservation.slack.dto.response.InitialResponse;
-import com.h3.reservation.slack.dto.response.RetrieveResponse;
-import com.h3.reservation.slack.fragment.block.ActionsBlock;
-import com.h3.reservation.slack.fragment.block.InputBlock;
-import com.h3.reservation.slack.fragment.element.ButtonElement;
-import com.h3.reservation.slack.fragment.element.DatepickerElement;
-import com.h3.reservation.slack.fragment.element.Element;
-import com.h3.reservation.slack.fragment.text.PlainText;
+import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.RetrieveResponseFactory;
+import com.h3.reservation.slack.fragment.block.Block;
+import com.h3.reservation.slack.fragment.block.ContextBlock;
+import com.h3.reservation.slack.fragment.block.DividerBlock;
+import com.h3.reservation.slack.fragment.block.SectionBlock;
+import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
+import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.view.ModalView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,15 +44,15 @@ public class SlackService {
 
     public void initMenu(EventCallbackRequest dto) {
         String postUrl = "https://slack.com/api/chat.postMessage";
-        send(postUrl, generateInitResponse(dto.getChannel()));
+        send(postUrl, InitResponseFactory.of(dto.getChannel()));
     }
 
     public void viewModal(BlockActionRequest dto) {
         InitMenuType type = InitMenuType.valueOf(dto.getAction_id().toUpperCase());
         String postUrl = "https://slack.com/api/views.open";
         Object response = new PlainText(dto.getAction_id());
-        if (InitMenuType.RETRIEVE == type) {
-            response = generateRetrieveResponse(dto.getTrigger_id());
+        if (InitMenuType.RETRIEVE.equals(type)) {
+            response = RetrieveResponseFactory.of(dto.getTrigger_id());
         }
         send(postUrl, response);
     }
@@ -72,28 +73,63 @@ public class SlackService {
         logger.debug("webclient response 응답 : {}", response);
     }
 
-    private InitialResponse generateInitResponse(String channel) {
-        List<Element> elements = Arrays.asList(
-            new ButtonElement(new PlainText(":spiral_calendar_pad: 전체 조회"), "retrieve"),
-            new ButtonElement(new PlainText(":pushpin: 회의실 예약"), "reserve"),
-            new ButtonElement(new PlainText(":file_folder: 예약 확인"), "confirm"),
-            new ButtonElement(new PlainText(":memo: 예약 변경"), "change"),
-            new ButtonElement(new PlainText(":scissors: 예약 취소"), "cancel"));
-
-        List<ActionsBlock> blocks = Collections.singletonList(new ActionsBlock(elements));
-
-        return new InitialResponse(channel, blocks);
+    public ModalUpdateResponse updateModal() {
+        return new ModalUpdateResponse(
+            new ModalView(
+                new PlainText("조회하기"),
+                new PlainText("확인"),
+                generateDummyBlocks()
+            )
+        );
     }
 
-    private RetrieveResponse generateRetrieveResponse(String trigger_id) {
-        DatepickerElement datePicker = new DatepickerElement("retrieve_datepicker");
-
-        ModalView modalView = new ModalView(
-            new PlainText("예약 조회하기"),
-            new PlainText("조회"),
-            new PlainText("취소"),
-            Collections.singletonList(new InputBlock(new PlainText("조회할 날짜를 선택하세요. \uD83D\uDE03"), datePicker))
+    private List<Block> generateDummyBlocks() {
+        return Arrays.asList(
+            new SectionBlock(
+                new MrkdwnText("2019-12-05 12:10-14:10 회의실 예약 현황입니다.")
+            ),
+            new DividerBlock(),
+            new ContextBlock(
+                Collections.singletonList(
+                    new MrkdwnText("*회의실 1*")
+                )
+            ),
+            new DividerBlock(),
+            new SectionBlock(
+                new MrkdwnText("*프로젝트 회의*"),
+                Arrays.asList(
+                    new PlainText("버디"),
+                    new PlainText("12:10-13:10")
+                )
+            ),
+            new SectionBlock(
+                new MrkdwnText("*프로젝트 회의*"),
+                Arrays.asList(
+                    new PlainText("희봉"),
+                    new PlainText("13:10-14:10")
+                )
+            ),
+            new DividerBlock(),
+            new ContextBlock(
+                Collections.singletonList(
+                    new MrkdwnText("*회의실 2*")
+                )
+            ),
+            new DividerBlock(),
+            new SectionBlock(
+                new MrkdwnText("*스터디*"),
+                Arrays.asList(
+                    new PlainText("닉"),
+                    new PlainText("12:10-13:10")
+                )
+            ),
+            new SectionBlock(
+                new MrkdwnText("*프로젝트 회의*"),
+                Arrays.asList(
+                    new PlainText("도넛"),
+                    new PlainText("13:10-14:10")
+                )
+            )
         );
-        return new RetrieveResponse(trigger_id, modalView);
     }
 }
