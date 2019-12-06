@@ -42,7 +42,7 @@ public class SlackService {
         return dto.getChallenge();
     }
 
-    public void eventCallBack(EventCallbackRequest dto) {
+    public void initMenu(EventCallbackRequest dto) {
         String postUrl = "https://slack.com/api/chat.postMessage";
         send(postUrl, InitResponseFactory.of(dto.getChannel()));
     }

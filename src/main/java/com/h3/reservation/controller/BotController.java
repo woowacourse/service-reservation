@@ -48,7 +48,7 @@ public class BotController {
             return ResponseEntity.ok(service.verify(toDto(req, VerificationRequest.class)));
         }
         if (RequestType.EVENT_CALLBACK.equals(type)) {
-            service.eventCallBack(toDto(req, EventCallbackRequest.class));
+            service.initMenu(toDto(req, EventCallbackRequest.class));
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
