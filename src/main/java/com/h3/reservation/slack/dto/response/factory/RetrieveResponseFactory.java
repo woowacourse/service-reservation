@@ -24,12 +24,12 @@ public class RetrieveResponseFactory {
             new PlainText("조회"),
             new PlainText("취소"),
             Arrays.asList(
-                new InputBlock(new PlainText("조회할 날짜를 선택하세요."), datePicker),
-                new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요*")),
+                new InputBlock("retrieve_datepicker_block", new PlainText("조회할 날짜를 선택하세요."), datePicker),
+                new SectionBlock("retrieve_start_time_label_block", new MrkdwnText("*시작 시간을 선택하세요*")),
                 generateTimePicker(
                     "retrieve_start_time", "retrieve_start_minute", 10, 0
                 ),
-                new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요*")),
+                new SectionBlock("retrieve_end_time_label_block", new MrkdwnText("*종료 시간을 선택하세요*")),
                 generateTimePicker(
                     "retrieve_end_time", "retrieve_end_minute", 21, 50
                 )
@@ -41,6 +41,7 @@ public class RetrieveResponseFactory {
     private static ActionsBlock generateTimePicker(String timeActionId, String minuteActionId,
                                             int initialTime, int initialMinute) {
         return new ActionsBlock(
+            "retrieve_timepicker_block",
             Arrays.asList(
                 new StaticSelectElement(
                     new PlainText("시"),

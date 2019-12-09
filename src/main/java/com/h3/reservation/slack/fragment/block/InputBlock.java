@@ -10,6 +10,7 @@ import com.h3.reservation.slack.fragment.composition.text.Text;
  * @date 2019-12-04
  */
 public class InputBlock extends Block {
+    private String block_id;
     private Text label;
     private Element element;
 
@@ -17,8 +18,9 @@ public class InputBlock extends Block {
         super(BlockType.INPUT);
     }
 
-    public InputBlock(Text label, Element element) {
+    public InputBlock(String block_id, Text label, Element element) {
         super(BlockType.INPUT);
+        this.block_id = block_id;
         this.label = label;
         this.element = element;
     }

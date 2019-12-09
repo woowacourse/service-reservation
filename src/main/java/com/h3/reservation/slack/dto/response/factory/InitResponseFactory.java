@@ -19,7 +19,7 @@ public class InitResponseFactory {
             new ButtonElement(new PlainText(":memo: 예약 변경"), "change"),
             new ButtonElement(new PlainText(":scissors: 예약 취소"), "cancel"));
 
-        List<ActionsBlock> blocks = Collections.singletonList(new ActionsBlock(elements));
+        List<ActionsBlock> blocks = Collections.singletonList(new ActionsBlock("initial_block", elements));
 
         return new InitialResponse(channel, blocks);
     }
