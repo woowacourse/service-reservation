@@ -8,5 +8,5 @@ package com.h3.reservation.slack;
 public enum InitMenuType {
     RETRIEVE,
     RESERVE,
-    CHANGE_CANCEL
+    CHANGE
 }

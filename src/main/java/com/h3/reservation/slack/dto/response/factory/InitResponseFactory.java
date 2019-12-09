@@ -15,7 +15,7 @@ public class InitResponseFactory {
         List<Element> elements = Arrays.asList(
             new ButtonElement(new PlainText(":spiral_calendar_pad: 전체 조회"), "retrieve"),
             new ButtonElement(new PlainText(":pushpin: 회의실 예약"), "reserve"),
-            new ButtonElement(new PlainText(":scissors: 예약 변경/취소"), "change_cancel"));
+            new ButtonElement(new PlainText(":scissors: 예약 변경/취소"), "change"));
 
         List<ActionsBlock> blocks = Collections.singletonList(new ActionsBlock("initial_block", elements));
 
