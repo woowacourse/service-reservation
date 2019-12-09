@@ -6,6 +6,7 @@ import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.ReserveResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.RetrieveResponseFactory;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.ContextBlock;
@@ -53,6 +54,9 @@ public class SlackService {
         Object response = new PlainText(dto.getAction_id());
         if (InitMenuType.RETRIEVE.equals(type)) {
             response = RetrieveResponseFactory.of(dto.getTrigger_id());
+        }
+        if (InitMenuType.RESERVE.equals(type)) {
+            response = ReserveResponseFactory.of(dto.getTrigger_id());
         }
         send(postUrl, response);
     }
