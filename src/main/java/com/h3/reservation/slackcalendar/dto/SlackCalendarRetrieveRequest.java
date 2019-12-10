@@ -11,7 +11,7 @@ public class SlackCalendarRetrieveRequest {
     private String endTime;
 
     /**
-     * @param date      yyyy-mm-dd
+     * @param date      yyyy-MM-dd
      * @param startTime hh:mm
      * @param endTime   hh:mm
      */
