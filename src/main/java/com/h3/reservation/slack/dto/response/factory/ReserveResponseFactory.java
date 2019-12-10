@@ -23,6 +23,7 @@ public class ReserveResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("reserve_datepicker");
 
         ModalView modalView = new ModalView(
+            "reserve",
             new PlainText("예약하기"),
             new PlainText("예약"),
             new PlainText("취소"),

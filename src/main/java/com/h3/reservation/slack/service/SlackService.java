@@ -72,6 +72,7 @@ public class SlackService {
     public ModalUpdateResponse updateModal() {
         return new ModalUpdateResponse(
             new ModalView(
+                "retrieve_result",
                 new PlainText("조회하기"),
                 new PlainText("확인"),
                 generateDummyBlocks()

@@ -20,6 +20,7 @@ public class RetrieveResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("retrieve_datepicker");
 
         ModalView modalView = new ModalView(
+            "retrieve",
             new PlainText("조회하기"),
             new PlainText("조회"),
             new PlainText("취소"),

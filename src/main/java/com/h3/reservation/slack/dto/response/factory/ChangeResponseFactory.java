@@ -14,6 +14,7 @@ public class ChangeResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("change_datepicker");
 
         ModalView modalView = new ModalView(
+            "change",
             new PlainText("변경/취소하기"),
             new PlainText("조회"),
             new PlainText("취소"),
