@@ -9,23 +9,23 @@ import com.h3.reservation.slack.fragment.composition.text.PlainText;
  */
 public class ButtonElement extends Element {
     private PlainText text;
-    private String action_id;
+    private String actionId;
 
     public ButtonElement() {
         super(ElementType.BUTTON);
     }
 
-    public ButtonElement(PlainText text, String action_id) {
+    public ButtonElement(PlainText text, String actionId) {
         super(ElementType.BUTTON);
         this.text = text;
-        this.action_id = action_id;
+        this.actionId = actionId;
     }
 
     public PlainText getText() {
         return text;
     }
 
-    public String getAction_id() {
-        return action_id;
+    public String getActionId() {
+        return actionId;
     }
 }
