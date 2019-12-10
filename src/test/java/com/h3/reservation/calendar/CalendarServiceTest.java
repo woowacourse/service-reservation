@@ -7,6 +7,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
+import com.h3.reservation.common.MeetingRoom;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -101,8 +102,8 @@ class CalendarServiceTest {
         ReservationDateTime reservationDateTime2 =
                 ReservationDateTime.of("2019-12-01", "16:00:00", "18:00:00");
 
-        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime, calendarId, "회의실1", "닉", "스터디"));
-        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime2, calendarId, "회의실1", "닉", "스터디"));
+        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
+        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime2, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
     }
 
     @Test
@@ -125,9 +126,9 @@ class CalendarServiceTest {
                 ReservationDateTime.of("2019-12-01", "15:59:00", "18:00:00");
 
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime, calendarId, "회의실1", "닉", "스터디"));
+                -> calendarService.insertEvent(reservationDateTime, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime2, calendarId, "회의실1", "닉", "스터디"));
+                -> calendarService.insertEvent(reservationDateTime2, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
     }
 
     private Event createEvent(String startTime, String endTime) {
