@@ -1,6 +1,7 @@
 package com.h3.reservation.calendar.domain;
 
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.h3.reservation.calendar.domain.exception.InvalidDateTimeRangeException;
 
 public class ReservationDateTime {
@@ -22,10 +23,6 @@ public class ReservationDateTime {
 
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-    }
-
-    private boolean isFirstTimeEarlierThanOrEqualToSecondTime(final DateTime firstDateTime, final DateTime secondDateTime) {
-        return firstDateTime.getValue() <= secondDateTime.getValue();
     }
 
     /**
@@ -62,6 +59,10 @@ public class ReservationDateTime {
         return tokens.length == MIN_COUNT_OF_TIME_TOKENS;
     }
 
+    private boolean isFirstTimeEarlierThanOrEqualToSecondTime(final DateTime firstDateTime, final DateTime secondDateTime) {
+        return firstDateTime.getValue() <= secondDateTime.getValue();
+    }
+
     public boolean isStartTimeEarlierThanOrEqualTo(DateTime dateTime) {
         return isFirstTimeEarlierThanOrEqualToSecondTime(startDateTime, dateTime);
     }
@@ -88,5 +89,9 @@ public class ReservationDateTime {
 
     public DateTime getEndDateTime() {
         return endDateTime;
+    }
+
+    public EventDateTime toEventDateTime(DateTime dateTime) {
+        return new EventDateTime().setDateTime(dateTime);
     }
 }

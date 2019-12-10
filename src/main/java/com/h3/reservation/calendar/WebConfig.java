@@ -36,8 +36,8 @@ public class WebConfig {
     public Calendar calendar() throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         return new Calendar.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
-            .setApplicationName(APPLICATION_NAME)
-            .build();
+                .setApplicationName(APPLICATION_NAME)
+                .build();
     }
 
     private Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {

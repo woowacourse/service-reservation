@@ -7,6 +7,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -78,6 +81,53 @@ class CalendarServiceTest {
         assertThat(fetchedSchedule.get(0)).isEqualTo(event2);
         assertThat(fetchedSchedule.get(1)).isEqualTo(event3);
         assertThat(fetchedSchedule.get(2)).isEqualTo(event4);
+    }
+
+    @Test
+    void 회의실_예약_성공() throws IOException {
+        CalendarId calendarId = CalendarId.from("example@group.calendar.google.com");
+
+        Events eventsInCalendar = new Events();
+        Event event = createEvent("2019-12-01T14:00:00", "2019-12-01T16:00:00");
+        event.setSummary("회의실1/버디/프로젝트");
+        eventsInCalendar.setItems(Arrays.asList(event));
+
+        when(calendar.events()).thenReturn(events);
+        when(events.list(calendarId.getId())).thenReturn(list);
+        when(list.execute()).thenReturn(eventsInCalendar);
+
+        ReservationDateTime reservationDateTime =
+                ReservationDateTime.of("2019-12-01", "12:00:00", "14:00:00");
+        ReservationDateTime reservationDateTime2 =
+                ReservationDateTime.of("2019-12-01", "16:00:00", "18:00:00");
+
+        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime, calendarId, "회의실1", "닉", "스터디"));
+        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime2, calendarId, "회의실1", "닉", "스터디"));
+    }
+
+    @Test
+    @DisplayName("기존의 예약시간과 겹치면 예약실패")
+    void create_NotAvailableReserveEventException() throws IOException {
+        CalendarId calendarId = CalendarId.from("example@group.calendar.google.com");
+
+        Events eventsInCalendar = new Events();
+        Event event = createEvent("2019-12-01T14:00:00", "2019-12-01T16:00:00");
+        event.setSummary("회의실1/버디/프로젝트");
+        eventsInCalendar.setItems(Arrays.asList(event));
+
+        when(calendar.events()).thenReturn(events);
+        when(events.list(calendarId.getId())).thenReturn(list);
+        when(list.execute()).thenReturn(eventsInCalendar);
+
+        ReservationDateTime reservationDateTime =
+                ReservationDateTime.of("2019-12-01", "12:00:00", "14:01:00");
+        ReservationDateTime reservationDateTime2 =
+                ReservationDateTime.of("2019-12-01", "15:59:00", "18:00:00");
+
+        assertThrows(NotAvailableReserveEventException.class, ()
+                -> calendarService.insertEvent(reservationDateTime, calendarId, "회의실1", "닉", "스터디"));
+        assertThrows(NotAvailableReserveEventException.class, ()
+                -> calendarService.insertEvent(reservationDateTime2, calendarId, "회의실1", "닉", "스터디"));
     }
 
     private Event createEvent(String startTime, String endTime) {
