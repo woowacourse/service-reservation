@@ -10,18 +10,24 @@ import java.util.List;
  * @date 2019-12-04
  */
 public class ActionsBlock extends Block {
+    private String block_id;
     private List<Element> elements;
 
     public ActionsBlock() {
         super(BlockType.ACTIONS);
     }
 
-    public ActionsBlock(List<Element> elements) {
+    public ActionsBlock(String block_id, List<Element> elements) {
         super(BlockType.ACTIONS);
+        this.block_id = block_id;
         this.elements = elements;
     }
 
     public List<Element> getElements() {
         return elements;
+    }
+
+    public String getBlock_id() {
+        return block_id;
     }
 }
