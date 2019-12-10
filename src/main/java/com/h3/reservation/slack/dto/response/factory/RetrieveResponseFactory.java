@@ -11,6 +11,11 @@ import com.h3.reservation.slack.fragment.view.ModalView;
 import java.util.Arrays;
 
 public class RetrieveResponseFactory {
+    private static final int MIN_TIME = 10;
+    private static final int MAX_TIME = 21;
+    private static final int MIN_MINUTE = 0;
+    private static final int MAX_MINUTE = 50;
+
     public static RetrieveResponse of(String trigger_id) {
         DatepickerElement datePicker = new DatepickerElement("retrieve_datepicker");
 
@@ -22,15 +27,15 @@ public class RetrieveResponseFactory {
                 new InputBlock("retrieve_datepicker_block", new PlainText("조회할 날짜를 선택하세요."), datePicker),
                 new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요.*")),
                 CommonResponseFactory.generateTimePicker(
-                    "retrieve_start_time_block", "retrieve_start_time", 10),
+                    "retrieve_start_time_block", "retrieve_start_time", MIN_TIME),
                 CommonResponseFactory.generateMinutePicker(
-                    "retrieve_start_minute_block", "retrieve_start_minute", 0
+                    "retrieve_start_minute_block", "retrieve_start_minute", MIN_MINUTE
                 ),
                 new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요.*")),
                 CommonResponseFactory.generateTimePicker(
-                    "retrieve_end_time_block", "retrieve_end_time", 21),
+                    "retrieve_end_time_block", "retrieve_end_time", MAX_TIME),
                 CommonResponseFactory.generateMinutePicker(
-                    "retrieve_end_minute_block", "retrieve_end_minute", 50
+                    "retrieve_end_minute_block", "retrieve_end_minute", MAX_MINUTE
                 )
             )
         );
