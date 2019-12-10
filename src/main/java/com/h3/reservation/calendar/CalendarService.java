@@ -4,16 +4,15 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
+import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
-import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.common.MeetingRoom;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,16 +24,17 @@ public class CalendarService {
         this.calendar = calendar;
     }
 
-    public List<Event> findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
+    public CalendarEvents findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
             Calendar.Events.List eventList = restrictEventsWithFetchingDate(calendarId);
             Events results = eventList.execute();
 
-            return results.getItems().stream()
+            List<Event> events = results.getItems().stream()
                     .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
                     .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
                     .collect(Collectors.toList());
 
+            return new CalendarEvents(events);
         } catch (IOException e) {
             throw new FetchingEventsFailedException(e);
         }
@@ -66,18 +66,15 @@ public class CalendarService {
     }
 
     private void checkValidReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {
-        List<Event> eventsByTime = findReservation(fetchingDate, calendarId);
+        CalendarEvents eventsByTime = findReservation(fetchingDate, calendarId);
         if (isReservedMeetingRoom(room, eventsByTime)) {
             throw new NotAvailableReserveEventException("이미 예약된 방이 있습니다!");
         }
     }
 
-    private boolean isReservedMeetingRoom(MeetingRoom room, List<Event> eventsByTime) {
-        return eventsByTime.stream()
-                .map(Event::getSummary)
-                .map(SummaryParser::parse)
-                .filter(Objects::nonNull)
-                .map(l -> l.get(0))
-                .anyMatch(room.getName()::equals);
+    private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
+        return eventsByTime.findMeetingRooms()
+                .stream()
+                .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }
 }

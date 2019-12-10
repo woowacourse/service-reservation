@@ -5,6 +5,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
+import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
 import com.h3.reservation.common.MeetingRoom;
@@ -18,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -52,11 +52,11 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01")
+        CalendarEvents fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01")
                 , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(1);
-        assertThat(fetchedSchedule.get(0)).isEqualTo(event);
+        assertThat(fetchedSchedule.getEvent(0)).isEqualTo(event);
     }
 
     @Test
@@ -75,13 +75,13 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
+        CalendarEvents fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
                 , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(3);
-        assertThat(fetchedSchedule.get(0)).isEqualTo(event2);
-        assertThat(fetchedSchedule.get(1)).isEqualTo(event3);
-        assertThat(fetchedSchedule.get(2)).isEqualTo(event4);
+        assertThat(fetchedSchedule.getEvent(0)).isEqualTo(event2);
+        assertThat(fetchedSchedule.getEvent(1)).isEqualTo(event3);
+        assertThat(fetchedSchedule.getEvent(2)).isEqualTo(event4);
     }
 
     @Test
