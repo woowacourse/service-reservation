@@ -16,6 +16,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ReserveResponseFactory {
+    private static final String MEETING_ROOM = "회의실";
+    private static final int NUMBER_OF_MEETING_ROOM = 5;
+
     public static ReserveResponse of(String trigger_id) {
         DatepickerElement datePicker = new DatepickerElement("reserve_datepicker");
 
@@ -37,7 +40,7 @@ public class ReserveResponseFactory {
                 CommonResponseFactory.generateMinutePicker(
                     "reserve_end_minute_block", "reserve_end_minute", 0
                 ),
-                new InputBlock("reserve_meetingroom_block", new PlainText("회의실을 선택하세요."),
+                new InputBlock("reserve_meeting_room_block", new PlainText("회의실을 선택하세요."),
                     generateMeetingRoomSelectElement()),
                 new InputBlock("reserve_name_block", new PlainText("예약자 이름을 입력하세요."),
                     new PlainTextInputElement("reserve_name", new PlainText("이름")))
@@ -48,8 +51,8 @@ public class ReserveResponseFactory {
 
     private static StaticSelectElement generateMeetingRoomSelectElement() {
         return new StaticSelectElement(
-            new PlainText("회의실"),
-            "reserve_meetingroom",
+            new PlainText(MEETING_ROOM),
+            "reserve_meeting_room",
             new Option(new PlainText("회의실 1"), String.valueOf(1)),
             generateMeetingRoomSelectOptions()
         );
@@ -57,8 +60,8 @@ public class ReserveResponseFactory {
 
     private static List<Option> generateMeetingRoomSelectOptions() {
         List<Option> options = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
-            options.add(new Option(new PlainText("회의실 " + i), String.valueOf(i)));
+        for (int i = 1; i <= NUMBER_OF_MEETING_ROOM; i++) {
+            options.add(new Option(new PlainText(String.format("%s %d", MEETING_ROOM, i)), String.valueOf(i)));
         }
         return options;
     }

@@ -11,21 +11,29 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommonResponseFactory {
+    private static final String TIME = "시";
+    private static final String MINUTE = "분";
+    private static final int MIN_TIME = 10;
+    private static final int MAX_TIME = 21;
+    private static final int MIN_MINUTE = 0;
+    private static final int MAX_MINUTE = 50;
+    private static final int MINUTE_INTERVAL = 10;
+
     public static ActionsBlock generateTimePicker(String blockId, String timeActionId, String minuteActionId,
-                                                   int initialTime, int initialMinute) {
+                                                  int initialTime, int initialMinute) {
         return new ActionsBlock(
             blockId,
             Arrays.asList(
                 new StaticSelectElement(
-                    new PlainText("시"),
+                    new PlainText(TIME),
                     timeActionId,
-                    new Option(new PlainText(initialTime + "시"), String.valueOf(initialTime)),
+                    new Option(new PlainText(initialTime + TIME), String.valueOf(initialTime)),
                     generateTimeSelect()
                 ),
                 new StaticSelectElement(
-                    new PlainText("분"),
+                    new PlainText(MINUTE),
                     minuteActionId,
-                    new Option(new PlainText(initialMinute + "분"), String.valueOf(initialMinute)),
+                    new Option(new PlainText(initialMinute + MINUTE), String.valueOf(initialMinute)),
                     generateMinuteSelect()
                 )
             )
@@ -37,9 +45,9 @@ public class CommonResponseFactory {
             blockId,
             new PlainText("시간을 선택하세요."),
             new StaticSelectElement(
-                new PlainText("시"),
+                new PlainText(TIME),
                 timeActionId,
-                new Option(new PlainText(initialTime + "시"), String.valueOf(initialTime)),
+                new Option(new PlainText(initialTime + TIME), String.valueOf(initialTime)),
                 generateTimeSelect()
             )
         );
@@ -50,9 +58,9 @@ public class CommonResponseFactory {
             blockId,
             new PlainText("분을 선택하세요."),
             new StaticSelectElement(
-                new PlainText("분"),
+                new PlainText(MINUTE),
                 minuteActionId,
-                new Option(new PlainText(initialMinute + "분"), String.valueOf(initialMinute)),
+                new Option(new PlainText(initialMinute + MINUTE), String.valueOf(initialMinute)),
                 generateMinuteSelect()
             )
         );
@@ -60,16 +68,16 @@ public class CommonResponseFactory {
 
     private static List<Option> generateTimeSelect() {
         List<Option> options = new ArrayList<>();
-        for (int i = 10; i <= 21; i++) {
-            options.add(new Option(new PlainText(i + "시"), String.valueOf(i)));
+        for (int i = MIN_TIME; i <= MAX_TIME; i++) {
+            options.add(new Option(new PlainText(i + TIME), String.valueOf(i)));
         }
         return options;
     }
 
     private static List<Option> generateMinuteSelect() {
         List<Option> options = new ArrayList<>();
-        for (int i = 0; i <= 50; i += 10) {
-            options.add(new Option(new PlainText(i + "분"), String.valueOf(i)));
+        for (int i = MIN_MINUTE; i <= MAX_MINUTE; i += MINUTE_INTERVAL) {
+            options.add(new Option(new PlainText(i + MINUTE), String.valueOf(i)));
         }
         return options;
     }
