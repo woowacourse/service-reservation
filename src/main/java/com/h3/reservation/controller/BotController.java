@@ -7,7 +7,7 @@ import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.RetrieveModalUpdateResponse;
 import com.h3.reservation.slack.service.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class BotController {
     }
 
     @PostMapping(value = "/slack/interaction")
-    public ResponseEntity<ModalUpdateResponse> interaction(@RequestParam Map<String, String> req) throws IOException {
+    public ResponseEntity<RetrieveModalUpdateResponse> interaction(@RequestParam Map<String, String> req) throws IOException {
         JsonNode reqJson = objectMapper.readTree(req.get(PAYLOAD));
         switch (RequestType.of(reqJson.get(TYPE).asText())) {
             case BLOCK_ACTIONS:
