@@ -10,7 +10,7 @@ import java.util.List;
 public class StaticSelectElement extends Element {
     private PlainText placeholder;
     private String actionId;
-    private Option initial_option;
+    private Option initialOption;
     private List<Option> options;
 
     public StaticSelectElement() {
@@ -24,11 +24,11 @@ public class StaticSelectElement extends Element {
         this.options = options;
     }
 
-    public StaticSelectElement(PlainText placeholder, String actionId, Option initial_option, List<Option> options) {
+    public StaticSelectElement(PlainText placeholder, String actionId, Option initialOption, List<Option> options) {
         super(ElementType.STATIC_SELECT);
         this.placeholder = placeholder;
         this.actionId = actionId;
-        this.initial_option = initial_option;
+        this.initialOption = initialOption;
         this.options = options;
     }
 
@@ -40,8 +40,8 @@ public class StaticSelectElement extends Element {
         return actionId;
     }
 
-    public Option getInitial_option() {
-        return initial_option;
+    public Option getInitialOption() {
+        return initialOption;
     }
 
     public List<Option> getOptions() {

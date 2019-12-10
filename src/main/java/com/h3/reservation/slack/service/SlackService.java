@@ -1,7 +1,6 @@
 package com.h3.reservation.slack.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
@@ -41,7 +40,13 @@ public class SlackService {
     private static final String BASE_URL = "https://slack.com/api";
     private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
 
-    private final WebClient webClient = initWebClient();
+    private final ObjectMapper objectMapper;
+    private final WebClient webClient;
+
+    public SlackService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        this.webClient = initWebClient();
+    }
 
     public String verify(VerificationRequest dto) {
         return dto.getChallenge();
@@ -69,12 +74,9 @@ public class SlackService {
 
     private WebClient initWebClient() {
         ExchangeStrategies strategies = ExchangeStrategies.builder()
-                .codecs(config -> {
-                    ObjectMapper objectMapper = (new ObjectMapper()).setPropertyNamingStrategy(
-                            PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
-                    );
-                    config.customCodecs().encoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON));
-                }).build();
+                .codecs(config ->
+                    config.customCodecs().encoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON))
+                ).build();
         return WebClient.builder()
                 .exchangeStrategies(strategies)
                 .baseUrl(BASE_URL)

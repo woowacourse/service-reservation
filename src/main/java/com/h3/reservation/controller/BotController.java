@@ -1,10 +1,8 @@
 package com.h3.reservation.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
@@ -34,10 +32,11 @@ public class BotController {
     private static final String TYPE = "type";
     private static final String PAYLOAD = "payload";
 
+    private final ObjectMapper objectMapper;
     private final SlackService service;
-    private final ObjectMapper objectMapper = initObjectMapper();
 
-    public BotController(SlackService service) {
+    public BotController(ObjectMapper objectMapper, SlackService service) {
+        this.objectMapper = objectMapper;
         this.service = service;
     }
 
@@ -66,13 +65,6 @@ public class BotController {
             default:
                 return ResponseEntity.badRequest().build();
         }
-    }
-
-    private ObjectMapper initObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
-        return objectMapper;
     }
 
     private <T> T jsonToDto(JsonNode json, Class<T> type) throws JsonProcessingException {
