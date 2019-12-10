@@ -36,10 +36,10 @@ class SlackCalendarServiceTest {
     @Test
     void retrieve() {
         List<Event> googleEvents = new ArrayList<>();
-        googleEvents.add(createEvent("회의실1/희봉/프로젝트", "2019-12-10T10:30:00", "2019-12-10T12:00:00"));
-        googleEvents.add(createEvent("회의실1/코니/회고", "2019-12-10T13:00:00", "2019-12-10T15:30:00"));
-        googleEvents.add(createEvent("회의실2/도넛/굴러간다", "2019-12-10T11:00:00", "2019-12-10T12:00:00"));
-        googleEvents.add(createEvent("회의실3/버디/회의", "2019-12-10T17:00:00", "2019-12-10T18:00:00"));
+        googleEvents.add(createEvent("회의실1/희봉/프로젝트", "2019-12-10T10:30:00.000+09:00", "2019-12-10T12:00:00.000+09:00"));
+        googleEvents.add(createEvent("회의실1/코니/회고", "2019-12-10T13:00:00.000+09:00", "2019-12-10T15:30:00.000+09:00"));
+        googleEvents.add(createEvent("회의실2/도넛/굴러간다", "2019-12-10T11:00:00.000+09:00", "2019-12-10T12:00:00.000+09:00"));
+        googleEvents.add(createEvent("회의실3/버디/회의", "2019-12-10T17:00:00.000+09:00", "2019-12-10T18:00:00.000+09:00"));
 
         when(calendarService.findReservation(any(), any())).thenReturn(googleEvents);
         String date = "2019-12-10";
@@ -49,10 +49,10 @@ class SlackCalendarServiceTest {
 
         SlackCalendarRetrieveResponse response = slackCalendarService.retrieve(request);
         List<SlackCalendarEvent> slackCalendarEvents = new ArrayList<>();
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실1", "희봉", "프로젝트", "19:30", "21:00"));
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실1", "코니", "회고", "22:00", "00:30"));
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실2", "도넛", "굴러간다", "20:00", "21:00"));
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실3", "버디", "회의", "02:00", "03:00"));
+        slackCalendarEvents.add(new SlackCalendarEvent("회의실1", "희봉", "프로젝트", "10:30", "12:00"));
+        slackCalendarEvents.add(new SlackCalendarEvent("회의실1", "코니", "회고", "13:00", "15:30"));
+        slackCalendarEvents.add(new SlackCalendarEvent("회의실2", "도넛", "굴러간다", "11:00", "12:00"));
+        slackCalendarEvents.add(new SlackCalendarEvent("회의실3", "버디", "회의", "17:00", "18:00"));
 
         assertEquals(response.getSlackCalendarEvents(), slackCalendarEvents);
     }
