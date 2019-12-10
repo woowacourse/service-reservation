@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class ChangeResponseFactory {
     public static ChangeResponse of(String trigger_id) {
-        DatepickerElement datePicker = new DatepickerElement("change_datepicker");
+        DatepickerElement datePicker = new DatepickerElement("datepicker");
 
         ModalView modalView = new ModalView(
             "change",
@@ -19,9 +19,9 @@ public class ChangeResponseFactory {
             new PlainText("조회"),
             new PlainText("취소"),
             Arrays.asList(
-                new InputBlock("change_datepicker_block", new PlainText("조회할 날짜를 선택하세요."), datePicker),
-                new InputBlock("change_name_block", new PlainText("예약자 이름을 입력하세요."),
-                    new PlainTextInputElement("change_name", new PlainText("이름")))
+                new InputBlock("datepicker_block", new PlainText("변경/취소할 날짜를 선택하세요."), datePicker),
+                new InputBlock("name_block", new PlainText("예약자 이름을 입력하세요."),
+                    new PlainTextInputElement("name", new PlainText("이름")))
             )
         );
         return new ChangeResponse(trigger_id, modalView);

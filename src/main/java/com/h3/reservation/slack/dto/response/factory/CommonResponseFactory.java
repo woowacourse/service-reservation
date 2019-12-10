@@ -13,6 +13,10 @@ import java.util.List;
 public class CommonResponseFactory {
     private static final String TIME = "시";
     private static final String MINUTE = "분";
+    private static final String SUFFIX_TIME_BLOCK = "_time_block";
+    private static final String SUFFIX_TIME = "_time";
+    private static final String SUFFIX_MINUTE_BLOCK = "_minute_block";
+    private static final String SUFFIX_MINUTE = "_minute";
     private static final int MIN_TIME = 10;
     private static final int MAX_TIME = 21;
     private static final int MIN_MINUTE = 0;
@@ -40,51 +44,51 @@ public class CommonResponseFactory {
         );
     }
 
-    public static InputBlock generateTimePickerWithInitValue(String blockId, String timeActionId, int initialTime) {
+    public static InputBlock generateTimePickerWithInitValue(String prefix, int initialTime) {
         return new InputBlock(
-            blockId,
+            prefix + SUFFIX_TIME_BLOCK,
             new PlainText("시간을 선택하세요."),
             new StaticSelectElement(
                 new PlainText(TIME),
-                timeActionId,
+                prefix + SUFFIX_TIME,
                 new Option(new PlainText(initialTime + TIME), String.valueOf(initialTime)),
                 generateTimeSelect()
             )
         );
     }
 
-    public static InputBlock generateTimePicker(String blockId, String timeActionId) {
+    public static InputBlock generateTimePicker(String prefix) {
         return new InputBlock(
-            blockId,
+            prefix + SUFFIX_TIME_BLOCK,
             new PlainText("시간을 선택하세요."),
             new StaticSelectElement(
                 new PlainText(TIME),
-                timeActionId,
+                prefix + SUFFIX_TIME,
                 generateTimeSelect()
             )
         );
     }
 
-    public static InputBlock generateMinutePickerWithInitValue(String blockId, String minuteActionId, int initialMinute) {
+    public static InputBlock generateMinutePickerWithInitValue(String prefix, int initialMinute) {
         return new InputBlock(
-            blockId,
+            prefix + SUFFIX_MINUTE_BLOCK,
             new PlainText("분을 선택하세요."),
             new StaticSelectElement(
                 new PlainText(MINUTE),
-                minuteActionId,
+                prefix + SUFFIX_MINUTE,
                 new Option(new PlainText(initialMinute + MINUTE), String.valueOf(initialMinute)),
                 generateMinuteSelect()
             )
         );
     }
 
-    public static InputBlock generateMinutePicker(String blockId, String minuteActionId) {
+    public static InputBlock generateMinutePicker(String prefix) {
         return new InputBlock(
-            blockId,
+            prefix + SUFFIX_MINUTE_BLOCK,
             new PlainText("분을 선택하세요."),
             new StaticSelectElement(
                 new PlainText(MINUTE),
-                minuteActionId,
+                prefix + SUFFIX_MINUTE,
                 generateMinuteSelect()
             )
         );

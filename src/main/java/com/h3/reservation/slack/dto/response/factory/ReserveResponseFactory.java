@@ -17,10 +17,12 @@ import java.util.List;
 
 public class ReserveResponseFactory {
     private static final String MEETING_ROOM = "회의실";
+    private static final String PREFIX_START = "start";
+    private static final String PREFIX_END = "end";
     private static final int NUMBER_OF_MEETING_ROOM = 5;
 
     public static ReserveResponse of(String trigger_id) {
-        DatepickerElement datePicker = new DatepickerElement("reserve_datepicker");
+        DatepickerElement datePicker = new DatepickerElement("datepicker");
 
         ModalView modalView = new ModalView(
             "reserve",
@@ -28,23 +30,17 @@ public class ReserveResponseFactory {
             new PlainText("예약"),
             new PlainText("취소"),
             Arrays.asList(
-                new InputBlock("reserve_datepicker_block", new PlainText("예약할 날짜를 선택하세요."), datePicker),
+                new InputBlock("datepicker_block", new PlainText("예약할 날짜를 선택하세요."), datePicker),
                 new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요.*")),
-                CommonResponseFactory.generateTimePicker(
-                    "reserve_start_time_block", "reserve_start_time"),
-                CommonResponseFactory.generateMinutePicker(
-                    "reserve_start_minute_block", "reserve_start_minute"
-                ),
+                CommonResponseFactory.generateTimePicker(PREFIX_START),
+                CommonResponseFactory.generateMinutePicker(PREFIX_START),
                 new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요.*")),
-                CommonResponseFactory.generateTimePicker(
-                    "reserve_end_time_block", "reserve_end_time"),
-                CommonResponseFactory.generateMinutePicker(
-                    "reserve_end_minute_block", "reserve_end_minute"
-                ),
-                new InputBlock("reserve_meeting_room_block", new PlainText("회의실을 선택하세요."),
+                CommonResponseFactory.generateTimePicker(PREFIX_END),
+                CommonResponseFactory.generateMinutePicker(PREFIX_END),
+                new InputBlock("meeting_room_block", new PlainText("회의실을 선택하세요."),
                     generateMeetingRoomSelectElement()),
-                new InputBlock("reserve_name_block", new PlainText("예약자 이름을 입력하세요."),
-                    new PlainTextInputElement("reserve_name", new PlainText("이름")))
+                new InputBlock("name_block", new PlainText("예약자 이름을 입력하세요."),
+                    new PlainTextInputElement("name", new PlainText("이름")))
             )
         );
         return new ReserveResponse(trigger_id, modalView);
@@ -53,7 +49,7 @@ public class ReserveResponseFactory {
     private static StaticSelectElement generateMeetingRoomSelectElement() {
         return new StaticSelectElement(
             new PlainText(MEETING_ROOM),
-            "reserve_meeting_room",
+            "meeting_room",
             generateMeetingRoomSelectOptions()
         );
     }
