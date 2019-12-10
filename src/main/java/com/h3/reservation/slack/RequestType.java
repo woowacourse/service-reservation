@@ -11,5 +11,9 @@ public enum RequestType {
     BLOCK_ACTIONS,
     VIEW_SUBMISSION,
     APP_MENTION,
-    APP_HOME_OPENED
+    APP_HOME_OPENED;
+
+    public static RequestType get(String name) {
+        return valueOf(name.toUpperCase());
+    }
 }

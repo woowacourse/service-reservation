@@ -34,49 +34,51 @@ import java.util.List;
 public class SlackService {
     private static final Logger logger = LoggerFactory.getLogger(SlackService.class);
 
-    private static final String TOKEN = System.getenv("BOT_TOKEN");
-    private static final String AUTHORIZATION = "Bearer " + TOKEN;
+    private static final String BASE_URL = "https://slack.com/api";
+    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+
+    private final WebClient webClient = initWebClient();
 
     public String verify(VerificationRequest dto) {
         return dto.getChallenge();
     }
 
-    public void initMenu(EventCallbackRequest dto) {
-        String postUrl = "https://slack.com/api/chat.postMessage";
+    public void showMenu(EventCallbackRequest dto) {
+        String postUrl = "/chat.postMessage";
         send(postUrl, InitResponseFactory.of(dto.getChannel()));
     }
 
-    public void viewModal(BlockActionRequest dto) {
-        InitMenuType type = InitMenuType.valueOf(dto.getAction_id().toUpperCase());
+    public void showModal(BlockActionRequest dto) {
         String postUrl = "https://slack.com/api/views.open";
-        Object response = type.apply(dto.getTrigger_id());
-        send(postUrl, response);
-    }
-
-    private void send(String url, Object dto) {
-        WebClient webClient = WebClient
-            .builder()
-            .baseUrl(url)
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .defaultHeader(HttpHeaders.AUTHORIZATION, AUTHORIZATION)
-            .defaultHeader(HttpHeaders.ACCEPT_CHARSET, "UTF-8")
-            .build();
-
-        String response = webClient.post()
-            .body(BodyInserters.fromValue(dto))
-            .exchange().block().bodyToMono(String.class)
-            .block();
-        logger.debug("webclient response 응답 : {}", response);
+        send(postUrl, InitMenuType.get(dto.getAction_id()).apply(dto.getTrigger_id()));
     }
 
     public ModalUpdateResponse updateModal() {
         return new ModalUpdateResponse(
-            new ModalView(
-                new PlainText("조회하기"),
-                new PlainText("확인"),
-                generateDummyBlocks()
-            )
+                new ModalView(
+                        new PlainText("조회하기"),
+                        new PlainText("확인"),
+                        generateDummyBlocks()
+                )
         );
+    }
+
+    private WebClient initWebClient() {
+        return WebClient.builder()
+                .baseUrl(BASE_URL)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.AUTHORIZATION, TOKEN)
+                .defaultHeader(HttpHeaders.ACCEPT_CHARSET, "UTF-8")
+                .build();
+    }
+
+    private void send(String url, Object dto) {
+        String response = webClient.post()
+            .uri(url)
+            .body(BodyInserters.fromValue(dto))
+            .exchange().block().bodyToMono(String.class)
+            .block();
+        logger.debug("WebClient Response: {}", response);
     }
 
     private List<Block> generateDummyBlocks() {
