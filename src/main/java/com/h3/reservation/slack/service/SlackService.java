@@ -1,5 +1,7 @@
 package com.h3.reservation.slack.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
@@ -17,8 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Arrays;
@@ -49,8 +53,8 @@ public class SlackService {
     }
 
     public void showModal(BlockActionRequest dto) {
-        String postUrl = "https://slack.com/api/views.open";
-        send(postUrl, InitMenuType.get(dto.getAction_id()).apply(dto.getTrigger_id()));
+        String postUrl = "/views.open";
+        send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
     }
 
     public ModalUpdateResponse updateModal() {
@@ -64,11 +68,17 @@ public class SlackService {
     }
 
     private WebClient initWebClient() {
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(config -> {
+                    ObjectMapper objectMapper = (new ObjectMapper()).setPropertyNamingStrategy(
+                            PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+                    );
+                    config.customCodecs().encoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON));
+                }).build();
         return WebClient.builder()
+                .exchangeStrategies(strategies)
                 .baseUrl(BASE_URL)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, TOKEN)
-                .defaultHeader(HttpHeaders.ACCEPT_CHARSET, "UTF-8")
                 .build();
     }
 

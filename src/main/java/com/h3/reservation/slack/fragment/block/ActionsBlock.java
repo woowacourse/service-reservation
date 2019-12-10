@@ -10,16 +10,16 @@ import java.util.List;
  * @date 2019-12-04
  */
 public class ActionsBlock extends Block {
-    private String block_id;
+    private String blockId;
     private List<Element> elements;
 
     public ActionsBlock() {
         super(BlockType.ACTIONS);
     }
 
-    public ActionsBlock(String block_id, List<Element> elements) {
+    public ActionsBlock(String blockId, List<Element> elements) {
         super(BlockType.ACTIONS);
-        this.block_id = block_id;
+        this.blockId = blockId;
         this.elements = elements;
     }
 
@@ -27,7 +27,7 @@ public class ActionsBlock extends Block {
         return elements;
     }
 
-    public String getBlock_id() {
-        return block_id;
+    public String getBlockId() {
+        return blockId;
     }
 }

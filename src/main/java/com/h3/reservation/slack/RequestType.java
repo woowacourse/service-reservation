@@ -13,7 +13,7 @@ public enum RequestType {
     APP_MENTION,
     APP_HOME_OPENED;
 
-    public static RequestType get(String name) {
+    public static RequestType of(String name) {
         return valueOf(name.toUpperCase());
     }
 }

@@ -6,18 +6,18 @@ package com.h3.reservation.slack.fragment.element;
  * @date 2019-12-04
  */
 public class DatepickerElement extends Element {
-    private String action_id;
+    private String actionId;
 
     public DatepickerElement() {
         super(ElementType.DATEPICKER);
     }
 
-    public DatepickerElement(String action_id) {
+    public DatepickerElement(String actionId) {
         super(ElementType.DATEPICKER);
-        this.action_id = action_id;
+        this.actionId = actionId;
     }
 
-    public String getAction_id() {
-        return action_id;
+    public String getActionId() {
+        return actionId;
     }
 }

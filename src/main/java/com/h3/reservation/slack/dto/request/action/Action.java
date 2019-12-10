@@ -9,29 +9,29 @@ import com.h3.reservation.slack.fragment.composition.text.Text;
  * @date 2019-12-03
  */
 public class Action {
-    private String action_id;
-    private String block_id;
+    private String actionId;
+    private String blockId;
     private Text text;
     private String value;
-    private String action_ts;
+    private String actionTs;
 
     public Action() {
     }
 
-    public Action(String action_id, String block_id, Text text, String value, String action_ts) {
-        this.action_id = action_id;
-        this.block_id = block_id;
+    public Action(String actionId, String blockId, Text text, String value, String actionTs) {
+        this.actionId = actionId;
+        this.blockId = blockId;
         this.text = text;
         this.value = value;
-        this.action_ts = action_ts;
+        this.actionTs = actionTs;
     }
 
-    public String getAction_id() {
-        return action_id;
+    public String getActionId() {
+        return actionId;
     }
 
-    public String getBlock_id() {
-        return block_id;
+    public String getBlockId() {
+        return blockId;
     }
 
     public Text getText() {
@@ -42,18 +42,18 @@ public class Action {
         return value;
     }
 
-    public String getAction_ts() {
-        return action_ts;
+    public String getActionTs() {
+        return actionTs;
     }
 
     @Override
     public String toString() {
         return "Action{" +
-            "action_id='" + action_id + '\'' +
-            ", block_id='" + block_id + '\'' +
+            "action_id='" + actionId + '\'' +
+            ", block_id='" + blockId + '\'' +
             ", text=" + text +
             ", value='" + value + '\'' +
-            ", action_ts='" + action_ts + '\'' +
+            ", action_ts='" + actionTs + '\'' +
             '}';
     }
 }

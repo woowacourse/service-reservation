@@ -10,27 +10,27 @@ import java.util.List;
  * @date 2019-12-03
  */
 public class BlockActionRequest {
-    private String trigger_id;
-    private String response_url;
+    private String triggerId;
+    private String responseUrl;
     private List<Action> actions;
     private String type;
 
     public BlockActionRequest() {
     }
 
-    public BlockActionRequest(String trigger_id, String response_url, List<Action> actions, String type) {
-        this.trigger_id = trigger_id;
-        this.response_url = response_url;
+    public BlockActionRequest(String triggerId, String responseUrl, List<Action> actions, String type) {
+        this.triggerId = triggerId;
+        this.responseUrl = responseUrl;
         this.actions = actions;
         this.type = type;
     }
 
-    public String getTrigger_id() {
-        return trigger_id;
+    public String getTriggerId() {
+        return triggerId;
     }
 
-    public String getResponse_url() {
-        return response_url;
+    public String getResponseUrl() {
+        return responseUrl;
     }
 
     public List<Action> getActions() {
@@ -41,15 +41,15 @@ public class BlockActionRequest {
         return type;
     }
 
-    public String getAction_id() {
-        return actions.get(0).getAction_id();
+    public String getActionId() {
+        return actions.get(0).getActionId();
     }
 
     @Override
     public String toString() {
         return "BlockActionRequest{" +
-            "trigger_id='" + trigger_id + '\'' +
-            ", response_url='" + response_url + '\'' +
+            "trigger_id='" + triggerId + '\'' +
+            ", response_url='" + responseUrl + '\'' +
             ", actions=" + actions +
             ", type='" + type + '\'' +
             '}';

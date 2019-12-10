@@ -10,7 +10,7 @@ import com.h3.reservation.slack.fragment.view.ModalView;
 import java.util.Arrays;
 
 public class ChangeResponseFactory {
-    public static ChangeResponse of(String trigger_id) {
+    public static ChangeResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("change_datepicker");
 
         ModalView modalView = new ModalView(
@@ -23,6 +23,6 @@ public class ChangeResponseFactory {
                     new PlainTextInputElement("change_name", new PlainText("이름")))
             )
         );
-        return new ChangeResponse(trigger_id, modalView);
+        return new ChangeResponse(triggerId, modalView);
     }
 }

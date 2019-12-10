@@ -18,7 +18,7 @@ public enum InitMenuType {
 
     private Function<String, Object> function;
 
-    public static InitMenuType get(String name) {
+    public static InitMenuType of(String name) {
         return valueOf(name.toUpperCase());
     }
 
