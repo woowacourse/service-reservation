@@ -1,10 +1,12 @@
 package com.h3.reservation.slack.fragment.element;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.h3.reservation.slack.fragment.composition.Option;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StaticSelectElement extends Element {
     private PlainText placeholder;
     private String action_id;
@@ -13,6 +15,13 @@ public class StaticSelectElement extends Element {
 
     public StaticSelectElement() {
         super(ElementType.STATIC_SELECT);
+    }
+
+    public StaticSelectElement(PlainText placeholder, String action_id, List<Option> options) {
+        super(ElementType.STATIC_SELECT);
+        this.placeholder = placeholder;
+        this.action_id = action_id;
+        this.options = options;
     }
 
     public StaticSelectElement(PlainText placeholder, String action_id, Option initial_option, List<Option> options) {

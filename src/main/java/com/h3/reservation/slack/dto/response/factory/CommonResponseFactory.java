@@ -40,7 +40,7 @@ public class CommonResponseFactory {
         );
     }
 
-    public static InputBlock generateTimePicker(String blockId, String timeActionId, int initialTime) {
+    public static InputBlock generateTimePickerWithInitValue(String blockId, String timeActionId, int initialTime) {
         return new InputBlock(
             blockId,
             new PlainText("시간을 선택하세요."),
@@ -53,7 +53,19 @@ public class CommonResponseFactory {
         );
     }
 
-    public static InputBlock generateMinutePicker(String blockId, String minuteActionId, int initialMinute) {
+    public static InputBlock generateTimePicker(String blockId, String timeActionId) {
+        return new InputBlock(
+            blockId,
+            new PlainText("시간을 선택하세요."),
+            new StaticSelectElement(
+                new PlainText(TIME),
+                timeActionId,
+                generateTimeSelect()
+            )
+        );
+    }
+
+    public static InputBlock generateMinutePickerWithInitValue(String blockId, String minuteActionId, int initialMinute) {
         return new InputBlock(
             blockId,
             new PlainText("분을 선택하세요."),
@@ -61,6 +73,18 @@ public class CommonResponseFactory {
                 new PlainText(MINUTE),
                 minuteActionId,
                 new Option(new PlainText(initialMinute + MINUTE), String.valueOf(initialMinute)),
+                generateMinuteSelect()
+            )
+        );
+    }
+
+    public static InputBlock generateMinutePicker(String blockId, String minuteActionId) {
+        return new InputBlock(
+            blockId,
+            new PlainText("분을 선택하세요."),
+            new StaticSelectElement(
+                new PlainText(MINUTE),
+                minuteActionId,
                 generateMinuteSelect()
             )
         );

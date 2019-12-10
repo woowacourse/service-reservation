@@ -26,15 +26,15 @@ public class RetrieveResponseFactory {
             Arrays.asList(
                 new InputBlock("retrieve_datepicker_block", new PlainText("조회할 날짜를 선택하세요."), datePicker),
                 new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요.*")),
-                CommonResponseFactory.generateTimePicker(
+                CommonResponseFactory.generateTimePickerWithInitValue(
                     "retrieve_start_time_block", "retrieve_start_time", MIN_TIME),
-                CommonResponseFactory.generateMinutePicker(
+                CommonResponseFactory.generateMinutePickerWithInitValue(
                     "retrieve_start_minute_block", "retrieve_start_minute", MIN_MINUTE
                 ),
                 new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요.*")),
-                CommonResponseFactory.generateTimePicker(
+                CommonResponseFactory.generateTimePickerWithInitValue(
                     "retrieve_end_time_block", "retrieve_end_time", MAX_TIME),
-                CommonResponseFactory.generateMinutePicker(
+                CommonResponseFactory.generateMinutePickerWithInitValue(
                     "retrieve_end_minute_block", "retrieve_end_minute", MAX_MINUTE
                 )
             )
