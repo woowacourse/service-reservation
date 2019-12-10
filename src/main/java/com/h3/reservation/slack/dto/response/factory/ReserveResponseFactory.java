@@ -25,11 +25,11 @@ public class ReserveResponseFactory {
             new PlainText("취소"),
             Arrays.asList(
                 new InputBlock("reserve_datepicker_block", new PlainText("예약할 날짜를 선택하세요."), datePicker),
-                new SectionBlock("reserve_start_time_label_block", new MrkdwnText("*시작 시간을 선택하세요.*")),
+                new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요.*")),
                 CommonResponseFactory.generateTimePicker(
                     "reserve_start_timepicker_block", "reserve_start_time", "reserve_start_minute", 10, 0
                 ),
-                new SectionBlock("reserve_end_time_label_block", new MrkdwnText("*종료 시간을 선택하세요.*")),
+                new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요.*")),
                 CommonResponseFactory.generateTimePicker(
                     "reserve_end_timepicker_block", "reserve_end_time", "reserve_end_minute", 12, 0
                 ),

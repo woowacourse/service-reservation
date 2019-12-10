@@ -26,4 +26,8 @@ public class ActionsBlock extends Block {
     public List<Element> getElements() {
         return elements;
     }
+
+    public String getBlock_id() {
+        return block_id;
+    }
 }

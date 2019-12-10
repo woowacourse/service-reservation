@@ -1,8 +1,8 @@
 package com.h3.reservation.slack.fragment.block;
 
 
-import com.h3.reservation.slack.fragment.element.Element;
 import com.h3.reservation.slack.fragment.composition.text.Text;
+import com.h3.reservation.slack.fragment.element.Element;
 
 /**
  * @author heebg
@@ -31,5 +31,9 @@ public class InputBlock extends Block {
 
     public Element getElement() {
         return element;
+    }
+
+    public String getBlock_id() {
+        return block_id;
     }
 }

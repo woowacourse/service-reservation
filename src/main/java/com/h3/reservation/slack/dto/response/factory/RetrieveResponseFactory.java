@@ -20,11 +20,11 @@ public class RetrieveResponseFactory {
             new PlainText("취소"),
             Arrays.asList(
                 new InputBlock("retrieve_datepicker_block", new PlainText("조회할 날짜를 선택하세요."), datePicker),
-                new SectionBlock("retrieve_start_time_label_block", new MrkdwnText("*시작 시간을 선택하세요.*")),
+                new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요.*")),
                 CommonResponseFactory.generateTimePicker(
                     "retrieve_start_timepicker_block", "retrieve_start_time", "retrieve_start_minute", 10, 0
                 ),
-                new SectionBlock("retrieve_end_time_label_block", new MrkdwnText("*종료 시간을 선택하세요.*")),
+                new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요.*")),
                 CommonResponseFactory.generateTimePicker(
                     "retrieve_end_timepicker_block", "retrieve_end_time", "retrieve_end_minute", 21, 50
                 )

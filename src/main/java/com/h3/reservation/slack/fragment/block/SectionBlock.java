@@ -13,7 +13,6 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SectionBlock extends Block {
-    private String block_id;
     private Text text;
     private List<Text> fields;
 
@@ -21,15 +20,13 @@ public class SectionBlock extends Block {
         super(BlockType.SECTION);
     }
 
-    public SectionBlock(String block_id, Text text) {
+    public SectionBlock(Text text) {
         super(BlockType.SECTION);
-        this.block_id = block_id;
         this.text = text;
     }
 
-    public SectionBlock(String block_id, Text text, List<Text> fields) {
+    public SectionBlock(Text text, List<Text> fields) {
         super(BlockType.SECTION);
-        this.block_id = block_id;
         this.text = text;
         this.fields = fields;
     }

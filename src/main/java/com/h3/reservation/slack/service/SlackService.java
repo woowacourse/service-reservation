@@ -94,19 +94,16 @@ public class SlackService {
     private List<Block> generateDummyBlocks() {
         return Arrays.asList(
             new SectionBlock(
-                "retrieve_result_title_block",
                 new MrkdwnText("2019-12-05 12:10-14:10 회의실 예약 현황입니다.")
             ),
             new DividerBlock(),
             new ContextBlock(
-                "retrieve_result_meeting_room_1_block",
                 Collections.singletonList(
                     new MrkdwnText("*회의실 1*")
                 )
             ),
             new DividerBlock(),
             new SectionBlock(
-                "retrieve_result",
                 new MrkdwnText("*프로젝트 회의*"),
                 Arrays.asList(
                     new PlainText("버디"),
@@ -114,7 +111,6 @@ public class SlackService {
                 )
             ),
             new SectionBlock(
-                "retrieve_result",
                 new MrkdwnText("*프로젝트 회의*"),
                 Arrays.asList(
                     new PlainText("희봉"),
@@ -123,14 +119,12 @@ public class SlackService {
             ),
             new DividerBlock(),
             new ContextBlock(
-                "retrieve_result_meeting_room_2_block",
                 Collections.singletonList(
                     new MrkdwnText("*회의실 2*")
                 )
             ),
             new DividerBlock(),
             new SectionBlock(
-                "retrieve_result",
                 new MrkdwnText("*스터디*"),
                 Arrays.asList(
                     new PlainText("닉"),
@@ -138,7 +132,6 @@ public class SlackService {
                 )
             ),
             new SectionBlock(
-                "retrieve_result",
                 new MrkdwnText("*프로젝트 회의*"),
                 Arrays.asList(
                     new PlainText("도넛"),
