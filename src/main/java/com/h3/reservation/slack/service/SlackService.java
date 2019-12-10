@@ -5,10 +5,7 @@ import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
-import com.h3.reservation.slack.dto.response.factory.ChangeResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.ReserveResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.RetrieveResponseFactory;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.ContextBlock;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
@@ -52,16 +49,7 @@ public class SlackService {
     public void viewModal(BlockActionRequest dto) {
         InitMenuType type = InitMenuType.valueOf(dto.getAction_id().toUpperCase());
         String postUrl = "https://slack.com/api/views.open";
-        Object response = new PlainText(dto.getAction_id());
-        if (InitMenuType.RETRIEVE.equals(type)) {
-            response = RetrieveResponseFactory.of(dto.getTrigger_id());
-        }
-        if (InitMenuType.RESERVE.equals(type)) {
-            response = ReserveResponseFactory.of(dto.getTrigger_id());
-        }
-        if (InitMenuType.CHANGE.equals(type)) {
-            response = ChangeResponseFactory.of(dto.getTrigger_id());
-        }
+        Object response = type.apply(dto.getTrigger_id());
         send(postUrl, response);
     }
 
