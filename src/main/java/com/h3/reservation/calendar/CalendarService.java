@@ -56,13 +56,17 @@ public class CalendarService {
         EventDateTime startTime = fetchingDate.toEventDateTime(fetchingDate.getStartDateTime());
         EventDateTime endTime = fetchingDate.toEventDateTime(fetchingDate.getEndDateTime());
 
-        Event event = new Event()
-                .setStart(startTime)
-                .setEnd(endTime)
-                .setSummary(room + "/" + attendee + "/" + description);
+        Event event = createEvent(room, attendee, description, startTime, endTime);
 
         calendar.events().insert(calendarId.getId(), event);
         return event;
+    }
+
+    private Event createEvent(MeetingRoom room, String attendee, String description, EventDateTime startTime, EventDateTime endTime) {
+        return new Event()
+                .setStart(startTime)
+                .setEnd(endTime)
+                .setSummary(room + "/" + attendee + "/" + description);
     }
 
     private void checkValidReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {

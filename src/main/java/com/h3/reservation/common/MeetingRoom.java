@@ -1,5 +1,7 @@
 package com.h3.reservation.common;
 
+import java.util.Arrays;
+
 public enum MeetingRoom {
     ROOM1("회의실1"),
     ROOM2("회의실2"),
@@ -12,6 +14,13 @@ public enum MeetingRoom {
 
     MeetingRoom(String name) {
         this.name = name;
+    }
+
+    public static MeetingRoom findByName(String name) {
+        return Arrays.stream(values())
+                .filter(room -> room.name.equals(name))
+                .findFirst()
+                .orElse(NONE);
     }
 
     public String getName() {
