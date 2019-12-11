@@ -9,6 +9,7 @@ import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
 import com.h3.reservation.common.MeetingRoom;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class CalendarService {
+
+    @Value("${calendar.summary.delimiter:/}")
+    private String summaryDelimiter;
 
     private Calendar calendar;
 
@@ -66,7 +70,7 @@ public class CalendarService {
         return new Event()
                 .setStart(startTime)
                 .setEnd(endTime)
-                .setSummary(room + "/" + attendee + "/" + description);
+                .setSummary(room + summaryDelimiter + attendee + summaryDelimiter + description);
     }
 
     private void checkValidReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {

@@ -24,12 +24,11 @@ public class CalendarEvents {
     }
 
     public List<MeetingRoom> findMeetingRooms() {
-        List<MeetingRoom> rooms = findSummaries().stream()
+        return findSummaries().stream()
                 .map(SummaryParser::parse)
                 .map(l -> l.get(INDEX_OF_MEETING_ROOM))
                 .map(MeetingRoom::findByName)
                 .collect(Collectors.toList());
-        return rooms;
     }
 
     public int size() {
