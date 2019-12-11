@@ -5,6 +5,7 @@ import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
 import com.h3.reservation.slack.fragment.block.Block;
@@ -62,13 +63,14 @@ public class SlackService {
         send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
     }
 
-    public ModalUpdateResponse updateModal() {
+    public ModalUpdateResponse updateModal(RetrieveRequest dto) {
         return new ModalUpdateResponse(
-                new ModalView(
-                        new PlainText("조회하기"),
-                        new PlainText("확인"),
-                        generateDummyBlocks()
-                )
+            new ModalView(
+                "retrieve_result",
+                new PlainText("조회하기"),
+                new PlainText("확인"),
+                generateDummyBlocks()
+            )
         );
     }
 
