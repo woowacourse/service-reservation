@@ -1,6 +1,6 @@
 package com.h3.reservation.slack.dto.response.factory;
 
-import com.h3.reservation.slack.dto.response.RetrieveModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.ContextBlock;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
@@ -8,8 +8,8 @@ import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.view.ModalView;
-import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.DateTime;
+import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ import static java.util.stream.Collectors.groupingBy;
  * @date 2019-12-10
  */
 public class RetrieveModalUpdateResponseFactory {
-    public static RetrieveModalUpdateResponse of(DateTime retrieveRangeDateTime, Reservations reservations) {
-        return new RetrieveModalUpdateResponse(
+    public static ModalUpdateResponse of(DateTime retrieveRangeDateTime, Reservations reservations) {
+        return new ModalUpdateResponse(
             new ModalView(
                 "retrieve_result",
                 new PlainText("조회하기"),

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @version 1.0
  * @date 2019-12-10
  */
-class RetrieveModalUpdateResponseFactoryTest {
+class ModalUpdateResponseFactoryTest {
     @Test
     @DisplayName("room을 key로 맵을 만들었을 때 room이 정렬이 되었는지 확인하는 학습 테스트")
     void groupby() {

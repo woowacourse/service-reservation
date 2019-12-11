@@ -5,9 +5,13 @@ import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
-import com.h3.reservation.slack.dto.response.RetrieveModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.factory.ChangeUpdateModalResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.ReserveModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.RetrieveModalUpdateResponseFactory;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservations;
@@ -60,7 +64,7 @@ public class SlackService {
         send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
     }
 
-    public RetrieveModalUpdateResponse updateModal(RetrieveRequest request) {
+    public ModalUpdateResponse updateRetrieveModal(RetrieveRequest request) {
         DateTime retrieveRangeDateTime = DateTime.of(request.getDate()
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
@@ -70,6 +74,14 @@ public class SlackService {
 
     private LocalTime generateLocalTime(String hour, String minute) {
         return LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
+    }
+
+    public ModalUpdateResponse updateReservationModal(ReserveRequest request) {
+        return ReserveModalUpdateResponseFactory.of();
+    }
+
+    public ModalUpdateResponse updateChangeModal(ChangeRequest request) {
+        return ChangeUpdateModalResponseFactory.of();
     }
 
     private WebClient initWebClient() {
