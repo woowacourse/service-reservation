@@ -36,4 +36,8 @@ public class RetrieveView {
     public State getState() {
         return state;
     }
+
+    public RetrieveValues getValues() {
+        return state.getValues();
+    }
 }
