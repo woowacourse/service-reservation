@@ -8,9 +8,12 @@ import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.element.DatepickerElement;
 import com.h3.reservation.slack.fragment.view.ModalView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 public class RetrieveResponseFactory {
+    private static final String INIT_DATE_PATTERN = "yyyy-MM-dd";
     private static final String PREFIX_START = "start";
     private static final String PREFIX_END = "end";
     private static final int MIN_HOUR = 10;
@@ -19,7 +22,7 @@ public class RetrieveResponseFactory {
     private static final int MAX_MINUTE = 50;
 
     public static RetrieveResponse of(String triggerId) {
-        DatepickerElement datePicker = new DatepickerElement("datepicker");
+        DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
             "retrieve",
@@ -37,5 +40,9 @@ public class RetrieveResponseFactory {
             )
         );
         return new RetrieveResponse(triggerId, modalView);
+    }
+
+    private static String generateNowDate() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(INIT_DATE_PATTERN));
     }
 }
