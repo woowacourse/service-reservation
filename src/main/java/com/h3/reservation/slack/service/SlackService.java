@@ -1,5 +1,6 @@
 package com.h3.reservation.slack.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
@@ -17,8 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Arrays;
@@ -34,39 +37,29 @@ import java.util.List;
 public class SlackService {
     private static final Logger logger = LoggerFactory.getLogger(SlackService.class);
 
-    private static final String TOKEN = System.getenv("BOT_TOKEN");
-    private static final String AUTHORIZATION = "Bearer " + TOKEN;
+    private static final String BASE_URL = "https://slack.com/api";
+    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+
+    private final ObjectMapper objectMapper;
+    private final WebClient webClient;
+
+    public SlackService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        this.webClient = initWebClient();
+    }
 
     public String verify(VerificationRequest dto) {
         return dto.getChallenge();
     }
 
-    public void initMenu(EventCallbackRequest dto) {
-        String postUrl = "https://slack.com/api/chat.postMessage";
+    public void showMenu(EventCallbackRequest dto) {
+        String postUrl = "/chat.postMessage";
         send(postUrl, InitResponseFactory.of(dto.getChannel()));
     }
 
-    public void viewModal(BlockActionRequest dto) {
-        InitMenuType type = InitMenuType.valueOf(dto.getAction_id().toUpperCase());
-        String postUrl = "https://slack.com/api/views.open";
-        Object response = type.apply(dto.getTrigger_id());
-        send(postUrl, response);
-    }
-
-    private void send(String url, Object dto) {
-        WebClient webClient = WebClient
-            .builder()
-            .baseUrl(url)
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .defaultHeader(HttpHeaders.AUTHORIZATION, AUTHORIZATION)
-            .defaultHeader(HttpHeaders.ACCEPT_CHARSET, "UTF-8")
-            .build();
-
-        String response = webClient.post()
-            .body(BodyInserters.fromValue(dto))
-            .exchange().block().bodyToMono(String.class)
-            .block();
-        logger.debug("webclient response 응답 : {}", response);
+    public void showModal(BlockActionRequest dto) {
+        String postUrl = "/views.open";
+        send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
     }
 
     public ModalUpdateResponse updateModal() {
@@ -78,6 +71,27 @@ public class SlackService {
                 generateDummyBlocks()
             )
         );
+    }
+
+    private WebClient initWebClient() {
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(config ->
+                    config.customCodecs().encoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON))
+                ).build();
+        return WebClient.builder()
+                .exchangeStrategies(strategies)
+                .baseUrl(BASE_URL)
+                .defaultHeader(HttpHeaders.AUTHORIZATION, TOKEN)
+                .build();
+    }
+
+    private void send(String url, Object dto) {
+        String response = webClient.post()
+            .uri(url)
+            .body(BodyInserters.fromValue(dto))
+            .exchange().block().bodyToMono(String.class)
+            .block();
+        logger.debug("WebClient Response: {}", response);
     }
 
     private List<Block> generateDummyBlocks() {

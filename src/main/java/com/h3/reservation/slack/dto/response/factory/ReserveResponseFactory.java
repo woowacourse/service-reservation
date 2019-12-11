@@ -21,7 +21,7 @@ public class ReserveResponseFactory {
     private static final String PREFIX_END = "end";
     private static final int NUMBER_OF_MEETING_ROOM = 5;
 
-    public static ReserveResponse of(String trigger_id) {
+    public static ReserveResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("datepicker");
 
         ModalView modalView = new ModalView(
@@ -43,7 +43,7 @@ public class ReserveResponseFactory {
                     new PlainTextInputElement("name", new PlainText("이름")))
             )
         );
-        return new ReserveResponse(trigger_id, modalView);
+        return new ReserveResponse(triggerId, modalView);
     }
 
     private static StaticSelectElement generateMeetingRoomSelectElement() {

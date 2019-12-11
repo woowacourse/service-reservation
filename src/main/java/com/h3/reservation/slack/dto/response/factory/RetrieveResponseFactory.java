@@ -18,7 +18,7 @@ public class RetrieveResponseFactory {
     private static final int MIN_MINUTE = 0;
     private static final int MAX_MINUTE = 50;
 
-    public static RetrieveResponse of(String trigger_id) {
+    public static RetrieveResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("datepicker");
 
         ModalView modalView = new ModalView(
@@ -38,6 +38,6 @@ public class RetrieveResponseFactory {
                 )
             )
         );
-        return new RetrieveResponse(trigger_id, modalView);
+        return new RetrieveResponse(triggerId, modalView);
     }
 }

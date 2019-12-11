@@ -18,6 +18,10 @@ public enum InitMenuType {
 
     private Function<String, Object> function;
 
+    public static InitMenuType of(String name) {
+        return valueOf(name.toUpperCase());
+    }
+
     InitMenuType(Function<String, Object> function) {
         this.function = function;
     }

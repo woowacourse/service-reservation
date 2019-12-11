@@ -10,7 +10,7 @@ import com.h3.reservation.slack.fragment.element.Element;
  * @date 2019-12-04
  */
 public class InputBlock extends Block {
-    private String block_id;
+    private String blockId;
     private Text label;
     private Element element;
 
@@ -18,9 +18,9 @@ public class InputBlock extends Block {
         super(BlockType.INPUT);
     }
 
-    public InputBlock(String block_id, Text label, Element element) {
+    public InputBlock(String blockId, Text label, Element element) {
         super(BlockType.INPUT);
-        this.block_id = block_id;
+        this.blockId = blockId;
         this.label = label;
         this.element = element;
     }
@@ -33,7 +33,7 @@ public class InputBlock extends Block {
         return element;
     }
 
-    public String getBlock_id() {
-        return block_id;
+    public String getBlockId() {
+        return blockId;
     }
 }
