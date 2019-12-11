@@ -5,6 +5,7 @@ import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.RetrieveModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.RetrieveModalUpdateResponseFactory;
@@ -57,7 +58,17 @@ public class SlackService {
         send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
     }
 
-    public RetrieveModalUpdateResponse updateModal() {
+//    public ModalUpdateResponse updateModal(RetrieveRequest dto) {
+//        return new ModalUpdateResponse(
+//            new ModalView(
+//                "retrieve_result",
+//                new PlainText("조회하기"),
+//                new PlainText("확인"),
+//                generateDummyBlocks()
+//            )
+//        );
+
+    public RetrieveModalUpdateResponse updateModal(RetrieveRequest dto) {
         EventDateTime retrieveRangeDateTime = EventDateTime.of("2019-12-10", "10:00", "18:00");
         Events events = slackCalendarService.retrieve(retrieveRangeDateTime);
         return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, events);

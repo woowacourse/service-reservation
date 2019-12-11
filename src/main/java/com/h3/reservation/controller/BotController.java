@@ -7,6 +7,7 @@ import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.RetrieveModalUpdateResponse;
 import com.h3.reservation.slack.service.SlackService;
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public class BotController {
                 service.showModal(jsonToDto(reqJson, BlockActionRequest.class));
                 return ResponseEntity.ok().build();
             case VIEW_SUBMISSION:
-                return ResponseEntity.ok(service.updateModal());
+                return ResponseEntity.ok(service.updateModal(jsonToDto(reqJson, RetrieveRequest.class)));
             default:
                 return ResponseEntity.badRequest().build();
         }

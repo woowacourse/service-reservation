@@ -30,6 +30,7 @@ public class RetrieveModalUpdateResponseFactory {
     public static RetrieveModalUpdateResponse of(EventDateTime retrieveRangeDateTime, Events events) {
         return new RetrieveModalUpdateResponse(
             new ModalView(
+                "retrieve_result",
                 new PlainText("조회하기"),
                 new PlainText("확인"),
                 generateBlocks(retrieveRangeDateTime, events)
