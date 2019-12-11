@@ -18,19 +18,19 @@ public class RetrieveView {
         }
     }
 
-    private String callback_id;
+    private String callbackId;
     private State state;
 
     public RetrieveView() {
     }
 
-    public RetrieveView(String callback_id, State state) {
-        this.callback_id = callback_id;
+    public RetrieveView(String callbackId, State state) {
+        this.callbackId = callbackId;
         this.state = state;
     }
 
-    public String getCallback_id() {
-        return callback_id;
+    public String getCallbackId() {
+        return callbackId;
     }
 
     public State getState() {

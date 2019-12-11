@@ -1,16 +1,16 @@
 package com.h3.reservation.slack.dto.request.viewsubmission.values.block;
 
 public class StartTimeBlock {
-    private StartTime start_time;
+    private StartTime startTime;
 
     public StartTimeBlock() {
     }
 
-    public StartTimeBlock(StartTime start_time) {
-        this.start_time = start_time;
+    public StartTimeBlock(StartTime startTime) {
+        this.startTime = startTime;
     }
 
-    public StartTime getStart_time() {
-        return start_time;
+    public StartTime getStartTime() {
+        return startTime;
     }
 }

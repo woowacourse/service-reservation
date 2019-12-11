@@ -2,17 +2,17 @@ package com.h3.reservation.slack.dto.request.viewsubmission.values.block;
 
 public class DatepickerBlock {
     class Datepicker {
-        private String selected_date;
+        private String selectedDate;
 
         public Datepicker() {
         }
 
-        public Datepicker(String selected_date) {
-            this.selected_date = selected_date;
+        public Datepicker(String selectedDate) {
+            this.selectedDate = selectedDate;
         }
 
-        public String getSelected_date() {
-            return selected_date;
+        public String getSelectedDate() {
+            return selectedDate;
         }
     }
 
@@ -29,7 +29,7 @@ public class DatepickerBlock {
         return datepicker;
     }
 
-    public String getSelected_date() {
-        return datepicker.getSelected_date();
+    public String getSelectedDate() {
+        return datepicker.getSelectedDate();
     }
 }

@@ -1,16 +1,16 @@
 package com.h3.reservation.slack.dto.request.viewsubmission.values.block;
 
 public class EndMinuteBlock {
-    private EndMinute end_minute;
+    private EndMinute endMinute;
 
     public EndMinuteBlock() {
     }
 
-    public EndMinuteBlock(EndMinute end_minute) {
-        this.end_minute = end_minute;
+    public EndMinuteBlock(EndMinute endMinute) {
+        this.endMinute = endMinute;
     }
 
-    public EndMinute getEnd_minute() {
-        return end_minute;
+    public EndMinute getEndMinute() {
+        return endMinute;
     }
 }

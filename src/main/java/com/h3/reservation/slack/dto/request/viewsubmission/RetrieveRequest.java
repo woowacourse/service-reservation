@@ -20,7 +20,7 @@ public class RetrieveRequest {
         return view;
     }
 
-    public String getCallback_id() {
-        return view.getCallback_id();
+    public String getCallbackId() {
+        return view.getCallbackId();
     }
 }
