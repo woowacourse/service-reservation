@@ -4,9 +4,9 @@ import com.google.api.services.calendar.model.Event;
 import com.h3.reservation.calendar.CalendarService;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
-import com.h3.reservation.slackcalendar.converter.EventConverter;
-import com.h3.reservation.slackcalendar.domain.EventDateTime;
-import com.h3.reservation.slackcalendar.domain.Events;
+import com.h3.reservation.slackcalendar.converter.ReservationConverter;
+import com.h3.reservation.slackcalendar.domain.DateTime;
+import com.h3.reservation.slackcalendar.domain.Reservations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +29,13 @@ public class SlackCalendarService {
         this.calendarService = calendarService;
     }
 
-    public Events retrieve(EventDateTime dateTime) {
+    public Reservations retrieve(DateTime dateTime) {
         List<Event> events = calendarService.findReservation(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
             , CalendarId.from(calendarId));
 
-        return Events.of(
+        return Reservations.of(
             events.stream()
-                .map(EventConverter::toSlackCalendarEvent)
+                .map(ReservationConverter::toReservation)
                 .collect(Collectors.toList())
         );
     }

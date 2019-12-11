@@ -9,11 +9,11 @@ import java.util.Objects;
  * @version 1.0
  * @date 2019-12-11
  */
-public class Event {
-    private final EventComponent component;
-    private final EventDateTime time;
+public class Reservation {
+    private final Component component;
+    private final DateTime time;
 
-    private Event(final EventComponent component, final EventDateTime time) {
+    private Reservation(final Component component, final DateTime time) {
         this.component = component;
         this.time = time;
     }
@@ -24,20 +24,20 @@ public class Event {
      * @param endTime   HH:mm
      * @return
      */
-    public static Event of(final String room, final String booker, final String purpose
+    public static Reservation of(final String room, final String booker, final String purpose
         , final String date, final String startTime, final String endTime) {
-        return new Event(EventComponent.of(room, booker, purpose)
-            , EventDateTime.of(date, startTime, endTime));
+        return new Reservation(Component.of(room, booker, purpose)
+            , DateTime.of(date, startTime, endTime));
     }
 
-    public static Event of(final String room, final String booker, final String purpose
+    public static Reservation of(final String room, final String booker, final String purpose
         , final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
-        return new Event(EventComponent.of(room, booker, purpose)
-            , EventDateTime.of(date, startTime, endTime));
+        return new Reservation(Component.of(room, booker, purpose)
+            , DateTime.of(date, startTime, endTime));
     }
 
-    public static Event of(final EventComponent component, final EventDateTime time) {
-        return new Event(component, time);
+    public static Reservation of(final Component component, final DateTime time) {
+        return new Reservation(component, time);
     }
 
     public String getRoom() {
@@ -65,7 +65,7 @@ public class Event {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Event that = (Event) o;
+        Reservation that = (Reservation) o;
 
         if (!Objects.equals(component, that.component)) return false;
         return Objects.equals(time, that.time);

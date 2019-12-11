@@ -18,15 +18,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version 1.0
  * @date 2019-12-11
  */
-class EventDateTimeTest {
+class DateTimeTest {
     @Test
     void constructor() {
         LocalDate date = LocalDate.of(2019, 12, 10);
         LocalTime startTime = LocalTime.of(13, 30);
         LocalTime endTime = LocalTime.of(15, 0);
-        EventDateTime eventTime = EventDateTime.of(date, startTime, endTime);
+        DateTime eventTime = DateTime.of(date, startTime, endTime);
 
-        assertEquals(eventTime, EventDateTime.of(date, startTime, endTime));
+        assertEquals(eventTime, DateTime.of(date, startTime, endTime));
     }
 
     @Test
@@ -35,9 +35,9 @@ class EventDateTimeTest {
         String startTime = "13:00";
         String endTime = "15:00";
 
-        EventDateTime eventTime = EventDateTime.of(date, startTime, endTime);
+        DateTime eventTime = DateTime.of(date, startTime, endTime);
 
-        assertEquals(eventTime, EventDateTime.of(LocalDate.parse(date), LocalTime.parse(startTime), LocalTime.parse(endTime)));
+        assertEquals(eventTime, DateTime.of(LocalDate.parse(date), LocalTime.parse(startTime), LocalTime.parse(endTime)));
         assertEquals(eventTime.getDate(), LocalDate.of(2019, 12, 10));
     }
 
@@ -47,9 +47,9 @@ class EventDateTimeTest {
         String startTime = "13:00";
         String endTime = "15:00";
 
-        assertThrows(DateTimeParseException.class, () -> EventDateTime.of("20191210", startTime, endTime));
-        assertThrows(DateTimeParseException.class, () -> EventDateTime.of(date, "1300", endTime));
-        assertThrows(DateTimeParseException.class, () -> EventDateTime.of(date, startTime, "1500"));
+        assertThrows(DateTimeParseException.class, () -> DateTime.of("20191210", startTime, endTime));
+        assertThrows(DateTimeParseException.class, () -> DateTime.of(date, "1300", endTime));
+        assertThrows(DateTimeParseException.class, () -> DateTime.of(date, startTime, "1500"));
     }
 
     @Test
@@ -58,7 +58,7 @@ class EventDateTimeTest {
         String startTime = "15:00";
         String endTime = "13:00";
 
-        assertThrows(InvalidTimeRangeException.class, () -> EventDateTime.of(date, startTime, endTime));
+        assertThrows(InvalidTimeRangeException.class, () -> DateTime.of(date, startTime, endTime));
     }
 
     @Test
@@ -90,7 +90,7 @@ class EventDateTimeTest {
         String startTime = "13:00";
         String endTime = "15:00";
 
-        EventDateTime eventTime = EventDateTime.of(date, startTime, endTime);
+        DateTime eventTime = DateTime.of(date, startTime, endTime);
         assertEquals(eventTime.getFormattedDate(), date);
         assertEquals(eventTime.getFormattedStartTime(), startTime);
         assertEquals(eventTime.getFormattedEndTime(), endTime);

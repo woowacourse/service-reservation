@@ -9,8 +9,8 @@ import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.RetrieveModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.RetrieveModalUpdateResponseFactory;
-import com.h3.reservation.slackcalendar.domain.EventDateTime;
-import com.h3.reservation.slackcalendar.domain.Events;
+import com.h3.reservation.slackcalendar.domain.DateTime;
+import com.h3.reservation.slackcalendar.domain.Reservations;
 import com.h3.reservation.slackcalendar.service.SlackCalendarService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,11 +61,11 @@ public class SlackService {
     }
 
     public RetrieveModalUpdateResponse updateModal(RetrieveRequest request) {
-        EventDateTime retrieveRangeDateTime = EventDateTime.of(request.getDate()
+        DateTime retrieveRangeDateTime = DateTime.of(request.getDate()
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
-        Events events = slackCalendarService.retrieve(retrieveRangeDateTime);
-        return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, events);
+        Reservations reservations = slackCalendarService.retrieve(retrieveRangeDateTime);
+        return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, reservations);
     }
 
     private LocalTime generateLocalTime(String hour, String minute) {

@@ -12,14 +12,14 @@ import java.util.Objects;
  * @version 1.0
  * @date 2019-12-11
  */
-public class EventDateTime {
+public class DateTime {
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     private static final String DEFAULT_TIME_FORMAT = "HH:mm";
     private final LocalDate date;
     private final LocalTime startTime;
     private final LocalTime endTime;
 
-    private EventDateTime(final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
+    private DateTime(final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
         checkValidate(startTime, endTime);
         this.date = date;
         this.startTime = startTime;
@@ -32,8 +32,8 @@ public class EventDateTime {
         }
     }
 
-    public static EventDateTime of(final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
-        return new EventDateTime(date, startTime, endTime);
+    public static DateTime of(final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
+        return new DateTime(date, startTime, endTime);
     }
 
     /**
@@ -42,16 +42,16 @@ public class EventDateTime {
      * @param endTime   HH:mm(:ss)
      * @return
      */
-    public static EventDateTime of(final String date, final String startTime, final String endTime) {
-        return new EventDateTime(LocalDate.parse(date), LocalTime.parse(startTime), LocalTime.parse(endTime));
+    public static DateTime of(final String date, final String startTime, final String endTime) {
+        return new DateTime(LocalDate.parse(date), LocalTime.parse(startTime), LocalTime.parse(endTime));
     }
 
     /**
      * @param date      yyyy-MM-dd
      * @return
      */
-    public static EventDateTime of(final String date, final LocalTime startTime, final LocalTime endTime) {
-        return new EventDateTime(LocalDate.parse(date), startTime, endTime);
+    public static DateTime of(final String date, final LocalTime startTime, final LocalTime endTime) {
+        return new DateTime(LocalDate.parse(date), startTime, endTime);
     }
 
     /**
@@ -84,7 +84,7 @@ public class EventDateTime {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EventDateTime eventTime = (EventDateTime) o;
+        DateTime eventTime = (DateTime) o;
 
         if (!Objects.equals(date, eventTime.date)) return false;
         if (!Objects.equals(startTime, eventTime.startTime)) return false;

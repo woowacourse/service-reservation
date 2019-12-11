@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @version 1.0
  * @date 2019-12-11
  */
-class EventTest {
+class ReservationTest {
     @Test
     void constructor() {
         String room = "회의실1";
@@ -23,12 +23,12 @@ class EventTest {
         LocalTime startTime = LocalTime.of(13, 30);
         LocalTime endTime = LocalTime.of(15, 00);
 
-        Event event = Event.of(room, booker, purpose, date, startTime, endTime);
-        assertEquals(event, Event.of(room, booker, purpose, date, startTime, endTime));
+        Reservation reservation = Reservation.of(room, booker, purpose, date, startTime, endTime);
+        assertEquals(reservation, Reservation.of(room, booker, purpose, date, startTime, endTime));
 
-        EventComponent eventComponent = EventComponent.of(room, booker, purpose);
-        EventDateTime eventTime = EventDateTime.of(date, startTime, endTime);
-        assertEquals(event, Event.of(eventComponent, eventTime));
+        Component component = Component.of(room, booker, purpose);
+        DateTime eventTime = DateTime.of(date, startTime, endTime);
+        assertEquals(reservation, Reservation.of(component, eventTime));
     }
 
     @Test
@@ -41,7 +41,7 @@ class EventTest {
         String startTime = "13:00";
         String endTime = "15:00";
 
-        Event event = Event.of(room, booker, purpose, date, startTime, endTime);
-        assertEquals(event, Event.of(room, booker, purpose, date, startTime, endTime));
+        Reservation reservation = Reservation.of(room, booker, purpose, date, startTime, endTime);
+        assertEquals(reservation, Reservation.of(room, booker, purpose, date, startTime, endTime));
     }
 }

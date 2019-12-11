@@ -7,19 +7,19 @@ import java.util.Objects;
  * @version 1.0
  * @date 2019-12-11
  */
-public class EventComponent {
+public class Component {
     private final String room;
     private final String booker;
     private final String purpose;
 
-    private EventComponent(final String room, final String booker, final String purpose) {
+    private Component(final String room, final String booker, final String purpose) {
         this.room = room;
         this.booker = booker;
         this.purpose = purpose;
     }
 
-    public static EventComponent of(final String room, final String booker, final String purpose) {
-        return new EventComponent(room, booker, purpose);
+    public static Component of(final String room, final String booker, final String purpose) {
+        return new Component(room, booker, purpose);
     }
 
     public String getRoom() {
@@ -39,7 +39,7 @@ public class EventComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EventComponent that = (EventComponent) o;
+        Component that = (Component) o;
 
         if (!Objects.equals(room, that.room)) return false;
         if (!Objects.equals(booker, that.booker)) return false;

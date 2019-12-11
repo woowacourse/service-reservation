@@ -8,9 +8,9 @@ import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.view.ModalView;
-import com.h3.reservation.slackcalendar.domain.Event;
-import com.h3.reservation.slackcalendar.domain.EventDateTime;
-import com.h3.reservation.slackcalendar.domain.Events;
+import com.h3.reservation.slackcalendar.domain.Reservation;
+import com.h3.reservation.slackcalendar.domain.DateTime;
+import com.h3.reservation.slackcalendar.domain.Reservations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,25 +27,25 @@ import static java.util.stream.Collectors.groupingBy;
  * @date 2019-12-10
  */
 public class RetrieveModalUpdateResponseFactory {
-    public static RetrieveModalUpdateResponse of(EventDateTime retrieveRangeDateTime, Events events) {
+    public static RetrieveModalUpdateResponse of(DateTime retrieveRangeDateTime, Reservations reservations) {
         return new RetrieveModalUpdateResponse(
             new ModalView(
                 "retrieve_result",
                 new PlainText("조회하기"),
                 new PlainText("확인"),
-                generateBlocks(retrieveRangeDateTime, events)
+                generateBlocks(retrieveRangeDateTime, reservations)
             )
         );
     }
 
-    private static List<Block> generateBlocks(EventDateTime retrieveRangeDateTime, Events events) {
+    private static List<Block> generateBlocks(DateTime retrieveRangeDateTime, Reservations reservations) {
         List<Block> blocks = new ArrayList<>();
         addTitleBlock(retrieveRangeDateTime, blocks);
-        addRetrieveBlocks(events, blocks);
+        addRetrieveBlocks(reservations, blocks);
         return blocks;
     }
 
-    private static void addTitleBlock(EventDateTime retrieveRangeDateTime, List<Block> blocks) {
+    private static void addTitleBlock(DateTime retrieveRangeDateTime, List<Block> blocks) {
         blocks.addAll(generateTitle(retrieveRangeDateTime.getFormattedDate(), retrieveRangeDateTime.getFormattedStartTime(), retrieveRangeDateTime.getFormattedEndTime()));
     }
 
@@ -57,12 +57,12 @@ public class RetrieveModalUpdateResponseFactory {
         );
     }
 
-    private static void addRetrieveBlocks(Events events, List<Block> blocks) {
-        if (events.isEventEmpty()) {
+    private static void addRetrieveBlocks(Reservations reservations, List<Block> blocks) {
+        if (reservations.isEventEmpty()) {
             addEmptyBlock(blocks);
             return;
         }
-        addReservationBlocks(events, blocks);
+        addReservationBlocks(reservations, blocks);
     }
 
     private static void addEmptyBlock(List<Block> blocks) {
@@ -73,20 +73,20 @@ public class RetrieveModalUpdateResponseFactory {
         ));
     }
 
-    private static void addReservationBlocks(Events events, List<Block> blocks) {
-        TreeMap<String, List<Event>> roomReservation = events.stream()
-            .collect(groupingBy(Event::getRoom, TreeMap::new, Collectors.toList()));
+    private static void addReservationBlocks(Reservations reservations, List<Block> blocks) {
+        TreeMap<String, List<Reservation>> roomReservation = reservations.stream()
+            .collect(groupingBy(Reservation::getRoom, TreeMap::new, Collectors.toList()));
         addReservationBlocksByRoom(blocks, roomReservation);
     }
 
-    private static void addReservationBlocksByRoom(List<Block> blocks, TreeMap<String, List<Event>> roomReservation) {
+    private static void addReservationBlocksByRoom(List<Block> blocks, TreeMap<String, List<Reservation>> roomReservation) {
         roomReservation.forEach((key, value) -> blocks.addAll(generateReservations(key, value)));
     }
 
-    private static List<Block> generateReservations(String room, List<Event> events) {
+    private static List<Block> generateReservations(String room, List<Reservation> reservations) {
         List<Block> blocks = new ArrayList<>();
         addRoomBlock(room, blocks);
-        events.forEach(event -> addReservationBlock(blocks, event));
+        reservations.forEach(event -> addReservationBlock(blocks, event));
         return blocks;
     }
 
@@ -106,8 +106,8 @@ public class RetrieveModalUpdateResponseFactory {
         );
     }
 
-    private static void addReservationBlock(List<Block> blocks, Event event) {
-        blocks.add(generateReservation(event.getBooker(), event.getPurpose(), event.getFormattedStartTime() + "-" + event.getFormattedEndTime()));
+    private static void addReservationBlock(List<Block> blocks, Reservation reservation) {
+        blocks.add(generateReservation(reservation.getBooker(), reservation.getPurpose(), reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime()));
     }
 
     private static Block generateReservation(String booker, String purpose, String time) {

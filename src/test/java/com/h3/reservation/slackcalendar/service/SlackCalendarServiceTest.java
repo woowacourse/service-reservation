@@ -1,10 +1,9 @@
 package com.h3.reservation.slackcalendar.service;
 
-import com.google.api.client.util.DateTime;
 import com.h3.reservation.calendar.CalendarService;
-import com.h3.reservation.slackcalendar.domain.Event;
-import com.h3.reservation.slackcalendar.domain.EventDateTime;
-import com.h3.reservation.slackcalendar.domain.Events;
+import com.h3.reservation.slackcalendar.domain.Reservation;
+import com.h3.reservation.slackcalendar.domain.DateTime;
+import com.h3.reservation.slackcalendar.domain.Reservations;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,16 +44,16 @@ class SlackCalendarServiceTest {
 
         String startTime = "10:00";
         String endTime = "18:00";
-        EventDateTime retrieveRangeDateTime = EventDateTime.of(date, startTime, endTime);
+        DateTime retrieveRangeDateTime = DateTime.of(date, startTime, endTime);
 
-        Events events = slackCalendarService.retrieve(retrieveRangeDateTime);
-        List<Event> eventList = new ArrayList<>();
-        eventList.add(Event.of("회의실1", "희봉", "프로젝트", date, "10:30", "12:00"));
-        eventList.add(Event.of("회의실1", "코니", "회고", date, "13:00", "15:30"));
-        eventList.add(Event.of("회의실2", "도넛", "굴러간다", date, "11:00", "12:00"));
-        eventList.add(Event.of("회의실3", "버디", "회의", date, "17:00", "18:00"));
+        Reservations reservations = slackCalendarService.retrieve(retrieveRangeDateTime);
+        List<Reservation> reservationList = new ArrayList<>();
+        reservationList.add(Reservation.of("회의실1", "희봉", "프로젝트", date, "10:30", "12:00"));
+        reservationList.add(Reservation.of("회의실1", "코니", "회고", date, "13:00", "15:30"));
+        reservationList.add(Reservation.of("회의실2", "도넛", "굴러간다", date, "11:00", "12:00"));
+        reservationList.add(Reservation.of("회의실3", "버디", "회의", date, "17:00", "18:00"));
 
-        assertEquals(events, Events.of(eventList));
+        assertEquals(reservations, Reservations.of(reservationList));
     }
 
     /**
@@ -67,8 +66,8 @@ class SlackCalendarServiceTest {
     private com.google.api.services.calendar.model.Event createEvent(String summary, String date, String startTime, String endTime) {
         return new com.google.api.services.calendar.model.Event()
             .setSummary(summary)
-            .setStart(new com.google.api.services.calendar.model.EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, startTime))))
-            .setEnd(new com.google.api.services.calendar.model.EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))));
+            .setStart(new com.google.api.services.calendar.model.EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
+            .setEnd(new com.google.api.services.calendar.model.EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));
     }
 
     /**
