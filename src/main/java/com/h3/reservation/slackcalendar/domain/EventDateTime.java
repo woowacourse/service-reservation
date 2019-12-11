@@ -47,6 +47,14 @@ public class EventDateTime {
     }
 
     /**
+     * @param date      yyyy-MM-dd
+     * @return
+     */
+    public static EventDateTime of(final String date, final LocalTime startTime, final LocalTime endTime) {
+        return new EventDateTime(LocalDate.parse(date), startTime, endTime);
+    }
+
+    /**
      * @return yyyy-MM-dd
      */
     public String getFormattedDate() {

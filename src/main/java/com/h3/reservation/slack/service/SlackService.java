@@ -22,6 +22,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalTime;
+
 /**
  * @author heebg
  * @version 1.0
@@ -60,14 +62,14 @@ public class SlackService {
 
     public RetrieveModalUpdateResponse updateModal(RetrieveRequest request) {
         EventDateTime retrieveRangeDateTime = EventDateTime.of(request.getDate()
-            , formatTime(request.getStartHour(), request.getStartMinute())
-            , formatTime(request.getEndHour(), request.getEndMinute()));
+            , generateLocalTime(request.getStartHour(), request.getStartMinute())
+            , generateLocalTime(request.getEndHour(), request.getEndMinute()));
         Events events = slackCalendarService.retrieve(retrieveRangeDateTime);
         return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, events);
     }
 
-    private String formatTime(String hour, String minute) {
-        return hour + ":" + minute;
+    private LocalTime generateLocalTime(String hour, String minute) {
+        return LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
     }
 
     private WebClient initWebClient() {
