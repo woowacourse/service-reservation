@@ -3,34 +3,34 @@ package com.h3.reservation.slack.dto.request.viewsubmission.values;
 import com.h3.reservation.slack.dto.request.viewsubmission.values.block.*;
 
 public class RetrieveValues {
-    private StartTimeBlock startTimeBlock;
+    private StartHourBlock startHourBlock;
     private StartMinuteBlock startMinuteBlock;
-    private EndTimeBlock endTimeBlock;
+    private EndHourBlock endHourBlock;
     private EndMinuteBlock endMinuteBlock;
     private DatepickerBlock datepickerBlock;
 
     public RetrieveValues() {
     }
 
-    public RetrieveValues(StartTimeBlock startTimeBlock, StartMinuteBlock startMinuteBlock, EndTimeBlock endTimeBlock,
+    public RetrieveValues(StartHourBlock startHourBlock, StartMinuteBlock startMinuteBlock, EndHourBlock endHourBlock,
                           EndMinuteBlock endMinuteBlock, DatepickerBlock datepickerBlock) {
-        this.startTimeBlock = startTimeBlock;
+        this.startHourBlock = startHourBlock;
         this.startMinuteBlock = startMinuteBlock;
-        this.endTimeBlock = endTimeBlock;
+        this.endHourBlock = endHourBlock;
         this.endMinuteBlock = endMinuteBlock;
         this.datepickerBlock = datepickerBlock;
     }
 
-    public StartTimeBlock getStartTimeBlock() {
-        return startTimeBlock;
+    public StartHourBlock getStartHourBlock() {
+        return startHourBlock;
     }
 
     public StartMinuteBlock getStartMinuteBlock() {
         return startMinuteBlock;
     }
 
-    public EndTimeBlock getEndTimeBlock() {
-        return endTimeBlock;
+    public EndHourBlock getEndHourBlock() {
+        return endHourBlock;
     }
 
     public EndMinuteBlock getEndMinuteBlock() {

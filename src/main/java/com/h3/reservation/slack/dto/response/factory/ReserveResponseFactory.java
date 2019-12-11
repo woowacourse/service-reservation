@@ -32,10 +32,10 @@ public class ReserveResponseFactory {
             Arrays.asList(
                 new InputBlock("datepicker_block", new PlainText("예약할 날짜를 선택하세요."), datePicker),
                 new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요.*")),
-                CommonResponseFactory.generateTimePicker(PREFIX_START),
+                CommonResponseFactory.generateHourPicker(PREFIX_START),
                 CommonResponseFactory.generateMinutePicker(PREFIX_START),
                 new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요.*")),
-                CommonResponseFactory.generateTimePicker(PREFIX_END),
+                CommonResponseFactory.generateHourPicker(PREFIX_END),
                 CommonResponseFactory.generateMinutePicker(PREFIX_END),
                 new InputBlock("meeting_room_block", new PlainText("회의실을 선택하세요."),
                     generateMeetingRoomSelectElement()),

@@ -11,28 +11,28 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommonResponseFactory {
-    private static final String TIME = "시";
+    private static final String HOUR = "시";
     private static final String MINUTE = "분";
-    private static final String SUFFIX_TIME_BLOCK = "_time_block";
-    private static final String SUFFIX_TIME = "_time";
+    private static final String SUFFIX_HOUR_BLOCK = "_hour_block";
+    private static final String SUFFIX_HOUR = "_hour";
     private static final String SUFFIX_MINUTE_BLOCK = "_minute_block";
     private static final String SUFFIX_MINUTE = "_minute";
-    private static final int MIN_TIME = 10;
-    private static final int MAX_TIME = 21;
+    private static final int MIN_HOUR = 10;
+    private static final int MAX_HOUR = 21;
     private static final int MIN_MINUTE = 0;
     private static final int MAX_MINUTE = 50;
     private static final int MINUTE_INTERVAL = 10;
 
-    public static ActionsBlock generateTimePicker(String blockId, String timeActionId, String minuteActionId,
-                                                  int initialTime, int initialMinute) {
+    public static ActionsBlock generateHourPicker(String blockId, String hourActionId, String minuteActionId,
+                                                  int initialHour, int initialMinute) {
         return new ActionsBlock(
             blockId,
             Arrays.asList(
                 new StaticSelectElement(
-                    new PlainText(TIME),
-                    timeActionId,
-                    new Option(new PlainText(initialTime + TIME), String.valueOf(initialTime)),
-                    generateTimeSelect()
+                    new PlainText(HOUR),
+                    hourActionId,
+                    new Option(new PlainText(initialHour + HOUR), String.valueOf(initialHour)),
+                    generateHourSelect()
                 ),
                 new StaticSelectElement(
                     new PlainText(MINUTE),
@@ -44,27 +44,27 @@ public class CommonResponseFactory {
         );
     }
 
-    public static InputBlock generateTimePickerWithInitValue(String prefix, int initialTime) {
+    public static InputBlock generateHourPickerWithInitValue(String prefix, int initialHour) {
         return new InputBlock(
-            prefix + SUFFIX_TIME_BLOCK,
+            prefix + SUFFIX_HOUR_BLOCK,
             new PlainText("시간을 선택하세요."),
             new StaticSelectElement(
-                new PlainText(TIME),
-                prefix + SUFFIX_TIME,
-                new Option(new PlainText(initialTime + TIME), String.valueOf(initialTime)),
-                generateTimeSelect()
+                new PlainText(HOUR),
+                prefix + SUFFIX_HOUR,
+                new Option(new PlainText(initialHour + HOUR), String.valueOf(initialHour)),
+                generateHourSelect()
             )
         );
     }
 
-    public static InputBlock generateTimePicker(String prefix) {
+    public static InputBlock generateHourPicker(String prefix) {
         return new InputBlock(
-            prefix + SUFFIX_TIME_BLOCK,
+            prefix + SUFFIX_HOUR_BLOCK,
             new PlainText("시간을 선택하세요."),
             new StaticSelectElement(
-                new PlainText(TIME),
-                prefix + SUFFIX_TIME,
-                generateTimeSelect()
+                new PlainText(HOUR),
+                prefix + SUFFIX_HOUR,
+                generateHourSelect()
             )
         );
     }
@@ -94,10 +94,10 @@ public class CommonResponseFactory {
         );
     }
 
-    private static List<Option> generateTimeSelect() {
+    private static List<Option> generateHourSelect() {
         List<Option> options = new ArrayList<>();
-        for (int i = MIN_TIME; i <= MAX_TIME; i++) {
-            options.add(new Option(new PlainText(i + TIME), String.valueOf(i)));
+        for (int i = MIN_HOUR; i <= MAX_HOUR; i++) {
+            options.add(new Option(new PlainText(i + HOUR), String.valueOf(i)));
         }
         return options;
     }
