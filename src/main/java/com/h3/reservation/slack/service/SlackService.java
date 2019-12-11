@@ -58,20 +58,16 @@ public class SlackService {
         send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
     }
 
-//    public ModalUpdateResponse updateModal(RetrieveRequest dto) {
-//        return new ModalUpdateResponse(
-//            new ModalView(
-//                "retrieve_result",
-//                new PlainText("조회하기"),
-//                new PlainText("확인"),
-//                generateDummyBlocks()
-//            )
-//        );
-
-    public RetrieveModalUpdateResponse updateModal(RetrieveRequest dto) {
-        EventDateTime retrieveRangeDateTime = EventDateTime.of("2019-12-10", "10:00", "18:00");
+    public RetrieveModalUpdateResponse updateModal(RetrieveRequest request) {
+        EventDateTime retrieveRangeDateTime = EventDateTime.of(request.getDate()
+            , formatTime(request.getStartHour(), request.getStartMinute())
+            , formatTime(request.getEndHour(), request.getEndMinute()));
         Events events = slackCalendarService.retrieve(retrieveRangeDateTime);
         return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, events);
+    }
+
+    private String formatTime(String hour, String minute) {
+        return hour + ":" + minute;
     }
 
     private WebClient initWebClient() {
