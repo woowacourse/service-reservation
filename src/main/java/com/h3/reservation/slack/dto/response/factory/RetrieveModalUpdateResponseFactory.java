@@ -8,8 +8,9 @@ import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.view.ModalView;
-import com.h3.reservation.slackcalendar.dto.SlackCalendarEvent;
-import com.h3.reservation.slackcalendar.dto.SlackCalendarRetrieveResponse;
+import com.h3.reservation.slackcalendar.domain.Event;
+import com.h3.reservation.slackcalendar.domain.EventDateTime;
+import com.h3.reservation.slackcalendar.domain.Events;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,25 +27,25 @@ import static java.util.stream.Collectors.groupingBy;
  * @date 2019-12-10
  */
 public class RetrieveModalUpdateResponseFactory {
-    public static RetrieveModalUpdateResponse of(SlackCalendarRetrieveResponse response) {
+    public static RetrieveModalUpdateResponse of(EventDateTime retrieveRangeDateTime, Events events) {
         return new RetrieveModalUpdateResponse(
             new ModalView(
                 new PlainText("조회하기"),
                 new PlainText("확인"),
-                generateBlocks(response)
+                generateBlocks(retrieveRangeDateTime, events)
             )
         );
     }
 
-    private static List<Block> generateBlocks(SlackCalendarRetrieveResponse response) {
+    private static List<Block> generateBlocks(EventDateTime retrieveRangeDateTime, Events events) {
         List<Block> blocks = new ArrayList<>();
-        addTitleBlock(response, blocks);
-        addRetrieveBlocks(response, blocks);
+        addTitleBlock(retrieveRangeDateTime, blocks);
+        addRetrieveBlocks(events, blocks);
         return blocks;
     }
 
-    private static void addTitleBlock(SlackCalendarRetrieveResponse response, List<Block> blocks) {
-        blocks.addAll(generateTitle(response.getDate(), response.getStartTime(), response.getEndTime()));
+    private static void addTitleBlock(EventDateTime retrieveRangeDateTime, List<Block> blocks) {
+        blocks.addAll(generateTitle(retrieveRangeDateTime.getFormattedDate(), retrieveRangeDateTime.getFormattedStartTime(), retrieveRangeDateTime.getFormattedEndTime()));
     }
 
     private static List<Block> generateTitle(String date, String startTime, String endTime) {
@@ -55,12 +56,12 @@ public class RetrieveModalUpdateResponseFactory {
         );
     }
 
-    private static void addRetrieveBlocks(SlackCalendarRetrieveResponse response, List<Block> blocks) {
-        if (response.isEventEmpty()) {
+    private static void addRetrieveBlocks(Events events, List<Block> blocks) {
+        if (events.isEventEmpty()) {
             addEmptyBlock(blocks);
             return;
         }
-        addReservationBlocks(response, blocks);
+        addReservationBlocks(events, blocks);
     }
 
     private static void addEmptyBlock(List<Block> blocks) {
@@ -71,17 +72,17 @@ public class RetrieveModalUpdateResponseFactory {
         ));
     }
 
-    private static void addReservationBlocks(SlackCalendarRetrieveResponse response, List<Block> blocks) {
-        TreeMap<String, List<SlackCalendarEvent>> roomReservation = response.getSlackCalendarEvents().stream()
-            .collect(groupingBy(SlackCalendarEvent::getRoom, TreeMap::new, Collectors.toList()));
+    private static void addReservationBlocks(Events events, List<Block> blocks) {
+        TreeMap<String, List<Event>> roomReservation = events.stream()
+            .collect(groupingBy(Event::getRoom, TreeMap::new, Collectors.toList()));
         addReservationBlocksByRoom(blocks, roomReservation);
     }
 
-    private static void addReservationBlocksByRoom(List<Block> blocks, TreeMap<String, List<SlackCalendarEvent>> roomReservation) {
+    private static void addReservationBlocksByRoom(List<Block> blocks, TreeMap<String, List<Event>> roomReservation) {
         roomReservation.forEach((key, value) -> blocks.addAll(generateReservations(key, value)));
     }
 
-    private static List<Block> generateReservations(String room, List<SlackCalendarEvent> events) {
+    private static List<Block> generateReservations(String room, List<Event> events) {
         List<Block> blocks = new ArrayList<>();
         addRoomBlock(room, blocks);
         events.forEach(event -> addReservationBlock(blocks, event));
@@ -104,8 +105,8 @@ public class RetrieveModalUpdateResponseFactory {
         );
     }
 
-    private static void addReservationBlock(List<Block> blocks, SlackCalendarEvent event) {
-        blocks.add(generateReservation(event.getBooker(), event.getPurpose(), event.getStartTime() + "-" + event.getEndTime()));
+    private static void addReservationBlock(List<Block> blocks, Event event) {
+        blocks.add(generateReservation(event.getBooker(), event.getPurpose(), event.getFormattedStartTime() + "-" + event.getFormattedEndTime()));
     }
 
     private static Block generateReservation(String booker, String purpose, String time) {

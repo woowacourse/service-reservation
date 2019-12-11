@@ -49,7 +49,7 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
 
         List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01")
-                , CalendarId.from(calendarId));
+            , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(1);
         assertThat(fetchedSchedule.get(0)).isEqualTo(event);
@@ -72,7 +72,7 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
 
         List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
-                , CalendarId.from(calendarId));
+            , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(3);
         assertThat(fetchedSchedule.get(0)).isEqualTo(event2);
@@ -82,7 +82,7 @@ class CalendarServiceTest {
 
     private Event createEvent(String startTime, String endTime) {
         return new Event()
-                .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(startTime)))
-                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(endTime)));
+            .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(startTime)))
+            .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(endTime)));
     }
 }

@@ -8,8 +8,8 @@ import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.response.RetrieveModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.RetrieveModalUpdateResponseFactory;
-import com.h3.reservation.slackcalendar.dto.SlackCalendarRetrieveRequest;
-import com.h3.reservation.slackcalendar.dto.SlackCalendarRetrieveResponse;
+import com.h3.reservation.slackcalendar.domain.EventDateTime;
+import com.h3.reservation.slackcalendar.domain.Events;
 import com.h3.reservation.slackcalendar.service.SlackCalendarService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,9 +58,9 @@ public class SlackService {
     }
 
     public RetrieveModalUpdateResponse updateModal() {
-        // TODO : RetrieveConverter.toSlackCalendarRetrieveRequest(dto)
-        SlackCalendarRetrieveResponse response = slackCalendarService.retrieve(new SlackCalendarRetrieveRequest("2019-12-10", "10:00", "18:00"));
-        return RetrieveModalUpdateResponseFactory.of(response);
+        EventDateTime retrieveRangeDateTime = EventDateTime.of("2019-12-10", "10:00", "18:00");
+        Events events = slackCalendarService.retrieve(retrieveRangeDateTime);
+        return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, events);
     }
 
     private WebClient initWebClient() {

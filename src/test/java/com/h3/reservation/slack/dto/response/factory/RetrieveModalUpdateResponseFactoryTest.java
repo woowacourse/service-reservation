@@ -1,6 +1,6 @@
 package com.h3.reservation.slack.dto.response.factory;
 
-import com.h3.reservation.slackcalendar.dto.SlackCalendarEvent;
+import com.h3.reservation.slackcalendar.domain.Event;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +21,14 @@ class RetrieveModalUpdateResponseFactoryTest {
     @Test
     @DisplayName("room을 key로 맵을 만들었을 때 room이 정렬이 되었는지 확인하는 학습 테스트")
     void groupby() {
-        List<SlackCalendarEvent> slackCalendarEvents = new ArrayList<>();
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실3", "희봉", "프로젝트", "10:30", "12:00"));
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실1", "코니", "회고", "13:00", "15:30"));
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실2", "도넛", "굴러간다", "13:00", "14:00"));
-        slackCalendarEvents.add(new SlackCalendarEvent("회의실3", "버디", "회의", "13:00", "14:00"));
+        List<Event> events = new ArrayList<>();
+        events.add(Event.of("회의실3", "희봉", "프로젝트", "2019-12-10", "10:30", "12:00"));
+        events.add(Event.of("회의실1", "코니", "회고", "2019-12-10", "13:00", "15:30"));
+        events.add(Event.of("회의실2", "도넛", "굴러간다", "2019-12-10", "13:00", "14:00"));
+        events.add(Event.of("회의실3", "버디", "회의", "2019-12-10", "13:00", "14:00"));
 
-        TreeMap<String, List<SlackCalendarEvent>> listMap = slackCalendarEvents.stream()
-            .collect(groupingBy(SlackCalendarEvent::getRoom, TreeMap::new, Collectors.toList()));
+        TreeMap<String, List<Event>> listMap = events.stream()
+            .collect(groupingBy(Event::getRoom, TreeMap::new, Collectors.toList()));
         assertEquals(listMap.size(), 3);
         listMap.forEach((key, value) -> System.out.println(key));
     }

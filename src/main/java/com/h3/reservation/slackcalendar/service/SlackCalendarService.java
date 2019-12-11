@@ -5,9 +5,8 @@ import com.h3.reservation.calendar.CalendarService;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
 import com.h3.reservation.slackcalendar.converter.EventConverter;
-import com.h3.reservation.slackcalendar.dto.SlackCalendarEvent;
-import com.h3.reservation.slackcalendar.dto.SlackCalendarRetrieveRequest;
-import com.h3.reservation.slackcalendar.dto.SlackCalendarRetrieveResponse;
+import com.h3.reservation.slackcalendar.domain.EventDateTime;
+import com.h3.reservation.slackcalendar.domain.Events;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +29,14 @@ public class SlackCalendarService {
         this.calendarService = calendarService;
     }
 
-    public SlackCalendarRetrieveResponse retrieve(SlackCalendarRetrieveRequest request) {
-        List<Event> events = calendarService.findReservation(ReservationDateTime.of(request.getDate(), request.getStartTime(), request.getEndTime())
+    public Events retrieve(EventDateTime dateTime) {
+        List<Event> events = calendarService.findReservation(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
             , CalendarId.from(calendarId));
-        List<SlackCalendarEvent> slackCalendarEvents = events.stream()
-            .map(EventConverter::toSlackCalendarEvent)
-            .collect(Collectors.toList());
-        return new SlackCalendarRetrieveResponse(request.getDate(), request.getStartTime(), request.getEndTime(), slackCalendarEvents);
+
+        return Events.of(
+            events.stream()
+                .map(EventConverter::toSlackCalendarEvent)
+                .collect(Collectors.toList())
+        );
     }
 }
