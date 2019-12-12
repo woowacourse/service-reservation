@@ -105,7 +105,7 @@ public class RetrieveModalUpdateResponseFactory {
     }
 
     private static void addReservationBlock(List<Block> blocks, Reservation reservation) {
-        blocks.add(generateReservation(reservation.getBooker(), reservation.getPurpose(),
+        blocks.add(generateReservation(reservation.getBooker(), reservation.getDescription(),
             reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime()));
     }
 

@@ -7,7 +7,7 @@ import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
-import com.h3.reservation.calendar.domain.ReservationDetails;
+import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
 import com.h3.reservation.common.MeetingRoom;
 import org.springframework.beans.factory.annotation.Value;

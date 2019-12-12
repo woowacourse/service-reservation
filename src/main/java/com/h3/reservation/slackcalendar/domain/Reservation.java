@@ -1,5 +1,8 @@
 package com.h3.reservation.slackcalendar.domain;
 
+import com.h3.reservation.common.MeetingRoom;
+import com.h3.reservation.common.ReservationDetails;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -10,12 +13,12 @@ import java.util.Objects;
  * @date 2019-12-11
  */
 public class Reservation {
-    private final Component component;
+    private final ReservationDetails details;
     private final DateTime time;
 
-    private Reservation(final Component component, final DateTime time) {
-        this.component = component;
-        this.time = time;
+    private Reservation(final ReservationDetails details, final DateTime dateTime) {
+        this.details = details;
+        this.time = dateTime;
     }
 
     /**
@@ -24,32 +27,36 @@ public class Reservation {
      * @param endTime   HH:mm
      * @return
      */
-    public static Reservation of(final String room, final String booker, final String purpose
+    public static Reservation of(final MeetingRoom room, final String booker, final String purpose
         , final String date, final String startTime, final String endTime) {
-        return new Reservation(Component.of(room, booker, purpose)
+        return new Reservation(ReservationDetails.of(room, booker, purpose)
             , DateTime.of(date, startTime, endTime));
     }
 
-    public static Reservation of(final String room, final String booker, final String purpose
+    public static Reservation of(final MeetingRoom room, final String booker, final String purpose
         , final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
-        return new Reservation(Component.of(room, booker, purpose)
+        return new Reservation(ReservationDetails.of(room, booker, purpose)
             , DateTime.of(date, startTime, endTime));
     }
 
-    public static Reservation of(final Component component, final DateTime time) {
-        return new Reservation(component, time);
+    public static Reservation of(final ReservationDetails details, final DateTime time) {
+        return new Reservation(details, time);
     }
 
-    public String getRoom() {
-        return component.getRoom();
+    public MeetingRoom getRoom() {
+        return details.getMeetingRoom();
     }
 
     public String getBooker() {
-        return component.getBooker();
+        return details.getBooker();
     }
 
-    public String getPurpose() {
-        return component.getPurpose();
+    public String getDescription() {
+        return details.getDescription();
+    }
+
+    public String getFormattedDate() {
+        return time.getFormattedDate();
     }
 
     public String getFormattedStartTime() {
@@ -60,6 +67,10 @@ public class Reservation {
         return time.getFormattedEndTime();
     }
 
+    public ReservationDetails getDetails() {
+        return details;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,13 +78,13 @@ public class Reservation {
 
         Reservation that = (Reservation) o;
 
-        if (!Objects.equals(component, that.component)) return false;
+        if (!Objects.equals(details, that.details)) return false;
         return Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        int result = component != null ? component.hashCode() : 0;
+        int result = details != null ? details.hashCode() : 0;
         result = 31 * result + (time != null ? time.hashCode() : 0);
         return result;
     }

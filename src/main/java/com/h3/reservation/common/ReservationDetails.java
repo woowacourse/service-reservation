@@ -1,6 +1,6 @@
-package com.h3.reservation.calendar.domain;
+package com.h3.reservation.common;
 
-import com.h3.reservation.common.MeetingRoom;
+import java.util.Objects;
 
 public class ReservationDetails {
 
@@ -28,5 +28,25 @@ public class ReservationDetails {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ReservationDetails that = (ReservationDetails) o;
+
+        if (meetingRoom != that.meetingRoom) return false;
+        if (!Objects.equals(booker, that.booker)) return false;
+        return Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = meetingRoom != null ? meetingRoom.hashCode() : 0;
+        result = 31 * result + (booker != null ? booker.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
     }
 }
