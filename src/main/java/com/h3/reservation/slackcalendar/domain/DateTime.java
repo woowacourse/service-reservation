@@ -27,7 +27,7 @@ public class DateTime {
     }
 
     private void checkValidate(LocalTime startTime, LocalTime endTime) {
-        if (startTime.isAfter(endTime)) {
+        if (!startTime.isBefore(endTime)) {
             throw new InvalidTimeRangeException();
         }
     }

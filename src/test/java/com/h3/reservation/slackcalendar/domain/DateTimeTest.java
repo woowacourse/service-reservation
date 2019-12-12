@@ -59,6 +59,15 @@ class DateTimeTest {
     }
 
     @Test
+    void constructor_startTime_same_endTime_exception() {
+        String date = "2019-12-10";
+        String startTime = "15:00";
+        String endTime = "15:00";
+
+        assertThrows(InvalidTimeRangeException.class, () -> DateTime.of(date, startTime, endTime));
+    }
+
+    @Test
     void getFormattedDate_Time() {
         String date = "2019-12-10";
         String startTime = "13:00";
