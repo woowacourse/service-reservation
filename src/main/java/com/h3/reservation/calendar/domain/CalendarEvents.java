@@ -6,7 +6,6 @@ import com.h3.reservation.common.MeetingRoom;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CalendarEvents {
 
@@ -24,9 +23,9 @@ public class CalendarEvents {
                 .collect(Collectors.toList());
     }
 
-    public List<MeetingRoom> findMeetingRooms() {
+    public List<MeetingRoom> findMeetingRooms(final String summaryDelimiter) {
         return findSummaries().stream()
-                .map(SummaryParser::parse)
+                .map(summary -> SummaryParser.parse(summary, summaryDelimiter))
                 .map(tokens -> tokens.get(INDEX_OF_MEETING_ROOM))
                 .map(roomName -> roomName.replace(" ", ""))
                 .map(MeetingRoom::findByName)

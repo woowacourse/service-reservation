@@ -4,10 +4,9 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.h3.reservation.calendar.CalendarService;
 import com.h3.reservation.calendar.domain.CalendarEvents;
-import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.slackcalendar.converter.ReservationConverter;
-import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.DateTime;
+import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,7 @@ class SlackCalendarServiceTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(ReservationConverter.class, "summaryDelimiter", "/");
+        ReflectionTestUtils.setField(slackCalendarService, "summaryDelimiter", "/");
     }
 
     @Test
@@ -77,9 +76,9 @@ class SlackCalendarServiceTest {
      */
     private Event createEvent(String summary, String date, String startTime, String endTime) {
         return new Event()
-            .setSummary(summary)
-            .setStart(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
-            .setEnd(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));
+                .setSummary(summary)
+                .setStart(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
+                .setEnd(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));
     }
 
     /**

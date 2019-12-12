@@ -71,7 +71,7 @@ public class CalendarService {
     }
 
     private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
-        return eventsByTime.findMeetingRooms()
+        return eventsByTime.findMeetingRooms(summaryDelimiter)
                 .stream()
                 .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }

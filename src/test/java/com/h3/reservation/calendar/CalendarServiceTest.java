@@ -9,7 +9,6 @@ import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
 import com.h3.reservation.calendar.domain.ReservationDetails;
-import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.common.MeetingRoom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +45,7 @@ class CalendarServiceTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(SummaryParser.class, "summaryDelimiter", "/");
+        ReflectionTestUtils.setField(calendarService, "summaryDelimiter", "/");
     }
 
     @Test
@@ -54,7 +53,7 @@ class CalendarServiceTest {
         String calendarId = "example@group.calendar.google.com";
 
         Events eventsInCalendar = new Events();
-        Event event = createEvent("2019-12-01","14:00:00", "16:00:00");
+        Event event = createEvent("2019-12-01", "14:00:00", "16:00:00");
         eventsInCalendar.setItems(Collections.singletonList(event));
 
         when(calendar.events()).thenReturn(events);

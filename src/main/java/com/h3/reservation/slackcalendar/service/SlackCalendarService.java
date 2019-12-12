@@ -24,6 +24,9 @@ public class SlackCalendarService {
     @Value("${calendar.id}")
     private String calendarId;
 
+    @Value("${calendar.summary.delimiter:/}")
+    private String summaryDelimiter;
+
     public SlackCalendarService(CalendarService calendarService) {
         this.calendarService = calendarService;
     }
@@ -34,7 +37,7 @@ public class SlackCalendarService {
 
         return Reservations.of(
                 reservation.getEvents().stream()
-                        .map(ReservationConverter::toReservation)
+                        .map(event -> ReservationConverter.toReservation(event, summaryDelimiter))
                         .collect(Collectors.toList())
         );
     }
