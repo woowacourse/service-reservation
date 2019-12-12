@@ -59,7 +59,7 @@ public class CalendarService {
 
         Event event = createEvent(reservationDetails, startTime, endTime);
 
-        calendar.events().insert(calendarId.getId(), event);
+        event = calendar.events().insert(calendarId.getId(), event).execute();
         return event;
     }
 

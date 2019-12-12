@@ -8,7 +8,7 @@ import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
-import com.h3.reservation.calendar.domain.ReservationDetails;
+import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.common.MeetingRoom;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,6 +95,7 @@ class CalendarServiceTest {
 
     @Test
     void 회의실_예약_성공() throws IOException {
+        // TODO : 유효하지 않은 calendar Id라 예약이 되지 않아 테스트가 실패.
         CalendarId calendarId = CalendarId.from("example@group.calendar.google.com");
 
         Events eventsInCalendar = new Events();
