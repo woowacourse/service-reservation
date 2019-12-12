@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 
 public class SummaryParser {
 
-    @Value("${calendar.summary.delimiter:/}")
-    private static String summaryDelimiter;
+//    @Value("${calendar.summary.delimiter:/}")
+    private static String summaryDelimiter = "/";
 
     private SummaryParser() {
     }

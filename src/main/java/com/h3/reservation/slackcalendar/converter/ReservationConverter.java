@@ -21,8 +21,8 @@ public class ReservationConverter {
     private static final int TIME_HOUR_INDEX = 0;
     private static final int TIME_MINUTE_INDEX = 1;
 
-    @Value("${calendar.summary.delimiter:/}")
-    private static String summaryDelimiter;
+//    @Value("${calendar.summary.delimiter}")
+    private static String summaryDelimiter = "/";
 
     private ReservationConverter() {
     }
