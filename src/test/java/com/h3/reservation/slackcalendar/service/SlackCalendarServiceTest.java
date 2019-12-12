@@ -1,5 +1,7 @@
 package com.h3.reservation.slackcalendar.service;
 
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.h3.reservation.calendar.CalendarService;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.DateTime;
@@ -63,11 +65,11 @@ class SlackCalendarServiceTest {
      * @param endTime   hh:mm
      * @return
      */
-    private com.google.api.services.calendar.model.Event createEvent(String summary, String date, String startTime, String endTime) {
-        return new com.google.api.services.calendar.model.Event()
+    private Event createEvent(String summary, String date, String startTime, String endTime) {
+        return new Event()
             .setSummary(summary)
-            .setStart(new com.google.api.services.calendar.model.EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
-            .setEnd(new com.google.api.services.calendar.model.EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));
+            .setStart(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
+            .setEnd(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));
     }
 
     /**
