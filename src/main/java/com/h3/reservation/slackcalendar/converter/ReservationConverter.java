@@ -1,6 +1,7 @@
 package com.h3.reservation.slackcalendar.converter;
 
 import com.google.api.services.calendar.model.Event;
+import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
  * @date 2019-12-10
  */
 public class ReservationConverter {
-
     private static final int SUMMARY_ROOM_INDEX = 0;
     private static final int SUMMARY_BOOKER_INDEX = 1;
     private static final int SUMMARY_PURPOSE_INDEX = 2;
@@ -33,8 +33,8 @@ public class ReservationConverter {
         String endDateTime = event.getEnd().getDateTime().toString();
 
         return Reservation.of(
-                summary[SUMMARY_ROOM_INDEX], summary[SUMMARY_BOOKER_INDEX], summary[SUMMARY_PURPOSE_INDEX]
-                , parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)
+            MeetingRoom.of(summary[SUMMARY_ROOM_INDEX]), summary[SUMMARY_BOOKER_INDEX], summary[SUMMARY_PURPOSE_INDEX]
+            , parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)
         );
     }
 

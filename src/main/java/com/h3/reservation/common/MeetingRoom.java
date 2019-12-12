@@ -16,6 +16,15 @@ public enum MeetingRoom {
         this.name = name;
     }
 
+    public static MeetingRoom of(String name) {
+        for (MeetingRoom room : values()) {
+            if (room.getName().equals(name)) {
+                return room;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     public static MeetingRoom findByName(String name) {
         return Arrays.stream(values())
                 .filter(room -> room.name.equals(name))

@@ -1,5 +1,6 @@
 package com.h3.reservation.slack.dto.response.factory.modalupdate;
 
+import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.ContextBlock;
@@ -71,13 +72,13 @@ public class RetrieveModalUpdateResponseFactory {
     }
 
     private static void addReservationBlocks(Reservations reservations, List<Block> blocks) {
-        TreeMap<String, List<Reservation>> roomReservation = reservations.stream()
+        TreeMap<MeetingRoom, List<Reservation>> roomReservation = reservations.stream()
             .collect(groupingBy(Reservation::getRoom, TreeMap::new, Collectors.toList()));
         addReservationBlocksByRoom(blocks, roomReservation);
     }
 
-    private static void addReservationBlocksByRoom(List<Block> blocks, TreeMap<String, List<Reservation>> roomReservation) {
-        roomReservation.forEach((key, value) -> blocks.addAll(generateReservations(key, value)));
+    private static void addReservationBlocksByRoom(List<Block> blocks, TreeMap<MeetingRoom, List<Reservation>> roomReservation) {
+        roomReservation.forEach((key, value) -> blocks.addAll(generateReservations(key.getName(), value)));
     }
 
     private static List<Block> generateReservations(String room, List<Reservation> reservations) {
