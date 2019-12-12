@@ -9,7 +9,7 @@ import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
-import com.h3.reservation.slack.dto.response.factory.ChangeUpdateModalResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.ChangeModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.ReserveModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.RetrieveModalUpdateResponseFactory;
@@ -81,7 +81,7 @@ public class SlackService {
     }
 
     public ModalUpdateResponse updateChangeModal(ChangeRequest request) {
-        return ChangeUpdateModalResponseFactory.of();
+        return ChangeModalUpdateResponseFactory.of();
     }
 
     private WebClient initWebClient() {

@@ -13,7 +13,8 @@ public enum ElementType {
     IMAGE("image"),
     MULTI_STATIC_SELECT("multi_static_select"),
     PLAIN_TEXT_INPUT("plain_text_input"),
-    STATIC_SELECT("static_select");
+    STATIC_SELECT("static_select"),
+    OVERFLOW("overflow");
 
     @JsonValue
     private String type;

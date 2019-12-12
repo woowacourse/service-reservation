@@ -1,16 +1,16 @@
 package com.h3.reservation.slack.dto.request.viewsubmission.values.block;
 
 public class EndHourBlock {
-    private EndHour endHour;
+    private OptionWrapper endHour;
 
     public EndHourBlock() {
     }
 
-    public EndHourBlock(EndHour endHour) {
+    public EndHourBlock(OptionWrapper endHour) {
         this.endHour = endHour;
     }
 
-    public EndHour getEndHour() {
+    public OptionWrapper getEndHour() {
         return endHour;
     }
 }
