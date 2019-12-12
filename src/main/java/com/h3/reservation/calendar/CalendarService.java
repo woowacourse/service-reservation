@@ -7,6 +7,7 @@ import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
+import com.h3.reservation.calendar.domain.ReservationDetails;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
 import com.h3.reservation.common.MeetingRoom;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,27 +51,27 @@ public class CalendarService {
         return eventsInCalendar.list(calendarId.getId());
     }
 
-    /**
-     * todo reservationDto를 만들자!
-     * 특정 시간에 예약된 (즉 예약하면 안되는) 모든 이벤트를 부른 뒤 해당 회의실로 필터링 -> 필터링 했을 때 남아있는게 존재하면 예약 실패! 없으면 예약시킴
-     */
-    public Event insertEvent(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room, String attendee, String description) throws IOException {
-        checkValidReservation(fetchingDate, calendarId, room);
+    public Event insertEvent(final ReservationDateTime fetchingDate, final CalendarId calendarId, ReservationDetails reservationDetails) throws IOException {
+        checkValidReservation(fetchingDate, calendarId, reservationDetails.getMeetingRoom());
 
         EventDateTime startTime = fetchingDate.toEventDateTime(fetchingDate.getStartDateTime());
         EventDateTime endTime = fetchingDate.toEventDateTime(fetchingDate.getEndDateTime());
 
-        Event event = createEvent(room, attendee, description, startTime, endTime);
+        Event event = createEvent(reservationDetails, startTime, endTime);
 
         calendar.events().insert(calendarId.getId(), event);
         return event;
     }
 
-    private Event createEvent(MeetingRoom room, String attendee, String description, EventDateTime startTime, EventDateTime endTime) {
+    private Event createEvent(final ReservationDetails reservationDetails, final EventDateTime startTime, final EventDateTime endTime) {
+        MeetingRoom meetingRoom = reservationDetails.getMeetingRoom();
+        String booker = reservationDetails.getBooker();
+        String description = reservationDetails.getDescription();
+
         return new Event()
                 .setStart(startTime)
                 .setEnd(endTime)
-                .setSummary(room + summaryDelimiter + attendee + summaryDelimiter + description);
+                .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
     }
 
     private void checkValidReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {

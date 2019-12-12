@@ -8,6 +8,7 @@ import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
+import com.h3.reservation.calendar.domain.ReservationDetails;
 import com.h3.reservation.common.MeetingRoom;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,9 +102,10 @@ class CalendarServiceTest {
                 ReservationDateTime.of("2019-12-01", "12:00:00", "14:00:00");
         ReservationDateTime reservationDateTime2 =
                 ReservationDateTime.of("2019-12-01", "16:00:00", "18:00:00");
+        ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
-        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
-        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime2, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
+        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime, calendarId, reservationDetails));
+        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime2, calendarId, reservationDetails));
     }
 
     @Test
@@ -124,11 +126,12 @@ class CalendarServiceTest {
                 ReservationDateTime.of("2019-12-01", "12:00:00", "14:01:00");
         ReservationDateTime reservationDateTime2 =
                 ReservationDateTime.of("2019-12-01", "15:59:00", "18:00:00");
+        ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
+                -> calendarService.insertEvent(reservationDateTime, calendarId, reservationDetails));
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime2, calendarId, MeetingRoom.ROOM1, "닉", "스터디"));
+                -> calendarService.insertEvent(reservationDateTime2, calendarId, reservationDetails));
     }
 
     private Event createEvent(String startTime, String endTime) {
