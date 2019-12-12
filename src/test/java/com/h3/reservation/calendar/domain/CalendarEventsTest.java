@@ -17,9 +17,9 @@ class CalendarEventsTest {
 
     @BeforeEach
     void setUp() {
-        Event event1 = new Event().setSummary("회의실1 / 버디 / 스터디");
-        Event event2 = new Event().setSummary("회의실2 / 닉 / 프로젝트");
-        Event event3 = new Event().setSummary("회의실3 / 코니 / 미션");
+        Event event1 = new Event().setSummary("회의실 1 / 버디 / 스터디");
+        Event event2 = new Event().setSummary("회의실 2 / 닉 / 프로젝트");
+        Event event3 = new Event().setSummary("회의실 3 / 코니 / 미션");
 
         events = Arrays.asList(event1, event2, event3);
     }
@@ -30,7 +30,7 @@ class CalendarEventsTest {
 
         List<String> summaries = calendarEvents.findSummaries();
 
-        assertThat(summaries).isEqualTo(Arrays.asList("회의실1 / 버디 / 스터디", "회의실2 / 닉 / 프로젝트", "회의실3 / 코니 / 미션"));
+        assertThat(summaries).isEqualTo(Arrays.asList("회의실 1 / 버디 / 스터디", "회의실 2 / 닉 / 프로젝트", "회의실 3 / 코니 / 미션"));
     }
 
     @Test

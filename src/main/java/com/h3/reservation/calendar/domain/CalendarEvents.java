@@ -26,7 +26,8 @@ public class CalendarEvents {
     public List<MeetingRoom> findMeetingRooms() {
         return findSummaries().stream()
                 .map(SummaryParser::parse)
-                .map(l -> l.get(INDEX_OF_MEETING_ROOM))
+                .map(tokens -> tokens.get(INDEX_OF_MEETING_ROOM))
+                .map(roomName -> roomName.replace(" ", ""))
                 .map(MeetingRoom::findByName)
                 .collect(Collectors.toList());
     }
