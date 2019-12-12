@@ -37,9 +37,10 @@ public class SlackCalendarService {
             , CalendarId.from(calendarId));
 
         return Reservations.of(
-                reservation.getEvents().stream()
-                        .map(ReservationConverter::toReservation)
-                        .collect(Collectors.toList())
+            reservation.getEvents().stream()
+                .map(ReservationConverter::toReservation)
+                .sorted(Comparator.comparing(Reservation::getFormattedStartTime))
+                .collect(Collectors.toList())
         );
     }
 
