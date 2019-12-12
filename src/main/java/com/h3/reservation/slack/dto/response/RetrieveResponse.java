@@ -8,19 +8,19 @@ import com.h3.reservation.slack.fragment.view.ModalView;
  * @date 2019-12-04
  */
 public class RetrieveResponse {
-    private String trigger_id;
+    private String triggerId;
     private ModalView view;
 
     public RetrieveResponse() {
     }
 
-    public RetrieveResponse(String trigger_id, ModalView view) {
-        this.trigger_id = trigger_id;
+    public RetrieveResponse(String triggerId, ModalView view) {
+        this.triggerId = triggerId;
         this.view = view;
     }
 
-    public String getTrigger_id() {
-        return trigger_id;
+    public String getTriggerId() {
+        return triggerId;
     }
 
     public ModalView getView() {

@@ -63,17 +63,6 @@ public class CalendarService {
         return event;
     }
 
-    private Event createEvent(final ReservationDetails reservationDetails, final EventDateTime startTime, final EventDateTime endTime) {
-        MeetingRoom meetingRoom = reservationDetails.getMeetingRoom();
-        String booker = reservationDetails.getBooker();
-        String description = reservationDetails.getDescription();
-
-        return new Event()
-                .setStart(startTime)
-                .setEnd(endTime)
-                .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
-    }
-
     private void checkValidReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {
         CalendarEvents eventsByTime = findReservation(fetchingDate, calendarId);
         if (isReservedMeetingRoom(room, eventsByTime)) {
@@ -85,5 +74,16 @@ public class CalendarService {
         return eventsByTime.findMeetingRooms()
                 .stream()
                 .anyMatch(meetingRoom -> meetingRoom.equals(room));
+    }
+
+    private Event createEvent(final ReservationDetails reservationDetails, final EventDateTime startTime, final EventDateTime endTime) {
+        MeetingRoom meetingRoom = reservationDetails.getMeetingRoom();
+        String booker = reservationDetails.getBooker();
+        String description = reservationDetails.getDescription();
+
+        return new Event()
+                .setStart(startTime)
+                .setEnd(endTime)
+                .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
     }
 }

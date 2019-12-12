@@ -1,17 +1,18 @@
 package com.h3.reservation.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.service.SlackService;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author heebg
@@ -31,58 +33,58 @@ import java.util.Map;
 @RestController
 public class BotController {
     private static final Logger logger = LoggerFactory.getLogger(BotController.class);
+
     private static final String TYPE = "type";
+    private static final String PAYLOAD = "payload";
 
-    private final SlackService service;
     private final ObjectMapper objectMapper;
+    private final SlackService service;
 
-    public BotController(SlackService service) {
+    public BotController(ObjectMapper objectMapper, SlackService service) {
+        this.objectMapper = objectMapper;
         this.service = service;
-        this.objectMapper = initObjectMapper();
     }
 
     @PostMapping("/slack/action")
-    public ResponseEntity action(@RequestBody JSONObject req) throws JsonProcessingException {
-        RequestType type = RequestType.valueOf(req.getAsString("type").toUpperCase());
-        if (RequestType.URL_VERIFICATION.equals(type)) {
-            return ResponseEntity.ok(service.verify(toDto(req, VerificationRequest.class)));
+    public ResponseEntity<String> action(@RequestBody JsonNode reqJson) throws JsonProcessingException {
+        switch (RequestType.of(reqJson.get(TYPE).asText())) {
+            case URL_VERIFICATION:
+                return ResponseEntity.ok(service.verify(jsonToDto(reqJson, VerificationRequest.class)));
+            case EVENT_CALLBACK:
+                service.showMenu(jsonToDto(reqJson, EventCallbackRequest.class));
+                return ResponseEntity.ok().build();
+            default:
+                return ResponseEntity.badRequest().build();
         }
-        if (RequestType.EVENT_CALLBACK.equals(type)) {
-            service.initMenu(toDto(req, EventCallbackRequest.class));
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping(value = "/slack/interaction", consumes = {"application/x-www-form-urlencoded"})
-    public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException, ParseException {
-        logger.debug("req : {}", req.toString());
-        JSONObject jsonObj = generateJsonObject(req);
-        RequestType type = RequestType.valueOf(jsonObj.getAsString(TYPE).toUpperCase());
-        if (RequestType.BLOCK_ACTIONS.equals(type)) {
-            service.viewModal(toDto(jsonObj, BlockActionRequest.class));
-            return ResponseEntity.ok().build();
+    @PostMapping(value = "/slack/interaction")
+    public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException {
+        JsonNode reqJson = objectMapper.readTree(req.get(PAYLOAD));
+        switch (RequestType.of(reqJson.get(TYPE).asText())) {
+            case BLOCK_ACTIONS:
+                service.showModal(jsonToDto(reqJson, BlockActionRequest.class));
+                return ResponseEntity.ok().build();
+            case VIEW_SUBMISSION:
+                return ResponseEntity.ok(Objects.requireNonNull(generateResponse(reqJson)));
+            default:
+                return ResponseEntity.badRequest().build();
         }
-        if (RequestType.VIEW_SUBMISSION.equals(type)) {
-            ModalUpdateResponse response = service.updateModal();
-            return ResponseEntity.ok(response);
+    }
+
+    private ModalUpdateResponse generateResponse(JsonNode reqJson) throws JsonProcessingException {
+        switch (InitMenuType.of(reqJson.get("view").get("callback_id").asText())) {
+            case RETRIEVE:
+                return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));
+            case RESERVE:
+                return service.updateReservationModal(jsonToDto(reqJson, ReserveRequest.class));
+            case CHANGE:
+                return service.updateChangeModal(jsonToDto(reqJson, ChangeRequest.class));
         }
-        return ResponseEntity.badRequest().build();
+        return null;
     }
 
-    private ObjectMapper initObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper;
-    }
-
-    private <T> T toDto(JSONObject object, Class<T> clazz) throws JsonProcessingException {
-        return objectMapper.readValue(object.toString(), clazz);
-    }
-
-    private JSONObject generateJsonObject(Map<String, String> req) throws ParseException {
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(req.get("payload"));
-        return (JSONObject) obj;
+    private <T> T jsonToDto(JsonNode json, Class<T> type) throws JsonProcessingException {
+        return objectMapper.treeToValue(json, type);
     }
 }

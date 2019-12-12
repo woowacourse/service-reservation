@@ -14,6 +14,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ModalView {
     private final String type = "modal";
+    private String callbackId;
     private PlainText title;
     private PlainText submit;
     private PlainText close;
@@ -22,13 +23,15 @@ public class ModalView {
     public ModalView() {
     }
 
-    public ModalView(PlainText title, PlainText close, List<Block> blocks) {
+    public ModalView(String callbackId, PlainText title, PlainText close, List<Block> blocks) {
+        this.callbackId = callbackId;
         this.title = title;
         this.close = close;
         this.blocks = blocks;
     }
 
-    public ModalView(PlainText title, PlainText submit, PlainText close, List<Block> blocks) {
+    public ModalView(String callbackId, PlainText title, PlainText submit, PlainText close, List<Block> blocks) {
+        this.callbackId = callbackId;
         this.title = title;
         this.submit = submit;
         this.close = close;
@@ -37,6 +40,10 @@ public class ModalView {
 
     public String getType() {
         return type;
+    }
+
+    public String getCallbackId() {
+        return callbackId;
     }
 
     public PlainText getTitle() {

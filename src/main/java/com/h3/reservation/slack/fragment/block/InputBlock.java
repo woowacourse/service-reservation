@@ -1,8 +1,8 @@
 package com.h3.reservation.slack.fragment.block;
 
 
-import com.h3.reservation.slack.fragment.element.Element;
 import com.h3.reservation.slack.fragment.composition.text.Text;
+import com.h3.reservation.slack.fragment.element.Element;
 
 /**
  * @author heebg
@@ -10,6 +10,7 @@ import com.h3.reservation.slack.fragment.composition.text.Text;
  * @date 2019-12-04
  */
 public class InputBlock extends Block {
+    private String blockId;
     private Text label;
     private Element element;
 
@@ -17,8 +18,9 @@ public class InputBlock extends Block {
         super(BlockType.INPUT);
     }
 
-    public InputBlock(Text label, Element element) {
+    public InputBlock(String blockId, Text label, Element element) {
         super(BlockType.INPUT);
+        this.blockId = blockId;
         this.label = label;
         this.element = element;
     }
@@ -29,5 +31,9 @@ public class InputBlock extends Block {
 
     public Element getElement() {
         return element;
+    }
+
+    public String getBlockId() {
+        return blockId;
     }
 }

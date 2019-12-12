@@ -12,6 +12,7 @@ public class ReservationDateTime {
     private static final String TIME_DELIMITER = ":";
     private static final String DEFAULT_SECONDS = "00";
     private static final int MIN_COUNT_OF_TIME_TOKENS = 2;
+    private static final String TIME_ZONE = "+09:00";
 
     private final DateTime startDateTime;
     private final DateTime endDateTime;
@@ -38,13 +39,17 @@ public class ReservationDateTime {
      * @param endTime      The format of fetchingDate : hh:mm(:ss)
      */
     public static ReservationDateTime of(final String fetchingDate, final String startTime, final String endTime) {
-        String formattedStartTime = createFormattedTime(startTime);
-        String formattedEndTime = createFormattedTime(endTime);
+        String formattedStartTime = createFormattedTimeWithTimeZone(startTime);
+        String formattedEndTime = createFormattedTimeWithTimeZone(endTime);
 
         DateTime startDateTime = DateTime.parseRfc3339(fetchingDate + formattedStartTime);
         DateTime endDateTime = DateTime.parseRfc3339(fetchingDate + formattedEndTime);
 
         return new ReservationDateTime(startDateTime, endDateTime);
+    }
+
+    private static String createFormattedTimeWithTimeZone(final String time) {
+        return createFormattedTime(time) + TIME_ZONE;
     }
 
     private static String createFormattedTime(final String time) {

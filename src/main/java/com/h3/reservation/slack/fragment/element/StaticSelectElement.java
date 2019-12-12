@@ -1,25 +1,34 @@
 package com.h3.reservation.slack.fragment.element;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.h3.reservation.slack.fragment.composition.Option;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StaticSelectElement extends Element {
     private PlainText placeholder;
-    private String action_id;
-    private Option initial_option;
+    private String actionId;
+    private Option initialOption;
     private List<Option> options;
 
     public StaticSelectElement() {
         super(ElementType.STATIC_SELECT);
     }
 
-    public StaticSelectElement(PlainText placeholder, String action_id, Option initial_option, List<Option> options) {
+    public StaticSelectElement(PlainText placeholder, String actionId, List<Option> options) {
         super(ElementType.STATIC_SELECT);
         this.placeholder = placeholder;
-        this.action_id = action_id;
-        this.initial_option = initial_option;
+        this.actionId = actionId;
+        this.options = options;
+    }
+
+    public StaticSelectElement(PlainText placeholder, String actionId, Option initialOption, List<Option> options) {
+        super(ElementType.STATIC_SELECT);
+        this.placeholder = placeholder;
+        this.actionId = actionId;
+        this.initialOption = initialOption;
         this.options = options;
     }
 
@@ -27,12 +36,12 @@ public class StaticSelectElement extends Element {
         return placeholder;
     }
 
-    public String getAction_id() {
-        return action_id;
+    public String getActionId() {
+        return actionId;
     }
 
-    public Option getInitial_option() {
-        return initial_option;
+    public Option getInitialOption() {
+        return initialOption;
     }
 
     public List<Option> getOptions() {
