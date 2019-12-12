@@ -38,6 +38,8 @@ public class ReserveResponseFactory {
                 CommonResponseFactory.generateMinutePicker(PREFIX_END),
                 new InputBlock("meeting_room_block", new PlainText("회의실을 선택하세요."),
                     generateMeetingRoomSelectElement()),
+                new InputBlock("description_block", new PlainText("회의 제목을 입력하세요."),
+                    new PlainTextInputElement("description", new PlainText("회의 제목"))),
                 new InputBlock("name_block", new PlainText("예약자 이름을 입력하세요."),
                     new PlainTextInputElement("name", new PlainText("이름")))
             )
