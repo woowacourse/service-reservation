@@ -1,6 +1,7 @@
 package com.h3.reservation.slack.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.h3.reservation.slack.EventType;
 import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
@@ -9,8 +10,9 @@ import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.InitHomeTabResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.ReserveModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.RetrieveModalUpdateResponseFactory;
 import com.h3.reservation.slackcalendar.domain.DateTime;
@@ -55,8 +57,15 @@ public class SlackService {
     }
 
     public void showMenu(EventCallbackRequest dto) {
-        String postUrl = "/chat.postMessage";
-        send(postUrl, InitResponseFactory.of(dto.getChannel()));
+        String postUrl;
+        switch (EventType.of(dto.getType())) {
+            case APP_MENTION:
+                postUrl = "/chat.postMessage";
+                send(postUrl, InitResponseFactory.of(dto.getChannel()));
+            case APP_HOME_OPENED:
+                postUrl = "/views.publish";
+                send(postUrl, InitHomeTabResponseFactory.of(dto.getUserId()));
+        }
     }
 
     public void showModal(BlockActionRequest dto) {
