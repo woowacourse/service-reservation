@@ -1,16 +1,16 @@
 package com.h3.reservation.slack.dto.request.viewsubmission.values.block;
 
 public class MeetingRoomBlock {
-    private MeetingRoom meetingRoom;
+    private OptionWrapper meetingRoom;
 
     public MeetingRoomBlock() {
     }
 
-    public MeetingRoomBlock(MeetingRoom meetingRoom) {
+    public MeetingRoomBlock(OptionWrapper meetingRoom) {
         this.meetingRoom = meetingRoom;
     }
 
-    public MeetingRoom getMeetingRoom() {
+    public OptionWrapper getMeetingRoom() {
         return meetingRoom;
     }
 }

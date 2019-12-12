@@ -1,16 +1,16 @@
 package com.h3.reservation.slack.dto.request.viewsubmission.values.block;
 
 public class StartMinuteBlock {
-    private StartMinute startMinute;
+    private OptionWrapper startMinute;
 
     public StartMinuteBlock() {
     }
 
-    public StartMinuteBlock(StartMinute startMinute) {
+    public StartMinuteBlock(OptionWrapper startMinute) {
         this.startMinute = startMinute;
     }
 
-    public StartMinute getStartMinute() {
+    public OptionWrapper getStartMinute() {
         return startMinute;
     }
 }
