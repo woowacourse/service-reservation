@@ -3,10 +3,13 @@ package com.h3.reservation.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.service.SlackService;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author heebg
@@ -55,17 +59,29 @@ public class BotController {
     }
 
     @PostMapping(value = "/slack/interaction")
-    public ResponseEntity<ModalUpdateResponse> interaction(@RequestParam Map<String, String> req) throws IOException {
+    public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException {
         JsonNode reqJson = objectMapper.readTree(req.get(PAYLOAD));
         switch (RequestType.of(reqJson.get(TYPE).asText())) {
             case BLOCK_ACTIONS:
                 service.showModal(jsonToDto(reqJson, BlockActionRequest.class));
                 return ResponseEntity.ok().build();
             case VIEW_SUBMISSION:
-                return ResponseEntity.ok(service.updateModal(jsonToDto(reqJson, RetrieveRequest.class)));
+                return ResponseEntity.ok(Objects.requireNonNull(generateResponse(reqJson)));
             default:
                 return ResponseEntity.badRequest().build();
         }
+    }
+
+    private ModalUpdateResponse generateResponse(JsonNode reqJson) throws JsonProcessingException {
+        switch (InitMenuType.of(reqJson.get("view").get("callback_id").asText())) {
+            case RETRIEVE:
+                return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));
+            case RESERVE:
+                return service.updateReservationModal(jsonToDto(reqJson, ReserveRequest.class));
+            case CHANGE:
+                return service.updateChangeModal(jsonToDto(reqJson, ChangeRequest.class));
+        }
+        return null;
     }
 
     private <T> T jsonToDto(JsonNode json, Class<T> type) throws JsonProcessingException {

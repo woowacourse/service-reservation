@@ -41,7 +41,7 @@ class CalendarServiceTest {
         String calendarId = "example@group.calendar.google.com";
 
         Events eventsInCalendar = new Events();
-        Event event = createEvent("2019-12-01T14:00:00", "2019-12-01T16:00:00");
+        Event event = createEvent("2019-12-01", "14:00:00", "16:00:00");
         eventsInCalendar.setItems(Collections.singletonList(event));
 
         when(calendar.events()).thenReturn(events);
@@ -49,7 +49,7 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
 
         List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01")
-                , CalendarId.from(calendarId));
+            , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(1);
         assertThat(fetchedSchedule.get(0)).isEqualTo(event);
@@ -60,11 +60,11 @@ class CalendarServiceTest {
         String calendarId = "example@group.calendar.google.com";
 
         Events eventsInCalendar = new Events();
-        Event event1 = createEvent("2019-12-01T13:00:00", "2019-12-01T14:00:00");
-        Event event2 = createEvent("2019-12-01T13:00:00", "2019-12-01T14:01:00");
-        Event event3 = createEvent("2019-12-01T14:00:00", "2019-12-01T16:00:00");
-        Event event4 = createEvent("2019-12-01T15:59:00", "2019-12-01T17:00:00");
-        Event event5 = createEvent("2019-12-01T16:00:00", "2019-12-01T17:00:00");
+        Event event1 = createEvent("2019-12-01", "13:00:00", "14:00:00");
+        Event event2 = createEvent("2019-12-01", "13:00:00", "14:01:00");
+        Event event3 = createEvent("2019-12-01", "14:00:00", "16:00:00");
+        Event event4 = createEvent("2019-12-01", "15:59:00", "17:00:00");
+        Event event5 = createEvent("2019-12-01", "16:00:00", "17:00:00");
         eventsInCalendar.setItems(Arrays.asList(event1, event2, event3, event4, event5));
 
         when(calendar.events()).thenReturn(events);
@@ -72,7 +72,7 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
 
         List<Event> fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
-                , CalendarId.from(calendarId));
+            , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(3);
         assertThat(fetchedSchedule.get(0)).isEqualTo(event2);
@@ -80,9 +80,13 @@ class CalendarServiceTest {
         assertThat(fetchedSchedule.get(2)).isEqualTo(event4);
     }
 
-    private Event createEvent(String startTime, String endTime) {
+    private Event createEvent(String date, String startTime, String endTime) {
         return new Event()
-                .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(startTime)))
-                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(endTime)));
+            .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, startTime))))
+            .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))));
+    }
+
+    private String generateDateTime(String date, String time) {
+        return date + "T" + time + "+09:00";
     }
 }

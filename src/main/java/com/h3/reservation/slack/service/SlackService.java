@@ -5,16 +5,17 @@ import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.factory.ChangeUpdateModalResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
-import com.h3.reservation.slack.fragment.block.Block;
-import com.h3.reservation.slack.fragment.block.ContextBlock;
-import com.h3.reservation.slack.fragment.block.DividerBlock;
-import com.h3.reservation.slack.fragment.block.SectionBlock;
-import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
-import com.h3.reservation.slack.fragment.composition.text.PlainText;
-import com.h3.reservation.slack.fragment.view.ModalView;
+import com.h3.reservation.slack.dto.response.factory.ReserveModalUpdateResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.RetrieveModalUpdateResponseFactory;
+import com.h3.reservation.slackcalendar.domain.DateTime;
+import com.h3.reservation.slackcalendar.domain.Reservations;
+import com.h3.reservation.slackcalendar.service.SlackCalendarService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -25,9 +26,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.LocalTime;
 
 /**
  * @author heebg
@@ -41,10 +40,12 @@ public class SlackService {
     private static final String BASE_URL = "https://slack.com/api";
     private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
 
+    private final SlackCalendarService slackCalendarService;
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
 
-    public SlackService(ObjectMapper objectMapper) {
+    public SlackService(SlackCalendarService slackCalendarService, ObjectMapper objectMapper) {
+        this.slackCalendarService = slackCalendarService;
         this.objectMapper = objectMapper;
         this.webClient = initWebClient();
     }
@@ -63,27 +64,36 @@ public class SlackService {
         send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
     }
 
-    public ModalUpdateResponse updateModal(RetrieveRequest dto) {
-        return new ModalUpdateResponse(
-            new ModalView(
-                "retrieve_result",
-                new PlainText("조회하기"),
-                new PlainText("확인"),
-                generateDummyBlocks()
-            )
-        );
+    public ModalUpdateResponse updateRetrieveModal(RetrieveRequest request) {
+        DateTime retrieveRangeDateTime = DateTime.of(request.getDate()
+            , generateLocalTime(request.getStartHour(), request.getStartMinute())
+            , generateLocalTime(request.getEndHour(), request.getEndMinute()));
+        Reservations reservations = slackCalendarService.retrieve(retrieveRangeDateTime);
+        return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, reservations);
+    }
+
+    private LocalTime generateLocalTime(String hour, String minute) {
+        return LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
+    }
+
+    public ModalUpdateResponse updateReservationModal(ReserveRequest request) {
+        return ReserveModalUpdateResponseFactory.of();
+    }
+
+    public ModalUpdateResponse updateChangeModal(ChangeRequest request) {
+        return ChangeUpdateModalResponseFactory.of();
     }
 
     private WebClient initWebClient() {
         ExchangeStrategies strategies = ExchangeStrategies.builder()
-                .codecs(config ->
-                    config.customCodecs().encoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON))
-                ).build();
+            .codecs(config ->
+                config.customCodecs().encoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON))
+            ).build();
         return WebClient.builder()
-                .exchangeStrategies(strategies)
-                .baseUrl(BASE_URL)
-                .defaultHeader(HttpHeaders.AUTHORIZATION, TOKEN)
-                .build();
+            .exchangeStrategies(strategies)
+            .baseUrl(BASE_URL)
+            .defaultHeader(HttpHeaders.AUTHORIZATION, TOKEN)
+            .build();
     }
 
     private void send(String url, Object dto) {
@@ -93,55 +103,5 @@ public class SlackService {
             .exchange().block().bodyToMono(String.class)
             .block();
         logger.debug("WebClient Response: {}", response);
-    }
-
-    private List<Block> generateDummyBlocks() {
-        return Arrays.asList(
-            new SectionBlock(
-                new MrkdwnText("2019-12-05 12:10-14:10 회의실 예약 현황입니다.")
-            ),
-            new DividerBlock(),
-            new ContextBlock(
-                Collections.singletonList(
-                    new MrkdwnText("*회의실 1*")
-                )
-            ),
-            new DividerBlock(),
-            new SectionBlock(
-                new MrkdwnText("*프로젝트 회의*"),
-                Arrays.asList(
-                    new PlainText("버디"),
-                    new PlainText("12:10-13:10")
-                )
-            ),
-            new SectionBlock(
-                new MrkdwnText("*프로젝트 회의*"),
-                Arrays.asList(
-                    new PlainText("희봉"),
-                    new PlainText("13:10-14:10")
-                )
-            ),
-            new DividerBlock(),
-            new ContextBlock(
-                Collections.singletonList(
-                    new MrkdwnText("*회의실 2*")
-                )
-            ),
-            new DividerBlock(),
-            new SectionBlock(
-                new MrkdwnText("*스터디*"),
-                Arrays.asList(
-                    new PlainText("닉"),
-                    new PlainText("12:10-13:10")
-                )
-            ),
-            new SectionBlock(
-                new MrkdwnText("*프로젝트 회의*"),
-                Arrays.asList(
-                    new PlainText("도넛"),
-                    new PlainText("13:10-14:10")
-                )
-            )
-        );
     }
 }

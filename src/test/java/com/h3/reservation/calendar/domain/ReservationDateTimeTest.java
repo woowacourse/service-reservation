@@ -25,8 +25,8 @@ class ReservationDateTimeTest {
         ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate);
 
         assertThat(reservationDateTime).isNotNull();
-        assertThat(reservationDateTime.getStartDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T00:00:00"));
-        assertThat(reservationDateTime.getEndDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T23:59:59"));
+        assertThat(reservationDateTime.getStartDateTime()).isEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T00:00:00")));
+        assertThat(reservationDateTime.getEndDateTime()).isEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T23:59:59")));
     }
 
     @Test
@@ -34,8 +34,8 @@ class ReservationDateTimeTest {
         ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate, "16:00", "18:00");
 
         assertThat(reservationDateTime).isNotNull();
-        assertThat(reservationDateTime.getStartDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T16:00:00"));
-        assertThat(reservationDateTime.getEndDateTime()).isEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T18:00:00"));
+        assertThat(reservationDateTime.getStartDateTime()).isEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T16:00:00")));
+        assertThat(reservationDateTime.getEndDateTime()).isEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T18:00:00")));
     }
 
     @Test
@@ -55,35 +55,39 @@ class ReservationDateTimeTest {
     void isStartTimeEarlierThanOrEqualTo() {
         ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate, "14:00", "18:00");
 
-        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T13:59:00"))).isFalse();
-        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T14:00:00"))).isTrue();
-        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T14:01:00"))).isTrue();
+        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T13:59:00")))).isFalse();
+        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T14:00:00")))).isTrue();
+        assertThat(reservationDateTime.isStartTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T14:01:00")))).isTrue();
     }
 
     @Test
     void isEndTimeEarlierThanOrEqualTo() {
         ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate, "14:00", "18:00");
 
-        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T17:59:00"))).isFalse();
-        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T18:00:00"))).isTrue();
-        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(successfulFetchingDate + "T18:01:00"))).isTrue();
+        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T17:59:00")))).isFalse();
+        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T18:00:00")))).isTrue();
+        assertThat(reservationDateTime.isEndTimeEarlierThanOrEqualTo(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T18:01:00")))).isTrue();
     }
 
     @Test
     void isStartTimeEarlierThan() {
         ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate, "14:00", "18:00");
 
-        assertThat(reservationDateTime.isStartTimeEarlierThan(DateTime.parseRfc3339(successfulFetchingDate + "T13:59:00"))).isFalse();
-        assertThat(reservationDateTime.isStartTimeEarlierThan(DateTime.parseRfc3339(successfulFetchingDate + "T14:00:00"))).isFalse();
-        assertThat(reservationDateTime.isStartTimeEarlierThan(DateTime.parseRfc3339(successfulFetchingDate + "T14:01:00"))).isTrue();
+        assertThat(reservationDateTime.isStartTimeEarlierThan(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T13:59:00")))).isFalse();
+        assertThat(reservationDateTime.isStartTimeEarlierThan(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T14:00:00")))).isFalse();
+        assertThat(reservationDateTime.isStartTimeEarlierThan(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T14:01:00")))).isTrue();
     }
 
     @Test
     void isEndTimeEarlierThan() {
         ReservationDateTime reservationDateTime = ReservationDateTime.of(successfulFetchingDate, "14:00", "18:00");
 
-        assertThat(reservationDateTime.isEndTimeEarlierThan(DateTime.parseRfc3339(successfulFetchingDate + "T17:59:00"))).isFalse();
-        assertThat(reservationDateTime.isEndTimeEarlierThan(DateTime.parseRfc3339(successfulFetchingDate + "T18:00:00"))).isFalse();
-        assertThat(reservationDateTime.isEndTimeEarlierThan(DateTime.parseRfc3339(successfulFetchingDate + "T18:01:00"))).isTrue();
+        assertThat(reservationDateTime.isEndTimeEarlierThan(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T17:59:00")))).isFalse();
+        assertThat(reservationDateTime.isEndTimeEarlierThan(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T18:00:00")))).isFalse();
+        assertThat(reservationDateTime.isEndTimeEarlierThan(DateTime.parseRfc3339(configureTimeZone(successfulFetchingDate + "T18:01:00")))).isTrue();
+    }
+
+    private String configureTimeZone(String time) {
+        return time + "+09:00";
     }
 }
