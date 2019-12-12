@@ -12,11 +12,7 @@ import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -46,7 +42,8 @@ public class RetrieveModalUpdateResponseFactory {
     }
 
     private static void addTitleBlock(DateTime retrieveRangeDateTime, List<Block> blocks) {
-        blocks.addAll(generateTitle(retrieveRangeDateTime.getFormattedDate(), retrieveRangeDateTime.getFormattedStartTime(), retrieveRangeDateTime.getFormattedEndTime()));
+        blocks.addAll(generateTitle(retrieveRangeDateTime.getFormattedDate(),
+            retrieveRangeDateTime.getFormattedStartTime(), retrieveRangeDateTime.getFormattedEndTime()));
     }
 
     private static List<Block> generateTitle(String date, String startTime, String endTime) {
@@ -107,7 +104,8 @@ public class RetrieveModalUpdateResponseFactory {
     }
 
     private static void addReservationBlock(List<Block> blocks, Reservation reservation) {
-        blocks.add(generateReservation(reservation.getBooker(), reservation.getPurpose(), reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime()));
+        blocks.add(generateReservation(reservation.getBooker(), reservation.getPurpose(),
+            reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime()));
     }
 
     private static Block generateReservation(String booker, String purpose, String time) {

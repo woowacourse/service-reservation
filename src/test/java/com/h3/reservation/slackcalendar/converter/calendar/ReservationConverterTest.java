@@ -3,9 +3,12 @@ package com.h3.reservation.slackcalendar.converter.calendar;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.slackcalendar.converter.ReservationConverter;
 import com.h3.reservation.slackcalendar.domain.Reservation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @date 2019-12-10
  */
 class ReservationConverterTest {
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(ReservationConverter.class, "summaryDelimiter", "/");
+    }
 
     @Test
     void toReservation() {

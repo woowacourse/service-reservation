@@ -3,14 +3,19 @@ package com.h3.reservation.slackcalendar.service;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.h3.reservation.calendar.CalendarService;
+import com.h3.reservation.calendar.domain.CalendarEvents;
+import com.h3.reservation.calendar.utils.SummaryParser;
+import com.h3.reservation.slackcalendar.converter.ReservationConverter;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservations;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,11 @@ class SlackCalendarServiceTest {
     @InjectMocks
     private SlackCalendarService slackCalendarService;
 
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(ReservationConverter.class, "summaryDelimiter", "/");
+    }
+
     @Test
     void retrieve() {
         String date = "2019-12-10";
@@ -42,7 +52,7 @@ class SlackCalendarServiceTest {
         googleEvents.add(createEvent("회의실2/도넛/굴러간다", date, "11:00", "12:00"));
         googleEvents.add(createEvent("회의실3/버디/회의", date, "17:00", "18:00"));
 
-        when(calendarService.findReservation(any(), any())).thenReturn(googleEvents);
+        when(calendarService.findReservation(any(), any())).thenReturn(new CalendarEvents(googleEvents));
 
         String startTime = "10:00";
         String endTime = "18:00";

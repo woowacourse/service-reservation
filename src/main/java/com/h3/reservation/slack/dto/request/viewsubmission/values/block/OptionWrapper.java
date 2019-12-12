@@ -2,13 +2,13 @@ package com.h3.reservation.slack.dto.request.viewsubmission.values.block;
 
 import com.h3.reservation.slack.fragment.composition.Option;
 
-public class EndMinute {
+public class OptionWrapper {
     private Option selectedOption;
 
-    public EndMinute() {
+    public OptionWrapper() {
     }
 
-    public EndMinute(Option selectedOption) {
+    public OptionWrapper(Option selectedOption) {
         this.selectedOption = selectedOption;
     }
 
