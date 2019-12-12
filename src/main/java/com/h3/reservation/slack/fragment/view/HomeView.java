@@ -4,19 +4,19 @@ import com.h3.reservation.slack.fragment.block.Block;
 
 import java.util.List;
 
-/**
- * @author heebg
- * @version 1.0
- * @date 2019-12-04
- */
-public class MessageView {
+public class HomeView {
+    private final String type = "home";
     private List<Block> blocks;
 
-    public MessageView() {
+    public HomeView() {
     }
 
-    public MessageView(List<Block> blocks) {
+    public HomeView(List<Block> blocks) {
         this.blocks = blocks;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public List<Block> getBlocks() {
