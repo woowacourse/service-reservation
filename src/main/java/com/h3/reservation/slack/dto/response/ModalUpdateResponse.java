@@ -3,7 +3,7 @@ package com.h3.reservation.slack.dto.response;
 import com.h3.reservation.slack.fragment.view.ModalView;
 
 public class ModalUpdateResponse {
-    private final String response_action = "update";
+    private final String responseAction = "update";
     private ModalView view;
 
     public ModalUpdateResponse() {
@@ -13,8 +13,8 @@ public class ModalUpdateResponse {
         this.view = view;
     }
 
-    public String getResponse_action() {
-        return response_action;
+    public String getResponseAction() {
+        return responseAction;
     }
 
     public ModalView getView() {
