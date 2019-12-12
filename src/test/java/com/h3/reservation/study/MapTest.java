@@ -1,4 +1,4 @@
-package com.h3.reservation.slack.dto.response.factory;
+package com.h3.reservation.study;
 
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author heebg
  * @version 1.0
- * @date 2019-12-10
+ * @date 2019-12-12
  */
-class ModalUpdateResponseFactoryTest {
+public class MapTest {
     @Test
     @DisplayName("room을 key로 맵을 만들었을 때 room이 정렬이 되었는지 확인하는 학습 테스트")
     void groupby() {
