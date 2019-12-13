@@ -29,7 +29,7 @@ public class ReservationConverter {
         String endDateTime = event.getEnd().getDateTime().toString();
 
         return Reservation.of(
-            MeetingRoom.of(summary[SUMMARY_ROOM_INDEX]), summary[SUMMARY_BOOKER_INDEX], summary[SUMMARY_PURPOSE_INDEX]
+            MeetingRoom.findByName(summary[SUMMARY_ROOM_INDEX]), summary[SUMMARY_BOOKER_INDEX], summary[SUMMARY_PURPOSE_INDEX]
             , parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)
         );
     }

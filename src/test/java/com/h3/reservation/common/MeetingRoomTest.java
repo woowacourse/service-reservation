@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class MeetingRoomTest {
     @Test
-    void of() {
-        MeetingRoom room = MeetingRoom.of("회의실1");
+    void findByName() {
+        MeetingRoom room = MeetingRoom.findByName("회의실1");
         assertEquals(room, MeetingRoom.ROOM1);
     }
 }

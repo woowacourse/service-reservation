@@ -90,7 +90,7 @@ public class SlackService {
     }
 
     public ModalUpdateResponse updateReservationModal(ReserveRequest request) throws IOException {
-        ReservationDetails details = ReservationDetails.of(MeetingRoom.of(request.getMeetingRoom()), request.getName(), request.getDescription());
+        ReservationDetails details = ReservationDetails.of(MeetingRoom.findByName(request.getMeetingRoom()), request.getName(), request.getDescription());
         DateTime dateTime = DateTime.of(request.getDate()
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
