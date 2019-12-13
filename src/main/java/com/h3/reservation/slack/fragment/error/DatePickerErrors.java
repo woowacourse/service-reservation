@@ -5,13 +5,13 @@ package com.h3.reservation.slack.fragment.error;
  * @version 1.0
  * @date 2019-12-12
  */
-public class DateTimeErrors extends Errors {
+public class DatePickerErrors extends Errors {
     private String datepickerBlock;
 
-    public DateTimeErrors() {
+    public DatePickerErrors() {
     }
 
-    public DateTimeErrors(String datepickerBlock) {
+    public DatePickerErrors(String datepickerBlock) {
         this.datepickerBlock = datepickerBlock;
     }
 

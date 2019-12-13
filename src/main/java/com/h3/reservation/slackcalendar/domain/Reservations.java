@@ -47,6 +47,13 @@ public class Reservations implements Iterable<Reservation> {
     }
 
     @Override
+    public String toString() {
+        return "Reservations{" +
+            "reservations=" + reservations +
+            '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

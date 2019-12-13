@@ -7,6 +7,7 @@ import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.view.ModalView;
+import com.h3.reservation.slackcalendar.domain.Reservation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,21 +19,21 @@ import java.util.List;
  * @date 2019-12-11
  */
 public class ReserveModalUpdateResponseFactory {
-    public static ModalUpdateResponse of() {
+    public static ModalUpdateResponse of(Reservation reserve) {
         return new ModalUpdateResponse(
             new ModalView(
                 "reservation_result",
                 new PlainText("예약하기"),
                 new PlainText("확인"),
-                generateBlocks()
+                generateBlocks(reserve)
             )
         );
     }
 
-    private static List<Block> generateBlocks() {
+    private static List<Block> generateBlocks(Reservation reservation) {
         List<Block> blocks = new ArrayList<>();
         addTitleBlock(blocks);
-        addReserveBlocks(blocks);
+        addReserveBlocks(blocks, reservation);
         return blocks;
     }
 
@@ -41,13 +42,18 @@ public class ReserveModalUpdateResponseFactory {
         blocks.add(new DividerBlock());
     }
 
-    private static void addReserveBlocks(List<Block> blocks) {
-        blocks.add(new SectionBlock(
-            new MrkdwnText("*" + "프로젝트" + "*"),
+    private static void addReserveBlocks(List<Block> blocks, Reservation reservation) {
+        blocks.add(generateReserve(reservation.getDescription(), reservation.getBooker(), reservation.getRoom().getName()
+            , reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime()));
+    }
+
+    private static SectionBlock generateReserve(String description, String booker, String room, String date, String startTime, String endTime) {
+        return new SectionBlock(
+            new MrkdwnText("*" + room + " / " + description + "*"),
             Arrays.asList(
-                new PlainText("버디"),
-                new PlainText("2019-12-12 15:00-16:00")
+                new PlainText(booker),
+                new PlainText(date + " " + startTime + "-" + endTime)
             )
-        ));
+        );
     }
 }

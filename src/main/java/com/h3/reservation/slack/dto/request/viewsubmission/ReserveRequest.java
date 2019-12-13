@@ -48,6 +48,10 @@ public class ReserveRequest {
         return view.getValues().getMeetingRoomBlock().getMeetingRoom().getSelectedOption().getValue();
     }
 
+    public String getDescription() {
+        return view.getValues().getDescriptionBlock().getValue();
+    }
+
     public String getName() {
         return view.getValues().getNameBlock().getValue();
     }

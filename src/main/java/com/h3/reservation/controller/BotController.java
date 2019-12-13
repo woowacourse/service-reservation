@@ -72,7 +72,7 @@ public class BotController {
         }
     }
 
-    private ModalUpdateResponse generateResponse(JsonNode reqJson) throws JsonProcessingException {
+    private ModalUpdateResponse generateResponse(JsonNode reqJson) throws IOException {
         switch (InitMenuType.of(reqJson.get("view").get("callback_id").asText())) {
             case RETRIEVE:
                 return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));

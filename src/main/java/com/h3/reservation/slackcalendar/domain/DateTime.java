@@ -80,6 +80,15 @@ public class DateTime {
     }
 
     @Override
+    public String toString() {
+        return "DateTime{" +
+            "date=" + date +
+            ", startTime=" + startTime +
+            ", endTime=" + endTime +
+            '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

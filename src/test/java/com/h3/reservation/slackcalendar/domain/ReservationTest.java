@@ -1,5 +1,7 @@
 package com.h3.reservation.slackcalendar.domain;
 
+import com.h3.reservation.common.MeetingRoom;
+import com.h3.reservation.common.ReservationDetails;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -15,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ReservationTest {
     @Test
     void constructor() {
-        String room = "회의실1";
+        MeetingRoom room = MeetingRoom.ROOM1;
         String booker = "희봉";
         String purpose = "프로젝트 회의";
 
@@ -26,14 +28,14 @@ class ReservationTest {
         Reservation reservation = Reservation.of(room, booker, purpose, date, startTime, endTime);
         assertEquals(reservation, Reservation.of(room, booker, purpose, date, startTime, endTime));
 
-        Component component = Component.of(room, booker, purpose);
+        ReservationDetails details = ReservationDetails.of(room, booker, purpose);
         DateTime eventTime = DateTime.of(date, startTime, endTime);
-        assertEquals(reservation, Reservation.of(component, eventTime));
+        assertEquals(reservation, Reservation.of(details, eventTime));
     }
 
     @Test
-    void constructor_all_string() {
-        String room = "회의실1";
+    void constructor_all_string_without_room() {
+        MeetingRoom room = MeetingRoom.ROOM1;
         String booker = "희봉";
         String purpose = "프로젝트 회의";
 

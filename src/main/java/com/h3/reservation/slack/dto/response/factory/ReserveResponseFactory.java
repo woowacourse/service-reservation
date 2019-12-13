@@ -1,5 +1,6 @@
 package com.h3.reservation.slack.dto.response.factory;
 
+import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slack.dto.response.ReserveResponse;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
@@ -11,15 +12,13 @@ import com.h3.reservation.slack.fragment.element.PlainTextInputElement;
 import com.h3.reservation.slack.fragment.element.StaticSelectElement;
 import com.h3.reservation.slack.fragment.view.ModalView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReserveResponseFactory {
-    private static final String MEETING_ROOM = "회의실";
     private static final String PREFIX_START = "start";
     private static final String PREFIX_END = "end";
-    private static final int NUMBER_OF_MEETING_ROOM = 5;
 
     public static ReserveResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("datepicker");
@@ -39,6 +38,8 @@ public class ReserveResponseFactory {
                 CommonResponseFactory.generateMinutePicker(PREFIX_END),
                 new InputBlock("meeting_room_block", new PlainText("회의실을 선택하세요."),
                     generateMeetingRoomSelectElement()),
+                new InputBlock("description_block", new PlainText("회의 제목을 입력하세요."),
+                    new PlainTextInputElement("description", new PlainText("회의 제목"))),
                 new InputBlock("name_block", new PlainText("예약자 이름을 입력하세요."),
                     new PlainTextInputElement("name", new PlainText("이름")))
             )
@@ -48,17 +49,16 @@ public class ReserveResponseFactory {
 
     private static StaticSelectElement generateMeetingRoomSelectElement() {
         return new StaticSelectElement(
-            new PlainText(MEETING_ROOM),
+            new PlainText("회의실"),
             "meeting_room",
             generateMeetingRoomSelectOptions()
         );
     }
 
     private static List<Option> generateMeetingRoomSelectOptions() {
-        List<Option> options = new ArrayList<>();
-        for (int i = 1; i <= NUMBER_OF_MEETING_ROOM; i++) {
-            options.add(new Option(new PlainText(String.format("%s %d", MEETING_ROOM, i)), String.valueOf(i)));
-        }
-        return options;
+        return Arrays.stream(MeetingRoom.values())
+            .filter(meetingRoom -> !meetingRoom.equals(MeetingRoom.NONE))
+            .map(room -> new Option(new PlainText(room.getName()), room.getName()))
+            .collect(Collectors.toList());
     }
 }
