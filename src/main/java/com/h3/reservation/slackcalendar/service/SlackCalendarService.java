@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
 public class SlackCalendarService {
     private final CalendarService calendarService;
 
-    @Value("${calendar.id}")
-    private String calendarId;
+    private final String calendarId = System.getenv("CALENDAR_ID");
 
     @Value("${calendar.summary.delimiter:/}")
     private String summaryDelimiter;
