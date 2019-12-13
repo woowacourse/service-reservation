@@ -10,6 +10,7 @@ import com.h3.reservation.slackcalendar.domain.Reservation;
  * @date 2019-12-10
  */
 public class ReservationConverter {
+    private static final int SUMMARY_VALID_SIZE = 3;
     private static final int SUMMARY_ROOM_INDEX = 0;
     private static final int SUMMARY_BOOKER_INDEX = 1;
     private static final int SUMMARY_PURPOSE_INDEX = 2;
@@ -21,6 +22,22 @@ public class ReservationConverter {
     private static final int TIME_MINUTE_INDEX = 1;
 
     private ReservationConverter() {
+    }
+
+    public static boolean isFormatted(String summary, String summaryDelimiter) {
+        return isValidateFormat(summary.split(summaryDelimiter));
+    }
+
+    private static boolean isValidateFormat(String[] summaries) {
+        return isValidSize(summaries) && isValidMeetingRoom(summaries[SUMMARY_ROOM_INDEX]);
+    }
+
+    private static boolean isValidSize(String[] summaries) {
+        return summaries.length == SUMMARY_VALID_SIZE;
+    }
+
+    private static boolean isValidMeetingRoom(String summary) {
+        return !MeetingRoom.NONE.equals(MeetingRoom.findByName(summary));
     }
 
     public static Reservation toReservation(Event event, String summaryDelimiter) {
