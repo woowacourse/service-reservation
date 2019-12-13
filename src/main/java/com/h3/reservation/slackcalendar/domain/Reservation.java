@@ -72,6 +72,14 @@ public class Reservation {
     }
 
     @Override
+    public String toString() {
+        return "Reservation{" +
+            "details=" + details +
+            ", time=" + time +
+            '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

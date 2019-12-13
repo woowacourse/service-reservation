@@ -7,9 +7,9 @@ import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
-import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
 import com.h3.reservation.common.MeetingRoom;
+import com.h3.reservation.common.ReservationDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +35,9 @@ public class CalendarService {
             Events results = eventList.execute();
 
             List<Event> events = results.getItems().stream()
-                    .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
-                    .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
-                    .collect(Collectors.toList());
+                .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
+                .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
+                .collect(Collectors.toList());
 
             return new CalendarEvents(events);
         } catch (IOException e) {
@@ -71,9 +71,9 @@ public class CalendarService {
     }
 
     private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
-        return eventsByTime.findMeetingRooms()
-                .stream()
-                .anyMatch(meetingRoom -> meetingRoom.equals(room));
+        return eventsByTime.findMeetingRooms(summaryDelimiter)
+            .stream()
+            .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }
 
     private Event createEvent(final ReservationDetails reservationDetails, final EventDateTime startTime, final EventDateTime endTime) {
@@ -82,8 +82,8 @@ public class CalendarService {
         String description = reservationDetails.getDescription();
 
         return new Event()
-                .setStart(startTime)
-                .setEnd(endTime)
-                .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
+            .setStart(startTime)
+            .setEnd(endTime)
+            .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
     }
 }

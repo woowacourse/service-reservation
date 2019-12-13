@@ -1,11 +1,9 @@
 package com.h3.reservation.calendar.domain;
 
 import com.google.api.services.calendar.model.Event;
-import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.common.MeetingRoom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,8 +35,7 @@ class CalendarEventsTest {
     void findMeetingRooms() {
         CalendarEvents calendarEvents = new CalendarEvents(events);
 
-        ReflectionTestUtils.setField(SummaryParser.class, "summaryDelimiter", "/");
-        List<MeetingRoom> meetingRooms = calendarEvents.findMeetingRooms();
+        List<MeetingRoom> meetingRooms = calendarEvents.findMeetingRooms("/");
 
         assertThat(meetingRooms).isEqualTo(Arrays.asList(MeetingRoom.ROOM1, MeetingRoom.ROOM2, MeetingRoom.ROOM3));
     }
@@ -56,5 +53,4 @@ class CalendarEventsTest {
         assertThat(calendarEvents.getEvent(1)).isEqualTo(events.get(1));
         assertThat(calendarEvents.getEvent(2)).isEqualTo(events.get(2));
     }
-
 }

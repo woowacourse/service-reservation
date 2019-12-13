@@ -28,6 +28,9 @@ public class SlackCalendarService {
     @Value("${calendar.id}")
     private String calendarId;
 
+    @Value("${calendar.summary.delimiter:/}")
+    private String summaryDelimiter;
+
     public SlackCalendarService(CalendarService calendarService) {
         this.calendarService = calendarService;
     }
@@ -38,7 +41,7 @@ public class SlackCalendarService {
 
         return Reservations.of(
             reservation.getEvents().stream()
-                .map(ReservationConverter::toReservation)
+                .map(event -> ReservationConverter.toReservation(event, summaryDelimiter))
                 .sorted(Comparator.comparing(Reservation::getFormattedStartTime))
                 .collect(Collectors.toList())
         );
@@ -47,6 +50,6 @@ public class SlackCalendarService {
     public Reservation reserve(Reservation reservation) throws IOException {
         Event event = calendarService.insertEvent(ReservationDateTime.of(reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime())
             , CalendarId.from(calendarId), reservation.getDetails());
-        return ReservationConverter.toReservation(event);
+        return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 }

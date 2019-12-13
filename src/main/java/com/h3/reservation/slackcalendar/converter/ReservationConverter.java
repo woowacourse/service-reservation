@@ -3,7 +3,6 @@ package com.h3.reservation.slackcalendar.converter;
 import com.google.api.services.calendar.model.Event;
 import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slackcalendar.domain.Reservation;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author heebg
@@ -21,13 +20,10 @@ public class ReservationConverter {
     private static final int TIME_HOUR_INDEX = 0;
     private static final int TIME_MINUTE_INDEX = 1;
 
-//    @Value("${calendar.summary.delimiter}")
-    private static String summaryDelimiter = "/";
-
     private ReservationConverter() {
     }
 
-    public static Reservation toReservation(Event event) {
+    public static Reservation toReservation(Event event, String summaryDelimiter) {
         String[] summary = event.getSummary().split(summaryDelimiter);
         String startDateTime = event.getStart().getDateTime().toString();
         String endDateTime = event.getEnd().getDateTime().toString();
