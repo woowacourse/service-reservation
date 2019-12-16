@@ -13,8 +13,10 @@ import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitHomeTabResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalpush.CancelPushResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalpush.ChangePushResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.ReserveModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.RetrieveModalUpdateResponseFactory;
 import com.h3.reservation.slackcalendar.domain.DateTime;
@@ -73,8 +75,15 @@ public class SlackService {
     }
 
     public void showModal(BlockActionRequest dto) {
-        String postUrl = "/views.open";
-        send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+        String postUrl = "/views.push";
+        if (dto.getActionId().startsWith("request_change")) {
+            send(postUrl, ChangePushResponseFactory.of(dto.getTriggerId()));
+        } else if (dto.getActionId().startsWith("request_cancel")) {
+            send(postUrl, CancelPushResponseFactory.of(dto.getTriggerId()));
+        } else {
+            postUrl = "/views.open";
+            send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+        }
     }
 
     public ModalUpdateResponse updateRetrieveModal(RetrieveRequest request) {
