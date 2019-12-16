@@ -14,7 +14,7 @@ import java.util.function.Function;
 public enum InitMenuType {
     RETRIEVE(RetrieveResponseFactory::of),
     RESERVE(ReserveResponseFactory::of),
-    CHANGE(ChangeResponseFactory::of);
+    CHANGE(ChangeResponseFactory::beta);
 
     private Function<String, Object> function;
 
