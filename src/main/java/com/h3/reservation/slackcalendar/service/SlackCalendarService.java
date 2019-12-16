@@ -41,6 +41,7 @@ public class SlackCalendarService {
 
         return Reservations.of(
             reservation.getEvents().stream()
+                .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
                 .map(event -> ReservationConverter.toReservation(event, summaryDelimiter))
                 .sorted(Comparator.comparing(Reservation::getFormattedStartTime))
                 .collect(Collectors.toList())

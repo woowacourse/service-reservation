@@ -10,6 +10,7 @@ import com.h3.reservation.slackcalendar.domain.Reservation;
  * @date 2019-12-10
  */
 public class ReservationConverter {
+    private static final int SUMMARY_VALID_SIZE = 3;
     private static final int SUMMARY_ROOM_INDEX = 0;
     private static final int SUMMARY_BOOKER_INDEX = 1;
     private static final int SUMMARY_PURPOSE_INDEX = 2;
@@ -23,13 +24,29 @@ public class ReservationConverter {
     private ReservationConverter() {
     }
 
+    public static boolean isFormatted(String summary, String summaryDelimiter) {
+        return isValidateFormat(summary.split(summaryDelimiter));
+    }
+
+    private static boolean isValidateFormat(String[] summaries) {
+        return isValidSize(summaries) && isValidMeetingRoom(summaries[SUMMARY_ROOM_INDEX]);
+    }
+
+    private static boolean isValidSize(String[] summaries) {
+        return summaries.length == SUMMARY_VALID_SIZE;
+    }
+
+    private static boolean isValidMeetingRoom(String summary) {
+        return !MeetingRoom.NONE.equals(MeetingRoom.findByName(summary));
+    }
+
     public static Reservation toReservation(Event event, String summaryDelimiter) {
         String[] summary = event.getSummary().split(summaryDelimiter);
         String startDateTime = event.getStart().getDateTime().toString();
         String endDateTime = event.getEnd().getDateTime().toString();
 
         return Reservation.of(
-            MeetingRoom.of(summary[SUMMARY_ROOM_INDEX]), summary[SUMMARY_BOOKER_INDEX], summary[SUMMARY_PURPOSE_INDEX]
+            MeetingRoom.findByName(summary[SUMMARY_ROOM_INDEX]), summary[SUMMARY_BOOKER_INDEX], summary[SUMMARY_PURPOSE_INDEX]
             , parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)
         );
     }
