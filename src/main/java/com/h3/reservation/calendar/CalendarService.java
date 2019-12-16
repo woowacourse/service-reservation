@@ -35,9 +35,9 @@ public class CalendarService {
             Events results = eventList.execute();
 
             List<Event> events = results.getItems().stream()
-                .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
-                .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
-                .collect(Collectors.toList());
+                    .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
+                    .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
+                    .collect(Collectors.toList());
 
             return new CalendarEvents(events);
         } catch (IOException e) {
@@ -72,8 +72,8 @@ public class CalendarService {
 
     private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
         return eventsByTime.findMeetingRooms(summaryDelimiter)
-            .stream()
-            .anyMatch(meetingRoom -> meetingRoom.equals(room));
+                .stream()
+                .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }
 
     private Event createEvent(final ReservationDetails reservationDetails, final EventDateTime startTime, final EventDateTime endTime) {
@@ -82,8 +82,24 @@ public class CalendarService {
         String description = reservationDetails.getDescription();
 
         return new Event()
-            .setStart(startTime)
-            .setEnd(endTime)
-            .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
+                .setStart(startTime)
+                .setEnd(endTime)
+                .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
+    }
+
+    public void deleteEvent(final String eventId, final CalendarId calendarId) throws IOException {
+        try {
+            checkValidEventByEventId(eventId, calendarId);
+            calendar.events().delete(calendarId.getId(), eventId);
+        } catch (NotFoundEventById e) {
+            System.out.println("아이디 없다~");
+        }
+
+    }
+
+    private void checkValidEventByEventId(String eventId, CalendarId calendarId) throws IOException {
+        if (calendar.events().get(calendarId.getId(), eventId) == null) {
+            throw new NotFoundEventById();
+        }
     }
 }
