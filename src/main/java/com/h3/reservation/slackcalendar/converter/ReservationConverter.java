@@ -4,6 +4,8 @@ import com.google.api.services.calendar.model.Event;
 import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 
+import java.util.Arrays;
+
 /**
  * @author heebg
  * @version 1.0
@@ -25,7 +27,7 @@ public class ReservationConverter {
     }
 
     public static boolean isFormatted(String summary, String summaryDelimiter) {
-        return isValidateFormat(summary.split(summaryDelimiter));
+        return isValidateFormat(splitWithTrim(summary, summaryDelimiter));
     }
 
     private static boolean isValidateFormat(String[] summaries) {
@@ -36,12 +38,12 @@ public class ReservationConverter {
         return summaries.length == SUMMARY_VALID_SIZE;
     }
 
-    private static boolean isValidMeetingRoom(String summary) {
-        return !MeetingRoom.NONE.equals(MeetingRoom.findByName(summary));
+    private static boolean isValidMeetingRoom(String meetingRoom) {
+        return !MeetingRoom.NONE.equals(MeetingRoom.findByName(meetingRoom));
     }
 
     public static Reservation toReservation(Event event, String summaryDelimiter) {
-        String[] summary = event.getSummary().split(summaryDelimiter);
+        String[] summary = splitWithTrim(event.getSummary(), summaryDelimiter);
         String startDateTime = event.getStart().getDateTime().toString();
         String endDateTime = event.getEnd().getDateTime().toString();
 
@@ -52,7 +54,7 @@ public class ReservationConverter {
     }
 
     private static String parseDate(String dateTime) {
-        String[] dateTimes = dateTime.split(DATETIME_REGEX);
+        String[] dateTimes = splitWithTrim(dateTime, DATETIME_REGEX);
         return dateTimes[DATETIME_DATE_INDEX];
     }
 
@@ -61,8 +63,14 @@ public class ReservationConverter {
      * @return
      */
     private static String parseTime(String dateTime) {
-        String[] times = dateTime.split(DATETIME_REGEX);
-        times = times[DATETIME_TIME_INDEX].split(TIME_REGEX);
+        String[] times = splitWithTrim(dateTime, DATETIME_REGEX);
+        times = splitWithTrim(times[DATETIME_TIME_INDEX], TIME_REGEX);
         return times[TIME_HOUR_INDEX] + ":" + times[TIME_MINUTE_INDEX];
+    }
+
+    private static String[] splitWithTrim(String summary, String summaryDelimiter) {
+        return Arrays.stream(summary.split(summaryDelimiter))
+            .map(String::trim)
+            .toArray(String[]::new);
     }
 }
