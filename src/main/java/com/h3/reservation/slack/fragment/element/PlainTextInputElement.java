@@ -1,7 +1,9 @@
 package com.h3.reservation.slack.fragment.element;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlainTextInputElement extends Element {
     private String actionId;
     private PlainText placeholder;

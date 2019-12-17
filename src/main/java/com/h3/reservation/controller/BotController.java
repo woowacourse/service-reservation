@@ -85,9 +85,8 @@ public class BotController {
                 return service.updateChangeRequestModal(jsonToDto(reqJson, ReserveRequest.class));
             case CANCEL_REQUEST:
                 return service.updateCancelRequestModal();
-            default:
-                return new ModalClearResponse();
         }
+        return new ModalClearResponse();
     }
 
     private <T> T jsonToDto(JsonNode json, Class<T> type) throws JsonProcessingException {

@@ -73,14 +73,16 @@ public class SlackService {
     }
 
     public void showModal(BlockActionRequest dto) {
-        String postUrl = "/views.push";
+        if (dto.getBlockId().equals("initial_block")) {
+            send("/views.open", InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+            return;
+        }
         if (dto.getActionId().startsWith("request_change")) {
-            send(postUrl, ChangePushResponseFactory.of(dto.getTriggerId()));
-        } else if (dto.getActionId().startsWith("request_cancel")) {
-            send(postUrl, CancelPushResponseFactory.of(dto.getTriggerId()));
-        } else {
-            postUrl = "/views.open";
-            send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+            send("/views.push", ChangePushResponseFactory.of(dto.getTriggerId()));
+            return;
+        }
+        if (dto.getActionId().startsWith("request_cancel")) {
+            send("/views.push", CancelPushResponseFactory.of(dto.getTriggerId()));
         }
     }
 

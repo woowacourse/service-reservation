@@ -6,6 +6,8 @@ public enum ModalSubmissionType {
     CHANGE,
     CHANGE_REQUEST,
     CANCEL_REQUEST,
+    RETRIEVE_RESULT,
+    RESERVATION_RESULT,
     CHANGE_RESULT,
     CANCELLATION_RESULT;
 
