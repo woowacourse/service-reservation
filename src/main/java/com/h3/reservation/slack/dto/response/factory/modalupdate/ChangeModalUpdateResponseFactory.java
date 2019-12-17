@@ -113,7 +113,7 @@ public class ChangeModalUpdateResponseFactory {
 
     private static ActionsBlock generateChangeButton(String id) {
         return new ActionsBlock(
-            "change_block",
+            "change_block_" + id,
             Arrays.asList(
                 new ButtonElement(new PlainText("변경"), "request_change_" + id, "primary"),
                 new ButtonElement(new PlainText("취소"), "request_cancel_" + id, "danger")
