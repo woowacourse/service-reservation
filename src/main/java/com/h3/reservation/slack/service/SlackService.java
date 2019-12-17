@@ -17,6 +17,9 @@ import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.ReserveModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.RetrieveModalUpdateResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalpush.CancelPushResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalpush.ChangePushResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalupdate.*;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 import com.h3.reservation.slackcalendar.service.SlackCalendarService;
@@ -72,8 +75,17 @@ public class SlackService {
     }
 
     public void showModal(BlockActionRequest dto) {
-        String postUrl = "/views.open";
-        send(postUrl, InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+        if (dto.getBlockId().equals("initial_block")) {
+            send("/views.open", InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+            return;
+        }
+        if (dto.getActionId().startsWith("request_change")) {
+            send("/views.push", ChangePushResponseFactory.of(dto.getTriggerId()));
+            return;
+        }
+        if (dto.getActionId().startsWith("request_cancel")) {
+            send("/views.push", CancelPushResponseFactory.of(dto.getTriggerId()));
+        }
     }
 
     public ModalUpdateResponse updateRetrieveModal(RetrieveRequest request) {
@@ -89,7 +101,9 @@ public class SlackService {
     }
 
     public ModalUpdateResponse updateReservationModal(ReserveRequest request) throws IOException {
-        ReservationDetails details = ReservationDetails.of(MeetingRoom.findByName(request.getMeetingRoom()), request.getName(), request.getDescription());
+        ReservationDetails details = ReservationDetails.of(
+            MeetingRoom.findByName(request.getMeetingRoom()), request.getName(), request.getDescription()
+        );
         DateTime dateTime = DateTime.of(request.getDate()
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
@@ -99,6 +113,14 @@ public class SlackService {
 
     public ModalUpdateResponse updateChangeModal(ChangeRequest request) {
         return ChangeModalUpdateResponseFactory.of();
+    }
+
+    public ModalUpdateResponse updateChangeRequestModal(ReserveRequest request) {
+        return ChangeFinishedResponseFactory.of();
+    }
+
+    public ModalUpdateResponse updateCancelRequestModal() {
+        return CancelFinishedResponseFactory.of();
     }
 
     private WebClient initWebClient() {

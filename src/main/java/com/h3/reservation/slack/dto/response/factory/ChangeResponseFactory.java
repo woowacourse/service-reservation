@@ -1,7 +1,6 @@
 package com.h3.reservation.slack.dto.response.factory;
 
-import com.h3.reservation.slack.dto.response.ChangeResponse;
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.ModalResponse;
 import com.h3.reservation.slack.fragment.block.ContextBlock;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
@@ -14,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class ChangeResponseFactory {
-    public static ChangeResponse of(String triggerId) {
+    public static ModalResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("datepicker");
 
         ModalView modalView = new ModalView(
@@ -28,10 +27,10 @@ public class ChangeResponseFactory {
                     new PlainTextInputElement("name", new PlainText("이름")))
             )
         );
-        return new ChangeResponse(triggerId, modalView);
+        return new ModalResponse(triggerId, modalView);
     }
 
-    public static ChangeResponse beta(String triggerId) {
+    public static ModalResponse beta(String triggerId) {
         ModalView modalView = new ModalView(
             "change",
             new PlainText("변경/취소하기"),
@@ -42,6 +41,6 @@ public class ChangeResponseFactory {
             ))
         );
 
-        return new ChangeResponse(triggerId, modalView);
+        return new ModalResponse(triggerId, modalView);
     }
 }

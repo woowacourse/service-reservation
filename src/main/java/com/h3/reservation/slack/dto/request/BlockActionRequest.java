@@ -45,6 +45,10 @@ public class BlockActionRequest {
         return actions.get(0).getActionId();
     }
 
+    public String getBlockId() {
+        return actions.get(0).getBlockId();
+    }
+
     @Override
     public String toString() {
         return "BlockActionRequest{" +

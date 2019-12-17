@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ModalActionType {
     UPDATE("update"),
+    CLEAR("clear"),
     ERRORS("errors");
 
     @JsonValue

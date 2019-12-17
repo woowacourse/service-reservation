@@ -19,6 +19,7 @@ public class ModalView {
     private PlainText submit;
     private PlainText close;
     private List<Block> blocks;
+    private boolean clearOnClose;
 
     public ModalView() {
     }
@@ -36,6 +37,14 @@ public class ModalView {
         this.submit = submit;
         this.close = close;
         this.blocks = blocks;
+    }
+
+    public ModalView(String callbackId, PlainText title, PlainText close, List<Block> blocks, boolean clearOnClose) {
+        this.callbackId = callbackId;
+        this.title = title;
+        this.close = close;
+        this.blocks = blocks;
+        this.clearOnClose = clearOnClose;
     }
 
     public String getType() {
@@ -60,5 +69,9 @@ public class ModalView {
 
     public List<Block> getBlocks() {
         return blocks;
+    }
+
+    public boolean isClearOnClose() {
+        return clearOnClose;
     }
 }

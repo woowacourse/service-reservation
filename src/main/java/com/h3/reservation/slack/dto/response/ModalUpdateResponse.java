@@ -2,19 +2,16 @@ package com.h3.reservation.slack.dto.response;
 
 import com.h3.reservation.slack.fragment.view.ModalView;
 
-public class ModalUpdateResponse {
-    private final ModalActionType responseAction = ModalActionType.UPDATE;
+public class ModalUpdateResponse extends ModalSubmissionResponse {
     private ModalView view;
 
     public ModalUpdateResponse() {
+        super(ModalActionType.UPDATE);
     }
 
     public ModalUpdateResponse(ModalView view) {
+        super(ModalActionType.UPDATE);
         this.view = view;
-    }
-
-    public ModalActionType getResponseAction() {
-        return responseAction;
     }
 
     public ModalView getView() {

@@ -31,13 +31,12 @@ public class CalendarService {
 
     public CalendarEvents findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
-            Calendar.Events.List eventList = restrictEventsWithFetchingDate(calendarId);
-            Events results = eventList.execute();
+            Events results = fetchEventsByCalendarId(calendarId);
 
             List<Event> events = results.getItems().stream()
-                .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
-                .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
-                .collect(Collectors.toList());
+                    .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
+                    .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
+                    .collect(Collectors.toList());
 
             return new CalendarEvents(events);
         } catch (IOException e) {
@@ -45,25 +44,31 @@ public class CalendarService {
         }
     }
 
-    private Calendar.Events.List restrictEventsWithFetchingDate(final CalendarId calendarId) throws IOException {
+    private Events fetchEventsByCalendarId(final CalendarId calendarId) throws IOException {
+        Calendar.Events.List eventList = findListByCalendarId(calendarId);
+        return eventList.execute();
+    }
+
+    private Calendar.Events.List findListByCalendarId(final CalendarId calendarId) throws IOException {
         Calendar.Events eventsInCalendar = calendar.events();
 
         return eventsInCalendar.list(calendarId.getId());
     }
 
-    public Event insertEvent(final ReservationDateTime fetchingDate, final CalendarId calendarId, ReservationDetails reservationDetails) throws IOException {
-        checkAvailableReservation(fetchingDate, calendarId, reservationDetails.getMeetingRoom());
+    public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) throws IOException {
+        checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
 
         EventDateTime startTime = fetchingDate.toEventDateTime(fetchingDate.getStartDateTime());
         EventDateTime endTime = fetchingDate.toEventDateTime(fetchingDate.getEndDateTime());
 
         Event event = createEvent(reservationDetails, startTime, endTime);
 
-        event = calendar.events().insert(calendarId.getId(), event).execute();
-        return event;
+        return calendar.events()
+                .insert(calendarId.getId(), event)
+                .execute();
     }
 
-    private void checkAvailableReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {
+    private void checkAvailableReservation(final ReservationDateTime fetchingDate, MeetingRoom room, final CalendarId calendarId) {
         CalendarEvents eventsByTime = findReservation(fetchingDate, calendarId);
         if (isReservedMeetingRoom(room, eventsByTime)) {
             throw new NotAvailableReserveEventException("이미 예약된 방이 있습니다!");
@@ -72,8 +77,8 @@ public class CalendarService {
 
     private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
         return eventsByTime.findMeetingRooms(summaryDelimiter)
-            .stream()
-            .anyMatch(meetingRoom -> meetingRoom.equals(room));
+                .stream()
+                .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }
 
     private Event createEvent(final ReservationDetails reservationDetails, final EventDateTime startTime, final EventDateTime endTime) {
@@ -82,8 +87,30 @@ public class CalendarService {
         String description = reservationDetails.getDescription();
 
         return new Event()
-            .setStart(startTime)
-            .setEnd(endTime)
-            .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
+                .setStart(startTime)
+                .setEnd(endTime)
+                .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
+    }
+
+    public void deleteEvent(final Event event, final CalendarId calendarId) throws IOException {
+        checkExistenceOfEvent(event, calendarId);
+
+        calendar.events()
+                .delete(calendarId.getId(), event.getId())
+                .execute();
+    }
+
+    private void checkExistenceOfEvent(final Event event, final CalendarId calendarId) throws IOException {
+        Events results = fetchEventsByCalendarId(calendarId);
+        List<Event> items = results.getItems();
+
+        if (notExistsEventInItems(event, items)) {
+            throw new EventNotFoundException();
+        }
+    }
+
+    private boolean notExistsEventInItems(final Event event, final List<Event> items) {
+        return items.stream()
+                .noneMatch(e -> e.getId().equals(event.getId()));
     }
 }

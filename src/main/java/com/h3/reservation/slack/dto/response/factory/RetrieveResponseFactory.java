@@ -1,6 +1,6 @@
 package com.h3.reservation.slack.dto.response.factory;
 
-import com.h3.reservation.slack.dto.response.RetrieveResponse;
+import com.h3.reservation.slack.dto.response.ModalResponse;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
@@ -21,7 +21,7 @@ public class RetrieveResponseFactory {
     private static final int MIN_MINUTE = 0;
     private static final int MAX_MINUTE = 50;
 
-    public static RetrieveResponse of(String triggerId) {
+    public static ModalResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
@@ -39,7 +39,7 @@ public class RetrieveResponseFactory {
                 CommonResponseFactory.generateMinutePickerWithInitValue(PREFIX_END, MAX_MINUTE)
             )
         );
-        return new RetrieveResponse(triggerId, modalView);
+        return new ModalResponse(triggerId, modalView);
     }
 
     private static String generateNowDate() {
