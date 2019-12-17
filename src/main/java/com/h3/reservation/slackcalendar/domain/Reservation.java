@@ -45,6 +45,10 @@ public class Reservation {
         return new Reservation(id, details, time);
     }
 
+    public boolean isSameBooker(String booker) {
+        return details.isSameBooker(booker);
+    }
+
     public String getId() {
         return id;
     }

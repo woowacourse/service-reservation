@@ -127,7 +127,7 @@ public class SlackService {
     }
 
     public ModalUpdateResponse updateChangeModal(ChangeRequest request) {
-        Reservations reservations = slackCalendarService.retrieve(request.getDate());
+        Reservations reservations = slackCalendarService.retrieve(request.getDate(), request.getName());
         return ChangeModalUpdateResponseFactory.of(reservations);
     }
 

@@ -49,12 +49,13 @@ public class SlackCalendarService {
         );
     }
 
-    public Reservations retrieve(String date) {
-        CalendarEvents reservation = calendarService.findReservation(ReservationDateTime.of(date), CalendarId.from(calendarId));
+    public Reservations retrieve(String date, String booker) {
+        CalendarEvents reservations = calendarService.findReservation(ReservationDateTime.of(date), CalendarId.from(calendarId));
         return Reservations.of(
-            reservation.getEvents().stream()
+            reservations.getEvents().stream()
                 .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
                 .map(event -> ReservationConverter.toReservation(event, summaryDelimiter))
+                .filter(reservation -> reservation.isSameBooker(booker))
                 .sorted(Comparator.comparing(Reservation::getFormattedStartTime))
                 .collect(Collectors.toList())
         );
