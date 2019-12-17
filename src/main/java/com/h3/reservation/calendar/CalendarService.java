@@ -31,8 +31,7 @@ public class CalendarService {
 
     public CalendarEvents findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
-            Calendar.Events.List eventList = restrictEventsWithFetchingDate(calendarId);
-            Events results = eventList.execute();
+            Events results = fetchEventsByCalendarId(calendarId);
 
             List<Event> events = results.getItems().stream()
                     .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
@@ -45,7 +44,12 @@ public class CalendarService {
         }
     }
 
-    private Calendar.Events.List restrictEventsWithFetchingDate(final CalendarId calendarId) throws IOException {
+    private Events fetchEventsByCalendarId(final CalendarId calendarId) throws IOException {
+        Calendar.Events.List eventList = findListByCalendarId(calendarId);
+        return eventList.execute();
+    }
+
+    private Calendar.Events.List findListByCalendarId(final CalendarId calendarId) throws IOException {
         Calendar.Events eventsInCalendar = calendar.events();
 
         return eventsInCalendar.list(calendarId.getId());
@@ -59,8 +63,9 @@ public class CalendarService {
 
         Event event = createEvent(reservationDetails, startTime, endTime);
 
-        event = calendar.events().insert(calendarId.getId(), event).execute();
-        return event;
+        return calendar.events()
+                .insert(calendarId.getId(), event)
+                .execute();
     }
 
     private void checkAvailableReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {
@@ -88,9 +93,24 @@ public class CalendarService {
     }
 
     public void deleteEvent(final Event event, final CalendarId calendarId) throws IOException {
-        Calendar.Events.List list = calendar.events().list(calendarId.getId());
-        List<Event> items = list.execute().getItems();
-        items.stream().filter(e -> event.getId().equals(e.getId())).findFirst().orElseThrow(NotFoundEventById::new);
-        calendar.events().delete(calendarId.getId(), event.getId()).execute();
+        checkExistenceOfEvent(event, calendarId);
+
+        calendar.events()
+                .delete(calendarId.getId(), event.getId())
+                .execute();
+    }
+
+    private void checkExistenceOfEvent(final Event event, final CalendarId calendarId) throws IOException {
+        Events results = fetchEventsByCalendarId(calendarId);
+        List<Event> items = results.getItems();
+
+        if (notExistsEventInItems(event, items)) {
+            throw new EventNotFoundException();
+        }
+    }
+
+    private boolean notExistsEventInItems(final Event event, final List<Event> items) {
+        return items.stream()
+                .noneMatch(e -> e.getId().equals(event.getId()));
     }
 }
