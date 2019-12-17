@@ -5,7 +5,9 @@ public enum ModalSubmissionType {
     RESERVE,
     CHANGE,
     CHANGE_REQUEST,
-    CANCEL_REQUEST;
+    CANCEL_REQUEST,
+    CHANGE_RESULT,
+    CANCELLATION_RESULT;
 
     public static ModalSubmissionType of(String name) {
         return valueOf(name.toUpperCase());

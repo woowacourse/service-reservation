@@ -10,8 +10,9 @@ import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
+import com.h3.reservation.slack.dto.response.ModalClearResponse;
+import com.h3.reservation.slack.dto.response.ModalSubmissionResponse;
 import com.h3.reservation.slack.dto.response.ModalSubmissionType;
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.service.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class BotController {
         }
     }
 
-    private ModalUpdateResponse generateResponse(JsonNode reqJson) throws IOException {
+    private ModalSubmissionResponse generateResponse(JsonNode reqJson) throws IOException {
         switch (ModalSubmissionType.of(reqJson.get("view").get("callback_id").asText())) {
             case RETRIEVE:
                 return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));
@@ -84,8 +85,9 @@ public class BotController {
                 return service.updateChangeRequestModal(jsonToDto(reqJson, ReserveRequest.class));
             case CANCEL_REQUEST:
                 return service.updateCancelRequestModal();
+            default:
+                return new ModalClearResponse();
         }
-        return null;
     }
 
     private <T> T jsonToDto(JsonNode json, Class<T> type) throws JsonProcessingException {

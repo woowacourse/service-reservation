@@ -23,10 +23,10 @@ public class ModalView {
     public ModalView() {
     }
 
-    public ModalView(String callbackId, PlainText title, PlainText close, List<Block> blocks) {
+    public ModalView(String callbackId, PlainText title, PlainText submit, List<Block> blocks) {
         this.callbackId = callbackId;
         this.title = title;
-        this.close = close;
+        this.submit = submit;
         this.blocks = blocks;
     }
 
