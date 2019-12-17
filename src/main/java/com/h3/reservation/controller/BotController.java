@@ -67,13 +67,13 @@ public class BotController {
                 service.showModal(jsonToDto(reqJson, BlockActionRequest.class));
                 return ResponseEntity.ok().build();
             case VIEW_SUBMISSION:
-                return ResponseEntity.ok(Objects.requireNonNull(generateResponse(reqJson)));
+                return ResponseEntity.ok(Objects.requireNonNull(generateModalSubmissionResponse(reqJson)));
             default:
                 return ResponseEntity.badRequest().build();
         }
     }
 
-    private ModalSubmissionResponse generateResponse(JsonNode reqJson) throws IOException {
+    private ModalSubmissionResponse generateModalSubmissionResponse(JsonNode reqJson) throws IOException {
         switch (ModalSubmissionType.of(reqJson.get("view").get("callback_id").asText())) {
             case RETRIEVE:
                 return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));

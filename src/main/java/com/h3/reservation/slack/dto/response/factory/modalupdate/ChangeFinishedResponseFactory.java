@@ -14,7 +14,8 @@ public class ChangeFinishedResponseFactory {
                 "change_result",
                 new PlainText("변경하기"),
                 new PlainText("확인"),
-                Collections.singletonList(new SectionBlock(new PlainText("변경되었습니다.")))
+                Collections.singletonList(new SectionBlock(new PlainText("변경되었습니다."))),
+                true
             )
         );
     }
