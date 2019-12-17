@@ -49,7 +49,7 @@ public class SlackCalendarService {
 
     public Reservation reserve(Reservation reservation) throws IOException {
         Event event = calendarService.insertEvent(ReservationDateTime.of(reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime())
-            , CalendarId.from(calendarId), reservation.getDetails());
+            , reservation.getDetails(), CalendarId.from(calendarId));
         return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 }

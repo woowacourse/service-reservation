@@ -55,8 +55,8 @@ public class CalendarService {
         return eventsInCalendar.list(calendarId.getId());
     }
 
-    public Event insertEvent(final ReservationDateTime fetchingDate, final CalendarId calendarId, ReservationDetails reservationDetails) throws IOException {
-        checkAvailableReservation(fetchingDate, calendarId, reservationDetails.getMeetingRoom());
+    public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) throws IOException {
+        checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
 
         EventDateTime startTime = fetchingDate.toEventDateTime(fetchingDate.getStartDateTime());
         EventDateTime endTime = fetchingDate.toEventDateTime(fetchingDate.getEndDateTime());
@@ -68,7 +68,7 @@ public class CalendarService {
                 .execute();
     }
 
-    private void checkAvailableReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId, MeetingRoom room) {
+    private void checkAvailableReservation(final ReservationDateTime fetchingDate, MeetingRoom room, final CalendarId calendarId) {
         CalendarEvents eventsByTime = findReservation(fetchingDate, calendarId);
         if (isReservedMeetingRoom(room, eventsByTime)) {
             throw new NotAvailableReserveEventException("이미 예약된 방이 있습니다!");

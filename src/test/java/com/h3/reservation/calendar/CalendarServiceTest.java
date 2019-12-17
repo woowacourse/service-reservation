@@ -44,6 +44,9 @@ class CalendarServiceTest {
     private Calendar.Events.List list;
 
     @Mock
+    private Calendar.Events.Insert insert;
+
+    @Mock
     private Calendar.Events.Delete delete;
 
     @BeforeEach
@@ -97,7 +100,6 @@ class CalendarServiceTest {
 
     @Test
     void 회의실_예약_성공() throws IOException {
-        // TODO : 유효하지 않은 calendar Id라 예약이 되지 않아 테스트가 실패.
         String calendarId = "example@group.calendar.google.com";
 
         Events eventsInCalendar = new Events();
@@ -111,12 +113,14 @@ class CalendarServiceTest {
 
         ReservationDateTime reservationDateTime =
                 ReservationDateTime.of("2019-12-01", "12:00:00", "14:00:00");
-        ReservationDateTime reservationDateTime2 =
-                ReservationDateTime.of("2019-12-01", "16:00:00", "18:00:00");
         ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
-//        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime, calendarId, reservationDetails));
-//        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime2, calendarId, reservationDetails));
+        Event insertedEvent = createEvent("2019-12-01", "12:00:00", "14:00:00");
+        when(events.insert(eq(calendarId), any(Event.class))).thenReturn(insert);
+        when(insert.execute()).thenReturn(insertedEvent);
+
+        assertDoesNotThrow(() -> calendarService.insertEvent(reservationDateTime, reservationDetails, CalendarId.from(calendarId)));
+        verify(insert, times(1)).execute();
     }
 
     @Test
@@ -140,19 +144,9 @@ class CalendarServiceTest {
         ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime, calendarId, reservationDetails));
+                -> calendarService.insertEvent(reservationDateTime, reservationDetails, calendarId));
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime2, calendarId, reservationDetails));
-    }
-
-    private Event createEvent(String date, String startTime, String endTime) {
-        return new Event()
-                .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, startTime))))
-                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))));
-    }
-
-    private String generateDateTime(String date, String time) {
-        return date + "T" + time + "+09:00";
+                -> calendarService.insertEvent(reservationDateTime2, reservationDetails, calendarId));
     }
 
     @Test
@@ -195,5 +189,15 @@ class CalendarServiceTest {
         event3.setId("wrongId");
 
         assertThrows(EventNotFoundException.class, () -> calendarService.deleteEvent(event3, CalendarId.from(calendarId)));
+    }
+
+    private Event createEvent(String date, String startTime, String endTime) {
+        return new Event()
+                .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, startTime))))
+                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))));
+    }
+
+    private String generateDateTime(String date, String time) {
+        return date + "T" + time + "+09:00";
     }
 }
