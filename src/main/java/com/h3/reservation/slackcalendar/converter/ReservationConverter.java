@@ -47,7 +47,6 @@ public class ReservationConverter {
         String startDateTime = event.getStart().getDateTime().toString();
         String endDateTime = event.getEnd().getDateTime().toString();
 
-        // TODO : event Id값 얻어오는 것 확인.
         return Reservation.of(
             event.getId(), MeetingRoom.findByName(summary[SUMMARY_ROOM_INDEX].replace(" ", "")), summary[SUMMARY_BOOKER_INDEX]
             , summary[SUMMARY_PURPOSE_INDEX], parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)

@@ -77,6 +77,22 @@ public class Reservation {
         return details;
     }
 
+    public int getStartHour() {
+        return time.getStartHour();
+    }
+
+    public int getStartMinute() {
+        return time.getStartMinute();
+    }
+
+    public int getEndHour() {
+        return time.getEndHour();
+    }
+
+    public int getEndMinute() {
+        return time.getEndMinute();
+    }
+
     @Override
     public String toString() {
         return "Reservation{" +

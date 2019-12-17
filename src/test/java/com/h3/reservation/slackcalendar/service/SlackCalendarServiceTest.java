@@ -75,7 +75,6 @@ class SlackCalendarServiceTest {
      * @return
      */
     private Event createEvent(String id, String summary, String date, String startTime, String endTime) {
-        // TODO : event Id 설정 어떻게 하는지 확인
         return new Event()
             .setId(id)
             .setSummary(summary)
