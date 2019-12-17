@@ -58,18 +58,19 @@ class CalendarServiceTest {
         ReflectionTestUtils.setField(calendarService, "summaryDelimiter", "/");
         calendarId = "example@group.calendar.google.com";
 
-        Event event1 = createEvent("2019-12-01", "13:00:00", "14:00:00");
-        Event event2 = createEvent("2019-12-01", "13:00:00", "14:01:00");
-        Event event3 = createEvent("2019-12-01", "14:00:00", "16:00:00");
-        Event event4 = createEvent("2019-12-01", "15:59:00", "17:00:00");
-        Event event5 = createEvent("2019-12-01", "16:00:00", "17:00:00");
+        Event event1 = createEvent("2019-12-01", "13:00:00", "14:00:00", "event1");
+        Event event2 = createEvent("2019-12-01", "13:00:00", "14:01:00", "event2");
+        Event event3 = createEvent("2019-12-01", "14:00:00", "16:00:00", "event3");
+        Event event4 = createEvent("2019-12-01", "15:59:00", "17:00:00", "event4");
+        Event event5 = createEvent("2019-12-01", "16:00:00", "17:00:00", "event5");
         eventList = Arrays.asList(event1, event2, event3, event4, event5);
     }
 
-    private Event createEvent(String date, String startTime, String endTime) {
+    private Event createEvent(String date, String startTime, String endTime, String id) {
         return new Event()
                 .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, startTime))))
-                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))));
+                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))))
+                .setId(id);
     }
 
     private String generateDateTime(String date, String time) {
@@ -127,7 +128,7 @@ class CalendarServiceTest {
                 ReservationDateTime.of("2019-12-01", "14:00:00", "15:00:00");
         ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
-        Event insertedEvent = createEvent("2019-12-01", "14:00:00", "15:00:00");
+        Event insertedEvent = createEvent("2019-12-01", "14:00:00", "15:00:00", "insertedEvent");
         when(events.insert(eq(calendarId), any(Event.class))).thenReturn(insert);
         when(insert.execute()).thenReturn(insertedEvent);
 
@@ -164,8 +165,6 @@ class CalendarServiceTest {
         Events eventsInCalendar = new Events();
         Event event1 = eventList.get(1);
         Event event2 = eventList.get(2);
-        event1.setId("exampleId");
-        event2.setId("exampleId2");
         eventsInCalendar.setItems(Arrays.asList(event1, event2));
 
         when(calendar.events()).thenReturn(events);
@@ -182,8 +181,6 @@ class CalendarServiceTest {
         Events eventsInCalendar = new Events();
         Event event1 = eventList.get(1);
         Event event2 = eventList.get(2);
-        event1.setId("exampleId");
-        event2.setId("exampleId2");
         eventsInCalendar.setItems(Arrays.asList(event1, event2));
 
         when(calendar.events()).thenReturn(events);
@@ -191,8 +188,7 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
         when(events.delete(calendarId, event1.getId())).thenReturn(delete);
 
-        Event event3 = createEvent("2019-12-01", "13:00:00", "14:01:00");
-        event3.setId("wrongId");
+        Event event3 = createEvent("2019-12-01", "13:00:00", "14:01:00", "wrongId");
 
         assertThrows(EventNotFoundException.class, () -> calendarService.deleteEvent(event3, CalendarId.from(calendarId)));
     }
