@@ -22,6 +22,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -49,18 +50,36 @@ class CalendarServiceTest {
     @Mock
     private Calendar.Events.Delete delete;
 
+    private String calendarId;
+    private List<Event> eventList;
+
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(calendarService, "summaryDelimiter", "/");
+        calendarId = "example@group.calendar.google.com";
+
+        Event event1 = createEvent("2019-12-01", "13:00:00", "14:00:00");
+        Event event2 = createEvent("2019-12-01", "13:00:00", "14:01:00");
+        Event event3 = createEvent("2019-12-01", "14:00:00", "16:00:00");
+        Event event4 = createEvent("2019-12-01", "15:59:00", "17:00:00");
+        Event event5 = createEvent("2019-12-01", "16:00:00", "17:00:00");
+        eventList = Arrays.asList(event1, event2, event3, event4, event5);
+    }
+
+    private Event createEvent(String date, String startTime, String endTime) {
+        return new Event()
+                .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, startTime))))
+                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))));
+    }
+
+    private String generateDateTime(String date, String time) {
+        return date + "T" + time + "+09:00";
     }
 
     @Test
     void 전체_이벤트_조회_리스트() throws IOException {
-        String calendarId = "example@group.calendar.google.com";
-
         Events eventsInCalendar = new Events();
-        Event event = createEvent("2019-12-01", "14:00:00", "16:00:00");
-        eventsInCalendar.setItems(Collections.singletonList(event));
+        eventsInCalendar.setItems(eventList);
 
         when(calendar.events()).thenReturn(events);
         when(events.list(calendarId)).thenReturn(list);
@@ -69,21 +88,16 @@ class CalendarServiceTest {
         CalendarEvents fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01")
                 , CalendarId.from(calendarId));
 
-        assertThat(fetchedSchedule.size()).isEqualTo(1);
-        assertThat(fetchedSchedule.getEvent(0)).isEqualTo(event);
+        assertThat(fetchedSchedule.size()).isEqualTo(5);
+        for (int index = 0; index < fetchedSchedule.size(); index++) {
+            assertThat(fetchedSchedule.getEvent(index)).isEqualTo(eventList.get(index));
+        }
     }
 
     @Test
     void 특정_시각에_대한_이벤트_조회() throws IOException {
-        String calendarId = "example@group.calendar.google.com";
-
         Events eventsInCalendar = new Events();
-        Event event1 = createEvent("2019-12-01", "13:00:00", "14:00:00");
-        Event event2 = createEvent("2019-12-01", "13:00:00", "14:01:00");
-        Event event3 = createEvent("2019-12-01", "14:00:00", "16:00:00");
-        Event event4 = createEvent("2019-12-01", "15:59:00", "17:00:00");
-        Event event5 = createEvent("2019-12-01", "16:00:00", "17:00:00");
-        eventsInCalendar.setItems(Arrays.asList(event1, event2, event3, event4, event5));
+        eventsInCalendar.setItems(eventList.subList(1, 4));
 
         when(calendar.events()).thenReturn(events);
         when(events.list(calendarId)).thenReturn(list);
@@ -93,17 +107,15 @@ class CalendarServiceTest {
                 , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(3);
-        assertThat(fetchedSchedule.getEvent(0)).isEqualTo(event2);
-        assertThat(fetchedSchedule.getEvent(1)).isEqualTo(event3);
-        assertThat(fetchedSchedule.getEvent(2)).isEqualTo(event4);
+        assertThat(fetchedSchedule.getEvent(0)).isEqualTo(eventList.get(1));
+        assertThat(fetchedSchedule.getEvent(1)).isEqualTo(eventList.get(2));
+        assertThat(fetchedSchedule.getEvent(2)).isEqualTo(eventList.get(3));
     }
 
     @Test
     void 회의실_예약_성공() throws IOException {
-        String calendarId = "example@group.calendar.google.com";
-
         Events eventsInCalendar = new Events();
-        Event event = createEvent("2019-12-01", "14:00:00", "16:00:00");
+        Event event = eventList.get(0);
         event.setSummary("회의실1/버디/프로젝트");
         eventsInCalendar.setItems(Collections.singletonList(event));
 
@@ -112,10 +124,10 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
-                ReservationDateTime.of("2019-12-01", "12:00:00", "14:00:00");
+                ReservationDateTime.of("2019-12-01", "14:00:00", "15:00:00");
         ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
-        Event insertedEvent = createEvent("2019-12-01", "12:00:00", "14:00:00");
+        Event insertedEvent = createEvent("2019-12-01", "14:00:00", "15:00:00");
         when(events.insert(eq(calendarId), any(Event.class))).thenReturn(insert);
         when(insert.execute()).thenReturn(insertedEvent);
 
@@ -126,15 +138,13 @@ class CalendarServiceTest {
     @Test
     @DisplayName("기존의 예약시간과 겹치면 예약실패")
     void create_NotAvailableReserveEventException() throws IOException {
-        CalendarId calendarId = CalendarId.from("example@group.calendar.google.com");
-
         Events eventsInCalendar = new Events();
-        Event event = createEvent("2019-12-01", "14:00:00", "16:00:00");
+        Event event = eventList.get(2);
         event.setSummary("회의실1/버디/프로젝트");
         eventsInCalendar.setItems(Collections.singletonList(event));
 
         when(calendar.events()).thenReturn(events);
-        when(events.list(calendarId.getId())).thenReturn(list);
+        when(events.list(calendarId)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
@@ -144,18 +154,16 @@ class CalendarServiceTest {
         ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime, reservationDetails, calendarId));
+                -> calendarService.insertEvent(reservationDateTime, reservationDetails, CalendarId.from(calendarId)));
         assertThrows(NotAvailableReserveEventException.class, ()
-                -> calendarService.insertEvent(reservationDateTime2, reservationDetails, calendarId));
+                -> calendarService.insertEvent(reservationDateTime2, reservationDetails, CalendarId.from(calendarId)));
     }
 
     @Test
     void deleteEvent() throws IOException {
-        String calendarId = "example@group.calendar.google.com";
-
         Events eventsInCalendar = new Events();
-        Event event1 = createEvent("2019-12-01", "13:00:00", "14:00:00");
-        Event event2 = createEvent("2019-12-01", "13:00:00", "14:01:00");
+        Event event1 = eventList.get(1);
+        Event event2 = eventList.get(2);
         event1.setId("exampleId");
         event2.setId("exampleId2");
         eventsInCalendar.setItems(Arrays.asList(event1, event2));
@@ -171,11 +179,9 @@ class CalendarServiceTest {
 
     @Test
     void deleteEvent_EventNotFoundException() throws IOException {
-        String calendarId = "example@group.calendar.google.com";
-
         Events eventsInCalendar = new Events();
-        Event event1 = createEvent("2019-12-01", "13:00:00", "14:00:00");
-        Event event2 = createEvent("2019-12-01", "13:00:00", "14:01:00");
+        Event event1 = eventList.get(1);
+        Event event2 = eventList.get(2);
         event1.setId("exampleId");
         event2.setId("exampleId2");
         eventsInCalendar.setItems(Arrays.asList(event1, event2));
@@ -189,15 +195,5 @@ class CalendarServiceTest {
         event3.setId("wrongId");
 
         assertThrows(EventNotFoundException.class, () -> calendarService.deleteEvent(event3, CalendarId.from(calendarId)));
-    }
-
-    private Event createEvent(String date, String startTime, String endTime) {
-        return new Event()
-                .setStart(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, startTime))))
-                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(generateDateTime(date, endTime))));
-    }
-
-    private String generateDateTime(String date, String time) {
-        return date + "T" + time + "+09:00";
     }
 }
