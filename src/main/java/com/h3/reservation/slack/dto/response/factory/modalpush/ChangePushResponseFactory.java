@@ -25,7 +25,7 @@ public class ChangePushResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("datepicker", "2019-12-17");
 
         ModalView modalView = new ModalView(
-            "change",
+            "change_request",
             new PlainText("변경하기"),
             new PlainText("변경"),
             new PlainText("취소"),

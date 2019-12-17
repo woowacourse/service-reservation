@@ -10,7 +10,7 @@ import java.util.Collections;
 public class CancelPushResponseFactory {
     public static ModalResponse of(String triggerId) {
         ModalView modalView = new ModalView(
-            "change",
+            "cancel_request",
             new PlainText("취소하기"),
             new PlainText("네"),
             new PlainText("아니오"),
