@@ -44,4 +44,11 @@ class ReservationConverterTest {
     private static Stream<String> unFormattedSummaries() {
         return Stream.of(unFormatted);
     }
+
+    @Test
+    void isFormatted_trim() {
+        String summary = " 회의실2 / 제목 / 목적 ";
+
+        assertTrue(ReservationConverter.isFormatted(summary, summaryDelimiter));
+    }
 }
