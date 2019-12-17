@@ -35,12 +35,12 @@ public class ChangeModalUpdateResponseFactory {
                 "change_result",
                 new PlainText("변경/취소하기"),
                 new PlainText("확인"),
-                generateBlocks2(reservations)
+                generateBlocks(reservations)
             )
         );
     }
 
-    private static List<Block> generateBlocks2(Reservations reservations) {
+    private static List<Block> generateBlocks(Reservations reservations) {
         List<Block> blocks = new ArrayList<>();
         addRetrieveBlocks(reservations, blocks);
         return blocks;
@@ -103,11 +103,7 @@ public class ChangeModalUpdateResponseFactory {
 
     private static Block generateReservation(String booker, String purpose, String date, String time) {
         return new SectionBlock(
-            new MrkdwnText("*" + purpose + "*\n" + date + " " + time + " - " + booker),
-            Arrays.asList(
-                new PlainText(booker),
-                new PlainText(time)
-            )
+            new MrkdwnText("*" + purpose + "*\n" + date + " " + time + " - " + booker)
         );
     }
 
@@ -117,30 +113,6 @@ public class ChangeModalUpdateResponseFactory {
             Arrays.asList(
                 new ButtonElement(new PlainText("변경"), "request_change_" + id, "primary"),
                 new ButtonElement(new PlainText("취소"), "request_cancel_" + id, "danger")
-            )
-        );
-    }
-
-    private static List<Block> generateBlocks(Reservations reservations) {
-        List<Block> blocks = new ArrayList<>();
-        addRoomBlock("회의실 1", blocks);
-        addReservationBlock(blocks);
-        return blocks;
-    }
-
-    private static void addReservationBlock(List<Block> blocks) {
-        blocks.add(
-            new SectionBlock(
-                new MrkdwnText("*프로젝트*\n2019-12-12 12:00-13:00 - 버디")
-            )
-        );
-        blocks.add(
-            new ActionsBlock(
-                "change_block",
-                Arrays.asList(
-                    new ButtonElement(new PlainText("변경"), "request_change_id", "primary"),
-                    new ButtonElement(new PlainText("취소"), "request_cancel_id", "danger")
-                )
             )
         );
     }
