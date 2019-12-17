@@ -3,7 +3,6 @@ package com.h3.reservation.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
@@ -11,7 +10,9 @@ import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.ModalClearResponse;
+import com.h3.reservation.slack.dto.response.ModalSubmissionResponse;
+import com.h3.reservation.slack.dto.response.ModalSubmissionType;
 import com.h3.reservation.slack.service.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,29 +60,33 @@ public class BotController {
     }
 
     @PostMapping(value = "/slack/interaction")
-    public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException {
+    public ResponseEntity<?> interaction(@RequestParam Map<String, String> req) throws IOException {
         JsonNode reqJson = objectMapper.readTree(req.get(PAYLOAD));
         switch (RequestType.of(reqJson.get(TYPE).asText())) {
             case BLOCK_ACTIONS:
                 service.showModal(jsonToDto(reqJson, BlockActionRequest.class));
                 return ResponseEntity.ok().build();
             case VIEW_SUBMISSION:
-                return ResponseEntity.ok(Objects.requireNonNull(generateResponse(reqJson)));
+                return ResponseEntity.ok(Objects.requireNonNull(generateModalSubmissionResponse(reqJson)));
             default:
                 return ResponseEntity.badRequest().build();
         }
     }
 
-    private ModalUpdateResponse generateResponse(JsonNode reqJson) throws IOException {
-        switch (InitMenuType.of(reqJson.get("view").get("callback_id").asText())) {
+    private ModalSubmissionResponse generateModalSubmissionResponse(JsonNode reqJson) throws IOException {
+        switch (ModalSubmissionType.of(reqJson.get("view").get("callback_id").asText())) {
             case RETRIEVE:
                 return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));
             case RESERVE:
                 return service.updateReservationModal(jsonToDto(reqJson, ReserveRequest.class));
             case CHANGE:
                 return service.updateChangeModal(jsonToDto(reqJson, ChangeRequest.class));
+            case CHANGE_REQUEST:
+                return service.updateChangeRequestModal(jsonToDto(reqJson, ReserveRequest.class));
+            case CANCEL_REQUEST:
+                return service.updateCancelRequestModal();
         }
-        return null;
+        return new ModalClearResponse();
     }
 
     private <T> T jsonToDto(JsonNode json, Class<T> type) throws JsonProcessingException {

@@ -1,14 +1,10 @@
 package com.h3.reservation.slack.dto.response.factory.modalupdate;
 
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
-import com.h3.reservation.slack.fragment.block.Block;
-import com.h3.reservation.slack.fragment.block.ContextBlock;
-import com.h3.reservation.slack.fragment.block.DividerBlock;
-import com.h3.reservation.slack.fragment.block.SectionBlock;
-import com.h3.reservation.slack.fragment.composition.Option;
+import com.h3.reservation.slack.fragment.block.*;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
-import com.h3.reservation.slack.fragment.element.OverflowElement;
+import com.h3.reservation.slack.fragment.element.ButtonElement;
 import com.h3.reservation.slack.fragment.view.ModalView;
 
 import java.util.ArrayList;
@@ -59,21 +55,15 @@ public class ChangeModalUpdateResponseFactory {
     private static void addReservationBlock(List<Block> blocks) {
         blocks.add(
             new SectionBlock(
-                new MrkdwnText("*프로젝트*"),
-                new OverflowElement(
-                    "reservation_1",
-                    Arrays.asList(
-                        new Option(new PlainText(":pencil: 변경"), "change"),
-                        new Option(new PlainText(":x: 취소"), "cancel")
-                    )
-                )
+                new MrkdwnText("*프로젝트*\n2019-12-12 12:00-13:00 - 버디")
             )
         );
         blocks.add(
-            new ContextBlock(
+            new ActionsBlock(
+                "change_block",
                 Arrays.asList(
-                    new PlainText("2019-12-12 12:00-13:00"),
-                    new PlainText("버디")
+                    new ButtonElement(new PlainText("변경"), "request_change_id", "primary"),
+                    new ButtonElement(new PlainText("취소"), "request_cancel_id", "danger")
                 )
             )
         );
