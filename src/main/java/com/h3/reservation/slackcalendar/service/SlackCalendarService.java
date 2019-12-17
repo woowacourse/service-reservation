@@ -5,6 +5,7 @@ import com.h3.reservation.calendar.CalendarService;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
+import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.slackcalendar.converter.ReservationConverter;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
@@ -47,9 +48,9 @@ public class SlackCalendarService {
         );
     }
 
-    public Reservation reserve(Reservation reservation) throws IOException {
-        Event event = calendarService.insertEvent(ReservationDateTime.of(reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime())
-            , CalendarId.from(calendarId), reservation.getDetails());
+    public Reservation reserve(ReservationDetails details, DateTime dateTime) throws IOException {
+        Event event = calendarService.insertEvent(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
+            , CalendarId.from(calendarId), details);
         return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 }

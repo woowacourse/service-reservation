@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ReservationTest {
     @Test
     void constructor() {
+        String id = "1";
         MeetingRoom room = MeetingRoom.ROOM1;
         String booker = "희봉";
         String purpose = "프로젝트 회의";
@@ -25,16 +26,17 @@ class ReservationTest {
         LocalTime startTime = LocalTime.of(13, 30);
         LocalTime endTime = LocalTime.of(15, 00);
 
-        Reservation reservation = Reservation.of(room, booker, purpose, date, startTime, endTime);
-        assertEquals(reservation, Reservation.of(room, booker, purpose, date, startTime, endTime));
+        Reservation reservation = Reservation.of(id, room, booker, purpose, date, startTime, endTime);
+        assertEquals(reservation, Reservation.of(id, room, booker, purpose, date, startTime, endTime));
 
         ReservationDetails details = ReservationDetails.of(room, booker, purpose);
         DateTime eventTime = DateTime.of(date, startTime, endTime);
-        assertEquals(reservation, Reservation.of(details, eventTime));
+        assertEquals(reservation, Reservation.of(id, details, eventTime));
     }
 
     @Test
     void constructor_all_string_without_room() {
+        String id = "1";
         MeetingRoom room = MeetingRoom.ROOM1;
         String booker = "희봉";
         String purpose = "프로젝트 회의";
@@ -43,7 +45,7 @@ class ReservationTest {
         String startTime = "13:00";
         String endTime = "15:00";
 
-        Reservation reservation = Reservation.of(room, booker, purpose, date, startTime, endTime);
-        assertEquals(reservation, Reservation.of(room, booker, purpose, date, startTime, endTime));
+        Reservation reservation = Reservation.of(id, room, booker, purpose, date, startTime, endTime);
+        assertEquals(reservation, Reservation.of(id, room, booker, purpose, date, startTime, endTime));
     }
 }

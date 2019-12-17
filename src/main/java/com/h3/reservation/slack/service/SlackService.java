@@ -13,12 +13,11 @@ import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitHomeTabResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.ReserveModalUpdateResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.modalupdate.RetrieveModalUpdateResponseFactory;
 import com.h3.reservation.slackcalendar.domain.DateTime;
-import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 import com.h3.reservation.slackcalendar.service.SlackCalendarService;
 import org.slf4j.Logger;
@@ -95,8 +94,7 @@ public class SlackService {
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
 
-        Reservation reservation = Reservation.of(details, dateTime);
-        return ReserveModalUpdateResponseFactory.of(slackCalendarService.reserve(reservation));
+        return ReserveModalUpdateResponseFactory.of(slackCalendarService.reserve(details, dateTime));
     }
 
     public ModalUpdateResponse updateChangeModal(ChangeRequest request) {

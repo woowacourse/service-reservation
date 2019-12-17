@@ -13,10 +13,12 @@ import java.util.Objects;
  * @date 2019-12-11
  */
 public class Reservation {
+    private final String id;
     private final ReservationDetails details;
     private final DateTime time;
 
-    private Reservation(final ReservationDetails details, final DateTime dateTime) {
+    private Reservation(final String id, final ReservationDetails details, final DateTime dateTime) {
+        this.id = id;
         this.details = details;
         this.time = dateTime;
     }
@@ -27,20 +29,24 @@ public class Reservation {
      * @param endTime   HH:mm
      * @return
      */
-    public static Reservation of(final MeetingRoom room, final String booker, final String purpose
+    public static Reservation of(final String id, final MeetingRoom room, final String booker, final String purpose
         , final String date, final String startTime, final String endTime) {
-        return new Reservation(ReservationDetails.of(room, booker, purpose)
+        return new Reservation(id, ReservationDetails.of(room, booker, purpose)
             , DateTime.of(date, startTime, endTime));
     }
 
-    public static Reservation of(final MeetingRoom room, final String booker, final String purpose
+    public static Reservation of(final String id, final MeetingRoom room, final String booker, final String purpose
         , final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
-        return new Reservation(ReservationDetails.of(room, booker, purpose)
+        return new Reservation(id, ReservationDetails.of(room, booker, purpose)
             , DateTime.of(date, startTime, endTime));
     }
 
-    public static Reservation of(final ReservationDetails details, final DateTime time) {
-        return new Reservation(details, time);
+    public static Reservation of(final String id, final ReservationDetails details, final DateTime time) {
+        return new Reservation(id, details, time);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public MeetingRoom getRoom() {
@@ -74,7 +80,8 @@ public class Reservation {
     @Override
     public String toString() {
         return "Reservation{" +
-            "details=" + details +
+            "id='" + id + '\'' +
+            ", details=" + details +
             ", time=" + time +
             '}';
     }
@@ -86,13 +93,15 @@ public class Reservation {
 
         Reservation that = (Reservation) o;
 
+        if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(details, that.details)) return false;
         return Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        int result = details != null ? details.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (details != null ? details.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
         return result;
     }
