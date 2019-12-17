@@ -31,7 +31,7 @@ public class ReservationConverter {
     }
 
     private static boolean isValidateFormat(String[] summaries) {
-        return isValidSize(summaries) && isValidMeetingRoom(summaries[SUMMARY_ROOM_INDEX]);
+        return isValidSize(summaries) && isValidMeetingRoom(summaries[SUMMARY_ROOM_INDEX].replace(" ", ""));
     }
 
     private static boolean isValidSize(String[] summaries) {
