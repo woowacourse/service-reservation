@@ -11,6 +11,7 @@ import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
+import com.h3.reservation.slack.dto.response.ModalResponse;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitHomeTabResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
@@ -80,12 +81,17 @@ public class SlackService {
             return;
         }
         if (dto.getActionId().startsWith("request_change")) {
-            send("/views.push", ChangePushResponseFactory.of(dto.getTriggerId()));
+            send("/views.push", pushChangeModal(dto));
             return;
         }
         if (dto.getActionId().startsWith("request_cancel")) {
             send("/views.push", CancelPushResponseFactory.of(dto.getTriggerId()));
         }
+    }
+
+    private ModalResponse pushChangeModal(BlockActionRequest dto) {
+
+        return ChangePushResponseFactory.of(dto.getTriggerId());
     }
 
     public ModalUpdateResponse updateRetrieveModal(RetrieveRequest request) {
@@ -112,7 +118,8 @@ public class SlackService {
     }
 
     public ModalUpdateResponse updateChangeModal(ChangeRequest request) {
-        return ChangeModalUpdateResponseFactory.of();
+        Reservations reservations = slackCalendarService.retrieve(request.getDate());
+        return ChangeModalUpdateResponseFactory.of(reservations);
     }
 
     public ModalUpdateResponse updateChangeRequestModal(ReserveRequest request) {

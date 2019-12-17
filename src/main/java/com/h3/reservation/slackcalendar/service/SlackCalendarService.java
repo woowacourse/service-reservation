@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,17 @@ public class SlackCalendarService {
         CalendarEvents reservation = calendarService.findReservation(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
             , CalendarId.from(calendarId));
 
+        return Reservations.of(
+            reservation.getEvents().stream()
+                .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
+                .map(event -> ReservationConverter.toReservation(event, summaryDelimiter))
+                .sorted(Comparator.comparing(Reservation::getFormattedStartTime))
+                .collect(Collectors.toList())
+        );
+    }
+
+    public Reservations retrieve(String date) {
+        CalendarEvents reservation = calendarService.findReservation(ReservationDateTime.of(date), CalendarId.from(calendarId));
         return Reservations.of(
             reservation.getEvents().stream()
                 .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
