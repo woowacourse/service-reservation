@@ -87,19 +87,10 @@ public class CalendarService {
                 .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
     }
 
-    public void deleteEvent(final String eventId, final CalendarId calendarId) throws IOException {
-        try {
-            checkValidEventByEventId(eventId, calendarId);
-            calendar.events().delete(calendarId.getId(), eventId);
-        } catch (NotFoundEventById e) {
-            System.out.println("아이디 없다~");
-        }
-
-    }
-
-    private void checkValidEventByEventId(String eventId, CalendarId calendarId) throws IOException {
-        if (calendar.events().get(calendarId.getId(), eventId) == null) {
-            throw new NotFoundEventById();
-        }
+    public void deleteEvent(final Event event, final CalendarId calendarId) throws IOException {
+        Calendar.Events.List list = calendar.events().list(calendarId.getId());
+        List<Event> items = list.execute().getItems();
+        items.stream().filter(e -> event.getId().equals(e.getId())).findFirst().orElseThrow(NotFoundEventById::new);
+        calendar.events().delete(calendarId.getId(), event.getId()).execute();
     }
 }
