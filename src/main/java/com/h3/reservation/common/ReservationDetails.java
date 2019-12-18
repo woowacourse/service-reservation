@@ -35,15 +35,6 @@ public class ReservationDetails {
     }
 
     @Override
-    public String toString() {
-        return "ReservationDetails{" +
-            "meetingRoom=" + meetingRoom +
-            ", booker='" + booker + '\'' +
-            ", description='" + description + '\'' +
-            '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -61,5 +52,14 @@ public class ReservationDetails {
         result = 31 * result + (booker != null ? booker.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ReservationDetails{" +
+                "meetingRoom=" + meetingRoom +
+                ", booker='" + booker + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

@@ -99,4 +99,12 @@ public class ReservationDateTime {
     public EventDateTime toEventDateTime(DateTime dateTime) {
         return new EventDateTime().setDateTime(dateTime);
     }
+
+    @Override
+    public String toString() {
+        return "ReservationDateTime{" +
+                "startDateTime=" + startDateTime +
+                ", endDateTime=" + endDateTime +
+                '}';
+    }
 }
