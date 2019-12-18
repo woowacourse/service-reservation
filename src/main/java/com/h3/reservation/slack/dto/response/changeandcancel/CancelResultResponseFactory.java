@@ -1,6 +1,7 @@
-package com.h3.reservation.slack.dto.response.factory.modalpush;
+package com.h3.reservation.slack.dto.response.changeandcancel;
 
-import com.h3.reservation.slack.dto.response.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
+import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
@@ -11,21 +12,19 @@ import com.h3.reservation.slackcalendar.domain.Reservation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class CancelPushResponseFactory {
-    public static ModalResponse of(String triggerId, Reservation reservation) {
-        String time = reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime();
-        ModalView modalView = new ModalView(
-            "cancel_request",
-            reservation.getId(),
-            new PlainText("취소하기"),
-            new PlainText("네"),
-            new PlainText("아니오"),
-            generateBlocks(reservation)
+public class CancelResultResponseFactory {
+    public static ModalUpdateResponse of(Reservation reservation) {
+        return new ModalUpdateResponse(
+            new ModalView(
+                ModalSubmissionType.CANCEL_RESULT,
+                new PlainText("취소하기"),
+                new PlainText("확인"),
+                generateBlocks(reservation),
+                true
+            )
         );
-        return new ModalResponse(triggerId, modalView);
     }
 
     private static List<Block> generateBlocks(Reservation reservation) {
@@ -36,7 +35,7 @@ public class CancelPushResponseFactory {
     }
 
     private static void addTitleBlock(List<Block> blocks) {
-        blocks.add(new SectionBlock(new PlainText("아래 이벤트를 취소하시겠습니까?")));
+        blocks.add(new SectionBlock(new PlainText("취소되었습니다.")));
         blocks.add(new DividerBlock());
     }
 
@@ -45,7 +44,8 @@ public class CancelPushResponseFactory {
             , reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime()));
     }
 
-    private static SectionBlock generateReserve(String description, String booker, String room, String date, String startTime, String endTime) {
+    private static SectionBlock generateReserve(String description, String booker, String room,
+                                                String date, String startTime, String endTime) {
         return new SectionBlock(
             new MrkdwnText("*" + room + " / " + description + "*"),
             Arrays.asList(

@@ -11,9 +11,9 @@ import com.h3.reservation.slack.dto.request.viewsubmission.CancelRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
-import com.h3.reservation.slack.dto.response.ModalClearResponse;
-import com.h3.reservation.slack.dto.response.ModalSubmissionResponse;
-import com.h3.reservation.slack.dto.response.ModalSubmissionType;
+import com.h3.reservation.slack.dto.response.common.ModalClearResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.service.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,16 +76,16 @@ public class BotController {
 
     private ModalSubmissionResponse generateModalSubmissionResponse(JsonNode reqJson) throws IOException {
         switch (ModalSubmissionType.of(reqJson.get("view").get("callback_id").asText())) {
-            case RETRIEVE:
-                return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));
-            case RESERVE:
-                return service.updateReservationModal(jsonToDto(reqJson, ReserveRequest.class));
-            case CHANGE:
-                return service.updateChangeModal(jsonToDto(reqJson, ChangeRequest.class));
-            case CHANGE_REQUEST:
-                return service.updateChangeRequestModal(jsonToDto(reqJson, ReserveRequest.class));
-            case CANCEL_REQUEST:
-                return service.updateCancelRequestModal(jsonToDto(reqJson, CancelRequest.class));
+            case RETRIEVE_INPUT:
+                return service.updateRetrieveResultModal(jsonToDto(reqJson, RetrieveRequest.class));
+            case RESERVE_INPUT:
+                return service.updateReserveResultModal(jsonToDto(reqJson, ReserveRequest.class));
+            case CHANGE_AND_CANCEL_INPUT:
+                return service.updateChangeAndCancelCandidateModal(jsonToDto(reqJson, ChangeRequest.class));
+            case CHANGE_INPUT:
+                return service.updateChangeResultModal(jsonToDto(reqJson, ReserveRequest.class));
+            case CANCEL_CONFIRM:
+                return service.updateCancelResultModal(jsonToDto(reqJson, CancelRequest.class));
         }
         return new ModalClearResponse();
     }

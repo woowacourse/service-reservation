@@ -1,7 +1,8 @@
-package com.h3.reservation.slack.dto.response.factory.modalupdate;
+package com.h3.reservation.slack.dto.response.retrieve;
 
 import com.h3.reservation.common.MeetingRoom;
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
+import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.ContextBlock;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
@@ -23,11 +24,11 @@ import static java.util.stream.Collectors.groupingBy;
  * @version 1.0
  * @date 2019-12-10
  */
-public class RetrieveModalUpdateResponseFactory {
+public class RetrieveResultResponseFactory {
     public static ModalUpdateResponse of(DateTime retrieveRangeDateTime, Reservations reservations) {
         return new ModalUpdateResponse(
             new ModalView(
-                "retrieve_result",
+                ModalSubmissionType.RETRIEVE_RESULT,
                 new PlainText("조회하기"),
                 new PlainText("확인"),
                 generateBlocks(retrieveRangeDateTime, reservations)

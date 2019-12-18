@@ -1,7 +1,9 @@
-package com.h3.reservation.slack.dto.response.factory;
+package com.h3.reservation.slack.dto.response.reserve;
 
 import com.h3.reservation.common.MeetingRoom;
-import com.h3.reservation.slack.dto.response.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.CommonResponseFactory;
+import com.h3.reservation.slack.dto.response.common.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.Option;
@@ -16,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ReserveResponseFactory {
+public class ReserveInputResponseFactory {
     private static final String PREFIX_START = "start";
     private static final String PREFIX_END = "end";
 
@@ -24,7 +26,7 @@ public class ReserveResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("datepicker");
 
         ModalView modalView = new ModalView(
-            "reserve",
+            ModalSubmissionType.RESERVE_INPUT,
             new PlainText("예약하기"),
             new PlainText("예약"),
             new PlainText("취소"),
