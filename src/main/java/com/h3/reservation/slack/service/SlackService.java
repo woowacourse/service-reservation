@@ -68,6 +68,7 @@ public class SlackService {
             case APP_MENTION:
                 postUrl = "/chat.postMessage";
                 send(postUrl, InitResponseFactory.of(dto.getChannel()));
+                break;
             case APP_HOME_OPENED:
                 postUrl = "/views.publish";
                 send(postUrl, InitHomeTabResponseFactory.of(dto.getUserId()));
