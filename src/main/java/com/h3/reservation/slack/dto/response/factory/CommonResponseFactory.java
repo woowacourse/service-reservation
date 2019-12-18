@@ -1,13 +1,11 @@
 package com.h3.reservation.slack.dto.response.factory;
 
-import com.h3.reservation.slack.fragment.block.ActionsBlock;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.composition.Option;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.element.StaticSelectElement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CommonResponseFactory {
@@ -22,27 +20,6 @@ public class CommonResponseFactory {
     private static final int MIN_MINUTE = 0;
     private static final int MAX_MINUTE = 50;
     private static final int MINUTE_INTERVAL = 10;
-
-    public static ActionsBlock generateHourPicker(String blockId, String hourActionId, String minuteActionId,
-                                                  int initialHour, int initialMinute) {
-        return new ActionsBlock(
-            blockId,
-            Arrays.asList(
-                new StaticSelectElement(
-                    new PlainText(HOUR),
-                    hourActionId,
-                    new Option(new PlainText(initialHour + HOUR), String.valueOf(initialHour)),
-                    generateHourSelect()
-                ),
-                new StaticSelectElement(
-                    new PlainText(MINUTE),
-                    minuteActionId,
-                    new Option(new PlainText(initialMinute + MINUTE), String.valueOf(initialMinute)),
-                    generateMinuteSelect()
-                )
-            )
-        );
-    }
 
     public static InputBlock generateHourPickerWithInitValue(String prefix, int initialHour) {
         return new InputBlock(

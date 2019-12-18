@@ -6,9 +6,9 @@ import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.slack.EventType;
 import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
-import com.h3.reservation.slack.dto.request.viewsubmission.CancelRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.CancelRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
@@ -16,13 +16,9 @@ import com.h3.reservation.slack.dto.response.ModalResponse;
 import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.factory.InitHomeTabResponseFactory;
 import com.h3.reservation.slack.dto.response.factory.InitResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalpush.CancelPushResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalpush.ChangePushResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.CancelFinishedResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeFinishedResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.ChangeModalUpdateResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.ReserveModalUpdateResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.modalupdate.RetrieveModalUpdateResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalpush.CancelSecondPushResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalpush.ChangeSecondPushResponseFactory;
+import com.h3.reservation.slack.dto.response.factory.modalupdate.*;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
@@ -95,7 +91,7 @@ public class SlackService {
     private ModalResponse pushChangeModal(BlockActionRequest dto) {
         String reservationId = parseReservationId(dto.getActionId());
         Reservation reservation = slackCalendarService.retrieveById(reservationId);
-        return ChangePushResponseFactory.of(dto.getTriggerId(), reservation);
+        return ChangeSecondPushResponseFactory.of(dto.getTriggerId(), reservation);
     }
 
     private String parseReservationId(String id) {
@@ -107,22 +103,22 @@ public class SlackService {
     private ModalResponse pushCancelModal(BlockActionRequest dto) {
         String reservationId = parseReservationId(dto.getActionId());
         Reservation reservation = slackCalendarService.retrieveById(reservationId);
-        return CancelPushResponseFactory.of(dto.getTriggerId(), reservation);
+        return CancelSecondPushResponseFactory.of(dto.getTriggerId(), reservation);
     }
 
-    public ModalUpdateResponse updateRetrieveModal(RetrieveRequest request) {
+    public ModalUpdateResponse pushRetrieveFirstModal(RetrieveRequest request) {
         DateTime retrieveRangeDateTime = DateTime.of(request.getDate()
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
         Reservations reservations = slackCalendarService.retrieve(retrieveRangeDateTime);
-        return RetrieveModalUpdateResponseFactory.of(retrieveRangeDateTime, reservations);
+        return RetrieveFirstPushResponseFactory.of(retrieveRangeDateTime, reservations);
     }
 
     private LocalTime generateLocalTime(String hour, String minute) {
         return LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
     }
 
-    public ModalUpdateResponse updateReservationModal(ReserveRequest request) throws IOException {
+    public ModalUpdateResponse pushReserveFirstModal(ReserveRequest request) throws IOException {
         ReservationDetails details = ReservationDetails.of(
             MeetingRoom.findByName(request.getMeetingRoom()), request.getName(), request.getDescription()
         );
@@ -130,15 +126,15 @@ public class SlackService {
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
 
-        return ReserveModalUpdateResponseFactory.of(slackCalendarService.reserve(details, dateTime));
+        return ReserveFinishedResponseFactory.of(slackCalendarService.reserve(details, dateTime));
     }
 
-    public ModalUpdateResponse updateChangeModal(ChangeRequest request) {
+    public ModalUpdateResponse pushChangeAndCancelFirstModal(ChangeRequest request) {
         Reservations reservations = slackCalendarService.retrieve(request.getDate(), request.getName());
-        return ChangeModalUpdateResponseFactory.of(reservations);
+        return ChangeAndCancelFirstPushResponseFactory.of(reservations);
     }
 
-    public ModalUpdateResponse updateChangeRequestModal(ReserveRequest request) {
+    public ModalUpdateResponse updateChangeFinishedModal(ReserveRequest request) {
         String reservationId = request.getPrivateMetadata();
         ReservationDetails details = ReservationDetails.of(
             MeetingRoom.findByName(request.getMeetingRoom()), request.getName(), request.getDescription()
@@ -150,7 +146,7 @@ public class SlackService {
         return ChangeFinishedResponseFactory.of(reservation);
     }
 
-    public ModalUpdateResponse updateCancelRequestModal(CancelRequest request) {
+    public ModalUpdateResponse updateCancelFinishedModal(CancelRequest request) {
         String reservationId = request.getPrivateMetadata();
         Reservation reservation = slackCalendarService.retrieveById(reservationId);
         slackCalendarService.cancel(reservation);

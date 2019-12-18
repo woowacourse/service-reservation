@@ -11,14 +11,13 @@ import com.h3.reservation.slackcalendar.domain.Reservation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class CancelPushResponseFactory {
+public class CancelSecondPushResponseFactory {
     public static ModalResponse of(String triggerId, Reservation reservation) {
         String time = reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime();
         ModalView modalView = new ModalView(
-            "cancel_request",
+            "cancel_second_push",
             reservation.getId(),
             new PlainText("취소하기"),
             new PlainText("네"),
@@ -45,7 +44,8 @@ public class CancelPushResponseFactory {
             , reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime()));
     }
 
-    private static SectionBlock generateReserve(String description, String booker, String room, String date, String startTime, String endTime) {
+    private static SectionBlock generateReserve(String description, String booker, String room,
+                                                String date, String startTime, String endTime) {
         return new SectionBlock(
             new MrkdwnText("*" + room + " / " + description + "*"),
             Arrays.asList(

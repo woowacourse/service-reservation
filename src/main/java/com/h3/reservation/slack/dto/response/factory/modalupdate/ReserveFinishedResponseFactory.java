@@ -18,11 +18,11 @@ import java.util.List;
  * @version 1.0
  * @date 2019-12-11
  */
-public class ReserveModalUpdateResponseFactory {
+public class ReserveFinishedResponseFactory {
     public static ModalUpdateResponse of(Reservation reserve) {
         return new ModalUpdateResponse(
             new ModalView(
-                "reservation_result",
+                "reserve_finished",
                 new PlainText("예약하기"),
                 new PlainText("확인"),
                 generateBlocks(reserve)
@@ -47,7 +47,8 @@ public class ReserveModalUpdateResponseFactory {
             , reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime()));
     }
 
-    private static SectionBlock generateReserve(String description, String booker, String room, String date, String startTime, String endTime) {
+    private static SectionBlock generateReserve(String description, String booker, String room,
+                                                String date, String startTime, String endTime) {
         return new SectionBlock(
             new MrkdwnText("*" + room + " / " + description + "*"),
             Arrays.asList(

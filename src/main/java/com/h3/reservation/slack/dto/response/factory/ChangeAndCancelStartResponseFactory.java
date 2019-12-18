@@ -1,9 +1,7 @@
 package com.h3.reservation.slack.dto.response.factory;
 
 import com.h3.reservation.slack.dto.response.ModalResponse;
-import com.h3.reservation.slack.fragment.block.ContextBlock;
 import com.h3.reservation.slack.fragment.block.InputBlock;
-import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.element.DatepickerElement;
 import com.h3.reservation.slack.fragment.element.PlainTextInputElement;
@@ -12,16 +10,15 @@ import com.h3.reservation.slack.fragment.view.ModalView;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 
-public class ChangeResponseFactory {
+public class ChangeAndCancelStartResponseFactory {
     private static final String INIT_DATE_PATTERN = "yyyy-MM-dd";
 
     public static ModalResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
-            "change",
+            "change_and_cancel_start",
             new PlainText("변경/취소하기"),
             new PlainText("조회"),
             new PlainText("취소"),

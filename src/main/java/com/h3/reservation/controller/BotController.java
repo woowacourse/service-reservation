@@ -76,16 +76,16 @@ public class BotController {
 
     private ModalSubmissionResponse generateModalSubmissionResponse(JsonNode reqJson) throws IOException {
         switch (ModalSubmissionType.of(reqJson.get("view").get("callback_id").asText())) {
-            case RETRIEVE:
-                return service.updateRetrieveModal(jsonToDto(reqJson, RetrieveRequest.class));
-            case RESERVE:
-                return service.updateReservationModal(jsonToDto(reqJson, ReserveRequest.class));
-            case CHANGE:
-                return service.updateChangeModal(jsonToDto(reqJson, ChangeRequest.class));
-            case CHANGE_REQUEST:
-                return service.updateChangeRequestModal(jsonToDto(reqJson, ReserveRequest.class));
-            case CANCEL_REQUEST:
-                return service.updateCancelRequestModal(jsonToDto(reqJson, CancelRequest.class));
+            case RETRIEVE_START:
+                return service.pushRetrieveFirstModal(jsonToDto(reqJson, RetrieveRequest.class));
+            case RESERVE_START:
+                return service.pushReserveFirstModal(jsonToDto(reqJson, ReserveRequest.class));
+            case CHANGE_AND_CANCEL_START:
+                return service.pushChangeAndCancelFirstModal(jsonToDto(reqJson, ChangeRequest.class));
+            case CHANGE_SECOND_PUSH:
+                return service.updateChangeFinishedModal(jsonToDto(reqJson, ReserveRequest.class));
+            case CANCEL_SECOND_PUSH:
+                return service.updateCancelFinishedModal(jsonToDto(reqJson, CancelRequest.class));
         }
         return new ModalClearResponse();
     }

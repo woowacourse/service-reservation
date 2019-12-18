@@ -17,7 +17,7 @@ public class ChangeFinishedResponseFactory {
     public static ModalUpdateResponse of(Reservation reservation) {
         return new ModalUpdateResponse(
             new ModalView(
-                "change_result",
+                "change_finished",
                 new PlainText("변경하기"),
                 new PlainText("확인"),
                 generateBlocks(reservation),
@@ -43,7 +43,8 @@ public class ChangeFinishedResponseFactory {
             , reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime()));
     }
 
-    private static SectionBlock generateReserve(String description, String booker, String room, String date, String startTime, String endTime) {
+    private static SectionBlock generateReserve(String description, String booker, String room,
+                                                String date, String startTime, String endTime) {
         return new SectionBlock(
             new MrkdwnText("*" + room + " / " + description + "*"),
             Arrays.asList(

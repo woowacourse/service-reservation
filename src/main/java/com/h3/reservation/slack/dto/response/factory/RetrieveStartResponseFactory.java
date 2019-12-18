@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
-public class RetrieveResponseFactory {
+public class RetrieveStartResponseFactory {
     private static final String INIT_DATE_PATTERN = "yyyy-MM-dd";
     private static final String PREFIX_START = "start";
     private static final String PREFIX_END = "end";
@@ -25,7 +25,7 @@ public class RetrieveResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
-            "retrieve",
+            "retrieve_start",
             new PlainText("조회하기"),
             new PlainText("조회"),
             new PlainText("취소"),

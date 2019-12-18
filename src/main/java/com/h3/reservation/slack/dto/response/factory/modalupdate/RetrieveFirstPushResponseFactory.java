@@ -23,11 +23,11 @@ import static java.util.stream.Collectors.groupingBy;
  * @version 1.0
  * @date 2019-12-10
  */
-public class RetrieveModalUpdateResponseFactory {
+public class RetrieveFirstPushResponseFactory {
     public static ModalUpdateResponse of(DateTime retrieveRangeDateTime, Reservations reservations) {
         return new ModalUpdateResponse(
             new ModalView(
-                "retrieve_result",
+                "retrieve_first_push",
                 new PlainText("조회하기"),
                 new PlainText("확인"),
                 generateBlocks(retrieveRangeDateTime, reservations)
