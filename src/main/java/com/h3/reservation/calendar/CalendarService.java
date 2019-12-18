@@ -9,6 +9,7 @@ import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
 import com.h3.reservation.calendar.exception.DeletingEventFailedException;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
+import com.h3.reservation.calendar.exception.InsertingEventFailedException;
 import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.common.ReservationDetails;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class CalendarService {
 
     public CalendarEvents findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
-            log.debug("find - fetching date : {}", fetchingDate);
+            log.debug("find by date - fetching date : {}", fetchingDate);
             Events results = fetchEventsByCalendarId(calendarId);
 
             List<Event> events = results.getItems().stream()
@@ -65,7 +66,7 @@ public class CalendarService {
 
     public Optional<Event> findEventById(final String eventId, final CalendarId calendarId) {
         try {
-            log.debug("find - fetching event : eventId={}", eventId);
+            log.debug("find by id - fetching event : event id={}", eventId);
             Event fetchedEvent = calendar.events()
                     .get(calendarId.getId(), eventId)
                     .execute();
@@ -79,31 +80,36 @@ public class CalendarService {
     private boolean isCancelled(final String eventId, final Event fetchedEvent) {
         String eventStatus = fetchedEvent.getStatus();
         if (CANCELLED_EVENT_STATUS.equals(eventStatus)) {
-            log.debug("event was cancelled : eventId={}", eventId);
+            log.debug("event was cancelled : event id={}", eventId);
             return true;
         }
         return false;
     }
 
-    public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) throws IOException {
-        log.debug("insert - fetching date : {}, details : {}", fetchingDate, reservationDetails);
-        checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
+    public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) {
+        try {
+            log.debug("insert - fetching date : {}, details : {}", fetchingDate, reservationDetails);
+            checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
 
-        EventDateTime startTime = fetchingDate.toEventDateTime(fetchingDate.getStartDateTime());
-        EventDateTime endTime = fetchingDate.toEventDateTime(fetchingDate.getEndDateTime());
+            EventDateTime startTime = fetchingDate.toEventDateTime(fetchingDate.getStartDateTime());
+            EventDateTime endTime = fetchingDate.toEventDateTime(fetchingDate.getEndDateTime());
 
-        Event event = createEvent(reservationDetails, startTime, endTime);
+            Event event = createEvent(reservationDetails, startTime, endTime);
 
-        Event insertedEvent = calendar.events()
-                .insert(calendarId.getId(), event)
-                .execute();
-        log.debug("inserted event : {}", insertedEvent.getId());
-        return insertedEvent;
+            Event insertedEvent = calendar.events()
+                    .insert(calendarId.getId(), event)
+                    .execute();
+            log.debug("inserted event : {}", insertedEvent.getId());
+            return insertedEvent;
+        } catch (IOException e) {
+            throw new InsertingEventFailedException(e);
+        }
     }
 
     private void checkAvailableReservation(final ReservationDateTime fetchingDate, MeetingRoom room, final CalendarId calendarId) {
         CalendarEvents eventsByTime = findReservation(fetchingDate, calendarId);
         if (isReservedMeetingRoom(room, eventsByTime)) {
+            log.debug("already reservation exists - fetching date : {} ,room : {}", fetchingDate, room);
             throw new NotAvailableReserveEventException("이미 예약된 방이 있습니다!");
         }
     }
