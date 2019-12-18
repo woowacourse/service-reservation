@@ -96,7 +96,15 @@ public class ReservationDateTime {
         return endDateTime;
     }
 
-    public EventDateTime toEventDateTime(DateTime dateTime) {
+    public EventDateTime createEventDateTimeFromStartDateTime() {
+        return toEventDateTime(startDateTime);
+    }
+
+    public EventDateTime createEventDateTimeFromEndDateTime() {
+        return toEventDateTime(endDateTime);
+    }
+
+    private EventDateTime toEventDateTime(DateTime dateTime) {
         return new EventDateTime().setDateTime(dateTime);
     }
 

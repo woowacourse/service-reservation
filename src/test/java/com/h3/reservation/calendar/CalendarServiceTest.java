@@ -52,6 +52,9 @@ class CalendarServiceTest {
     private Calendar.Events.Insert insert;
 
     @Mock
+    private Calendar.Events.Update update;
+
+    @Mock
     private Calendar.Events.Delete delete;
 
     private String calendarId;
@@ -187,6 +190,29 @@ class CalendarServiceTest {
                 -> calendarService.insertEvent(reservationDateTime, reservationDetails, CalendarId.from(calendarId)));
         assertThrows(NotAvailableReserveEventException.class, ()
                 -> calendarService.insertEvent(reservationDateTime2, reservationDetails, CalendarId.from(calendarId)));
+    }
+
+    @Test
+    void updateEvent() throws IOException {
+        Events eventsInCalendar = new Events();
+        Event event = dummyEvents.get(0);
+        event.setSummary("회의실1/버디/프로젝트");
+        eventsInCalendar.setItems(Collections.singletonList(event));
+
+        when(calendar.events()).thenReturn(events);
+        when(events.list(calendarId)).thenReturn(list);
+        when(list.execute()).thenReturn(eventsInCalendar);
+
+        ReservationDateTime reservationDateTime =
+                ReservationDateTime.of("2019-12-01", "14:00:00", "15:00:00");
+        ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
+
+        Event updatedEvent = createEvent("2019-12-01", "15:00:00", "16:00:00", "insertedEvent");
+        when(events.update(eq(calendarId), eq(event.getId()), any(Event.class))).thenReturn(update);
+        when(update.execute()).thenReturn(updatedEvent);
+
+        assertDoesNotThrow(() -> calendarService.updateEvent(event.getId(), reservationDateTime, reservationDetails, CalendarId.from(calendarId)));
+        verify(update, times(1)).execute();
     }
 
     @Test
