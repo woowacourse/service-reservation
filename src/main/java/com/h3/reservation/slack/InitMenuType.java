@@ -1,8 +1,8 @@
 package com.h3.reservation.slack;
 
-import com.h3.reservation.slack.dto.response.factory.ChangeAndCancelStartResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.ReserveStartResponseFactory;
-import com.h3.reservation.slack.dto.response.factory.RetrieveStartResponseFactory;
+import com.h3.reservation.slack.dto.response.changeandcancel.ChangeAndCancelStartResponseFactory;
+import com.h3.reservation.slack.dto.response.reserve.ReserveStartResponseFactory;
+import com.h3.reservation.slack.dto.response.retrieve.RetrieveStartResponseFactory;
 
 import java.util.function.Function;
 

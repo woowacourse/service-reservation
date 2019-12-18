@@ -1,4 +1,4 @@
-package com.h3.reservation.slack.dto.response;
+package com.h3.reservation.slack.dto.response.common;
 
 import com.h3.reservation.slack.fragment.view.ModalView;
 

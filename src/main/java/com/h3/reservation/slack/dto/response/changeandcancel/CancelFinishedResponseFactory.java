@@ -1,6 +1,6 @@
-package com.h3.reservation.slack.dto.response.factory.modalupdate;
+package com.h3.reservation.slack.dto.response.changeandcancel;
 
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;

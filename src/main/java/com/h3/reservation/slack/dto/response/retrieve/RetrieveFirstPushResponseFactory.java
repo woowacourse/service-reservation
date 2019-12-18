@@ -1,7 +1,7 @@
-package com.h3.reservation.slack.dto.response.factory.modalupdate;
+package com.h3.reservation.slack.dto.response.retrieve;
 
 import com.h3.reservation.common.MeetingRoom;
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.ContextBlock;
 import com.h3.reservation.slack.fragment.block.DividerBlock;

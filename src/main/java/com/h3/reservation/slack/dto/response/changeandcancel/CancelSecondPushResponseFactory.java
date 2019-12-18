@@ -1,6 +1,6 @@
-package com.h3.reservation.slack.dto.response.factory.modalupdate;
+package com.h3.reservation.slack.dto.response.changeandcancel;
 
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.common.ModalResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
@@ -13,17 +13,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChangeFinishedResponseFactory {
-    public static ModalUpdateResponse of(Reservation reservation) {
-        return new ModalUpdateResponse(
-            new ModalView(
-                "change_finished",
-                new PlainText("변경하기"),
-                new PlainText("확인"),
-                generateBlocks(reservation),
-                true
-            )
+public class CancelSecondPushResponseFactory {
+    public static ModalResponse of(String triggerId, Reservation reservation) {
+        String time = reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime();
+        ModalView modalView = new ModalView(
+            "cancel_second_push",
+            reservation.getId(),
+            new PlainText("취소하기"),
+            new PlainText("네"),
+            new PlainText("아니오"),
+            generateBlocks(reservation)
         );
+        return new ModalResponse(triggerId, modalView);
     }
 
     private static List<Block> generateBlocks(Reservation reservation) {
@@ -34,7 +35,7 @@ public class ChangeFinishedResponseFactory {
     }
 
     private static void addTitleBlock(List<Block> blocks) {
-        blocks.add(new SectionBlock(new PlainText(":tada: 예약이 변경되었습니다!")));
+        blocks.add(new SectionBlock(new PlainText("아래 이벤트를 취소하시겠습니까?")));
         blocks.add(new DividerBlock());
     }
 

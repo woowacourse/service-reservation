@@ -1,4 +1,4 @@
-package com.h3.reservation.slack.dto.response;
+package com.h3.reservation.slack.dto.response.common;
 
 public enum ModalSubmissionType {
     RETRIEVE_START,
