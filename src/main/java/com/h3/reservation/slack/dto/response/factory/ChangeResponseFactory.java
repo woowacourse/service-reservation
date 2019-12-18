@@ -9,12 +9,16 @@ import com.h3.reservation.slack.fragment.element.DatepickerElement;
 import com.h3.reservation.slack.fragment.element.PlainTextInputElement;
 import com.h3.reservation.slack.fragment.view.ModalView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 
 public class ChangeResponseFactory {
+    private static final String INIT_DATE_PATTERN = "yyyy-MM-dd";
+
     public static ModalResponse of(String triggerId) {
-        DatepickerElement datePicker = new DatepickerElement("datepicker");
+        DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
             "change",
@@ -30,17 +34,7 @@ public class ChangeResponseFactory {
         return new ModalResponse(triggerId, modalView);
     }
 
-    public static ModalResponse beta(String triggerId) {
-        ModalView modalView = new ModalView(
-            "change",
-            new PlainText("변경/취소하기"),
-            new PlainText("조회"),
-            new PlainText("취소"),
-            Collections.singletonList(new ContextBlock(
-                Collections.singletonList(new MrkdwnText("아직 개발중입니다. 커밍쑨~~"))
-            ))
-        );
-
-        return new ModalResponse(triggerId, modalView);
+    private static String generateNowDate() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(INIT_DATE_PATTERN));
     }
 }

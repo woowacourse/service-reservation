@@ -7,6 +7,7 @@ import com.h3.reservation.slack.RequestType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.CancelRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
@@ -84,7 +85,7 @@ public class BotController {
             case CHANGE_REQUEST:
                 return service.updateChangeRequestModal(jsonToDto(reqJson, ReserveRequest.class));
             case CANCEL_REQUEST:
-                return service.updateCancelRequestModal();
+                return service.updateCancelRequestModal(jsonToDto(reqJson, CancelRequest.class));
         }
         return new ModalClearResponse();
     }

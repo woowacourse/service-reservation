@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,10 +46,10 @@ class SlackCalendarServiceTest {
         String date = "2019-12-10";
 
         List<com.google.api.services.calendar.model.Event> googleEvents = new ArrayList<>();
-        googleEvents.add(createEvent("회의실1/희봉/프로젝트", date, "10:30", "12:00"));
-        googleEvents.add(createEvent("회의실2/도넛/굴러간다", date, "11:00", "12:00"));
-        googleEvents.add(createEvent("회의실1/코니/회고", date, "13:00", "15:30"));
-        googleEvents.add(createEvent("회의실3/버디/회의", date, "17:00", "18:00"));
+        googleEvents.add(createEvent("1", "회의실1/희봉/프로젝트", date, "10:30", "12:00"));
+        googleEvents.add(createEvent("2", "회의실2/도넛/굴러간다", date, "11:00", "12:00"));
+        googleEvents.add(createEvent("3", "회의실1/코니/회고", date, "13:00", "15:30"));
+        googleEvents.add(createEvent("4", "회의실3/버디/회의", date, "17:00", "18:00"));
 
         when(calendarService.findReservation(any(), any())).thenReturn(new CalendarEvents(googleEvents));
 
@@ -60,10 +59,10 @@ class SlackCalendarServiceTest {
 
         Reservations reservations = slackCalendarService.retrieve(retrieveRangeDateTime);
         List<Reservation> reservationList = new ArrayList<>();
-        reservationList.add(Reservation.of(MeetingRoom.ROOM1, "희봉", "프로젝트", date, "10:30", "12:00"));
-        reservationList.add(Reservation.of(MeetingRoom.ROOM2, "도넛", "굴러간다", date, "11:00", "12:00"));
-        reservationList.add(Reservation.of(MeetingRoom.ROOM1, "코니", "회고", date, "13:00", "15:30"));
-        reservationList.add(Reservation.of(MeetingRoom.ROOM3, "버디", "회의", date, "17:00", "18:00"));
+        reservationList.add(Reservation.of("1", MeetingRoom.ROOM1, "희봉", "프로젝트", date, "10:30", "12:00"));
+        reservationList.add(Reservation.of("2", MeetingRoom.ROOM2, "도넛", "굴러간다", date, "11:00", "12:00"));
+        reservationList.add(Reservation.of("3", MeetingRoom.ROOM1, "코니", "회고", date, "13:00", "15:30"));
+        reservationList.add(Reservation.of("4", MeetingRoom.ROOM3, "버디", "회의", date, "17:00", "18:00"));
 
         assertEquals(reservations, Reservations.of(reservationList));
     }
@@ -75,8 +74,9 @@ class SlackCalendarServiceTest {
      * @param endTime   hh:mm
      * @return
      */
-    private Event createEvent(String summary, String date, String startTime, String endTime) {
+    private Event createEvent(String id, String summary, String date, String startTime, String endTime) {
         return new Event()
+            .setId(id)
             .setSummary(summary)
             .setStart(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
             .setEnd(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));

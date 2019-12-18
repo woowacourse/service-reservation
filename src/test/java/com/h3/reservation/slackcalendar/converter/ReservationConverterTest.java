@@ -51,4 +51,11 @@ class ReservationConverterTest {
 
         assertTrue(ReservationConverter.isFormatted(summary, summaryDelimiter));
     }
+
+    @Test
+    void isFormatted_trim_meetingroom() {
+        String summary = " 회의실 2 / 제목 / 목적 ";
+
+        assertTrue(ReservationConverter.isFormatted(summary, summaryDelimiter));
+    }
 }

@@ -31,7 +31,7 @@ public class ReservationConverter {
     }
 
     private static boolean isValidateFormat(String[] summaries) {
-        return isValidSize(summaries) && isValidMeetingRoom(summaries[SUMMARY_ROOM_INDEX]);
+        return isValidSize(summaries) && isValidMeetingRoom(summaries[SUMMARY_ROOM_INDEX].replace(" ", ""));
     }
 
     private static boolean isValidSize(String[] summaries) {
@@ -48,8 +48,8 @@ public class ReservationConverter {
         String endDateTime = event.getEnd().getDateTime().toString();
 
         return Reservation.of(
-            MeetingRoom.findByName(summary[SUMMARY_ROOM_INDEX]), summary[SUMMARY_BOOKER_INDEX], summary[SUMMARY_PURPOSE_INDEX]
-            , parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)
+            event.getId(), MeetingRoom.findByName(summary[SUMMARY_ROOM_INDEX].replace(" ", "")), summary[SUMMARY_BOOKER_INDEX]
+            , summary[SUMMARY_PURPOSE_INDEX], parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)
         );
     }
 

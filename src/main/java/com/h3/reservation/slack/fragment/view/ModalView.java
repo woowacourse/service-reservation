@@ -15,6 +15,7 @@ import java.util.List;
 public class ModalView {
     private final String type = "modal";
     private String callbackId;
+    private String privateMetadata;
     private PlainText title;
     private PlainText submit;
     private PlainText close;
@@ -33,6 +34,15 @@ public class ModalView {
 
     public ModalView(String callbackId, PlainText title, PlainText submit, PlainText close, List<Block> blocks) {
         this.callbackId = callbackId;
+        this.title = title;
+        this.submit = submit;
+        this.close = close;
+        this.blocks = blocks;
+    }
+
+    public ModalView(String callbackId, String privateMetadata, PlainText title, PlainText submit, PlainText close, List<Block> blocks) {
+        this.callbackId = callbackId;
+        this.privateMetadata = privateMetadata;
         this.title = title;
         this.submit = submit;
         this.close = close;
@@ -69,6 +79,10 @@ public class ModalView {
 
     public List<Block> getBlocks() {
         return blocks;
+    }
+
+    public String getPrivateMetadata() {
+        return privateMetadata;
     }
 
     public boolean isClearOnClose() {

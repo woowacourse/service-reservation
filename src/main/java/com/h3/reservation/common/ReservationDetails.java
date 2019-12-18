@@ -18,6 +18,10 @@ public class ReservationDetails {
         return new ReservationDetails(meetingRoom, booker, description);
     }
 
+    public boolean isSameBooker(String booker) {
+        return this.booker.equals(booker);
+    }
+
     public MeetingRoom getMeetingRoom() {
         return meetingRoom;
     }
