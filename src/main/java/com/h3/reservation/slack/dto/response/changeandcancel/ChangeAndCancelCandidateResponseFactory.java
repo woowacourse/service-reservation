@@ -1,15 +1,12 @@
-package com.h3.reservation.slack.dto.response.retrieve;
+package com.h3.reservation.slack.dto.response.changeandcancel;
 
 import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
-import com.h3.reservation.slack.fragment.block.Block;
-import com.h3.reservation.slack.fragment.block.ContextBlock;
-import com.h3.reservation.slack.fragment.block.DividerBlock;
-import com.h3.reservation.slack.fragment.block.SectionBlock;
+import com.h3.reservation.slack.fragment.block.*;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
+import com.h3.reservation.slack.fragment.element.ButtonElement;
 import com.h3.reservation.slack.fragment.view.ModalView;
-import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 
@@ -21,38 +18,24 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * @author heebg
  * @version 1.0
- * @date 2019-12-10
+ * @date 2019-12-11
  */
-public class RetrieveFirstPushResponseFactory {
-    public static ModalUpdateResponse of(DateTime retrieveRangeDateTime, Reservations reservations) {
+public class ChangeAndCancelCandidateResponseFactory {
+    public static ModalUpdateResponse of(Reservations reservations) {
         return new ModalUpdateResponse(
             new ModalView(
-                "retrieve_first_push",
-                new PlainText("조회하기"),
+                "change_and_cancel_candidate",
+                new PlainText("변경/취소하기"),
                 new PlainText("확인"),
-                generateBlocks(retrieveRangeDateTime, reservations)
+                generateBlocks(reservations)
             )
         );
     }
 
-    private static List<Block> generateBlocks(DateTime retrieveRangeDateTime, Reservations reservations) {
+    private static List<Block> generateBlocks(Reservations reservations) {
         List<Block> blocks = new ArrayList<>();
-        addTitleBlock(retrieveRangeDateTime, blocks);
         addRetrieveBlocks(reservations, blocks);
         return blocks;
-    }
-
-    private static void addTitleBlock(DateTime retrieveRangeDateTime, List<Block> blocks) {
-        blocks.addAll(generateTitle(retrieveRangeDateTime.getFormattedDate(),
-            retrieveRangeDateTime.getFormattedStartTime(), retrieveRangeDateTime.getFormattedEndTime()));
-    }
-
-    private static List<Block> generateTitle(String date, String startTime, String endTime) {
-        return Collections.singletonList(
-            new SectionBlock(
-                new MrkdwnText(date + " " + startTime + "-" + endTime + " 회의실 예약 현황입니다.")
-            )
-        );
     }
 
     private static void addRetrieveBlocks(Reservations reservations, List<Block> blocks) {
@@ -106,15 +89,22 @@ public class RetrieveFirstPushResponseFactory {
 
     private static void addReservationBlock(List<Block> blocks, Reservation reservation) {
         blocks.add(generateReservation(reservation.getBooker(), reservation.getDescription(),
-            reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime()));
+            reservation.getFormattedDate(), reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime()));
+        blocks.add(generateChangeButton(reservation.getId()));
     }
 
-    private static Block generateReservation(String booker, String purpose, String time) {
+    private static Block generateReservation(String booker, String purpose, String date, String time) {
         return new SectionBlock(
-            new MrkdwnText("*" + purpose + "*"),
+            new MrkdwnText("*" + purpose + "*\n" + date + " " + time + " - " + booker)
+        );
+    }
+
+    private static ActionsBlock generateChangeButton(String id) {
+        return new ActionsBlock(
+            "change_block_" + id,
             Arrays.asList(
-                new PlainText(booker),
-                new PlainText(time)
+                new ButtonElement(new PlainText("변경"), "request_change_" + id, "primary"),
+                new ButtonElement(new PlainText("취소"), "request_cancel_" + id, "danger")
             )
         );
     }

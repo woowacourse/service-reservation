@@ -18,11 +18,11 @@ import java.util.List;
  * @version 1.0
  * @date 2019-12-11
  */
-public class ReserveFinishedResponseFactory {
+public class ReserveResultResponseFactory {
     public static ModalUpdateResponse of(Reservation reserve) {
         return new ModalUpdateResponse(
             new ModalView(
-                "reserve_finished",
+                "reserve_result",
                 new PlainText("예약하기"),
                 new PlainText("확인"),
                 generateBlocks(reserve)

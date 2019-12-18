@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChangeFinishedResponseFactory {
+public class ChangeResultResponseFactory {
     public static ModalUpdateResponse of(Reservation reservation) {
         return new ModalUpdateResponse(
             new ModalView(
-                "change_finished",
+                "change_result",
                 new PlainText("변경하기"),
                 new PlainText("확인"),
                 generateBlocks(reservation),

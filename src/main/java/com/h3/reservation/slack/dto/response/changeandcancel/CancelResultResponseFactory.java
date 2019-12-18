@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CancelFinishedResponseFactory {
+public class CancelResultResponseFactory {
     public static ModalUpdateResponse of(Reservation reservation) {
         return new ModalUpdateResponse(
             new ModalView(
-                "cancel_finished",
+                "cancel_result",
                 new PlainText("취소하기"),
                 new PlainText("확인"),
                 generateBlocks(reservation),

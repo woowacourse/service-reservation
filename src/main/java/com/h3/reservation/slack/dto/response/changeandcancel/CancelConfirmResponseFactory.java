@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CancelSecondPushResponseFactory {
+public class CancelConfirmResponseFactory {
     public static ModalResponse of(String triggerId, Reservation reservation) {
         String time = reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime();
         ModalView modalView = new ModalView(
-            "cancel_second_push",
+            "cancel_confirm",
             reservation.getId(),
             new PlainText("취소하기"),
             new PlainText("네"),

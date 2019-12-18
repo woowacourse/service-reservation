@@ -11,14 +11,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
-public class ChangeAndCancelStartResponseFactory {
+public class ChangeAndCancelInputResponseFactory {
     private static final String INIT_DATE_PATTERN = "yyyy-MM-dd";
 
     public static ModalResponse of(String triggerId) {
         DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
-            "change_and_cancel_start",
+            "change_and_cancel_input",
             new PlainText("변경/취소하기"),
             new PlainText("조회"),
             new PlainText("취소"),

@@ -1,8 +1,8 @@
 package com.h3.reservation.slack;
 
-import com.h3.reservation.slack.dto.response.changeandcancel.ChangeAndCancelStartResponseFactory;
-import com.h3.reservation.slack.dto.response.reserve.ReserveStartResponseFactory;
-import com.h3.reservation.slack.dto.response.retrieve.RetrieveStartResponseFactory;
+import com.h3.reservation.slack.dto.response.changeandcancel.ChangeAndCancelInputResponseFactory;
+import com.h3.reservation.slack.dto.response.reserve.ReserveInputResponseFactory;
+import com.h3.reservation.slack.dto.response.retrieve.RetrieveInputResponseFactory;
 
 import java.util.function.Function;
 
@@ -12,9 +12,9 @@ import java.util.function.Function;
  * @date 2019-12-04
  */
 public enum InitMenuType {
-    RETRIEVE(RetrieveStartResponseFactory::of),
-    RESERVE(ReserveStartResponseFactory::of),
-    CHANGE(ChangeAndCancelStartResponseFactory::of);
+    RETRIEVE(RetrieveInputResponseFactory::of),
+    RESERVE(ReserveInputResponseFactory::of),
+    CHANGE(ChangeAndCancelInputResponseFactory::of);
 
     private Function<String, Object> function;
 

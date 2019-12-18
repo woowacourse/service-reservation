@@ -1,7 +1,7 @@
 package com.h3.reservation.slack.dto.response.retrieve;
 
-import com.h3.reservation.slack.dto.response.common.ModalResponse;
 import com.h3.reservation.slack.dto.response.common.CommonResponseFactory;
+import com.h3.reservation.slack.dto.response.common.ModalResponse;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
-public class RetrieveStartResponseFactory {
+public class RetrieveInputResponseFactory {
     private static final String INIT_DATE_PATTERN = "yyyy-MM-dd";
     private static final String PREFIX_START = "start";
     private static final String PREFIX_END = "end";
@@ -26,7 +26,7 @@ public class RetrieveStartResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
-            "retrieve_start",
+            "retrieve_input",
             new PlainText("조회하기"),
             new PlainText("조회"),
             new PlainText("취소"),
