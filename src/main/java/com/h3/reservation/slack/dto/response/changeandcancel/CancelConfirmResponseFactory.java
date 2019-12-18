@@ -1,6 +1,7 @@
 package com.h3.reservation.slack.dto.response.changeandcancel;
 
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
@@ -17,7 +18,7 @@ public class CancelConfirmResponseFactory {
     public static ModalResponse of(String triggerId, Reservation reservation) {
         String time = reservation.getFormattedStartTime() + "-" + reservation.getFormattedEndTime();
         ModalView modalView = new ModalView(
-            "cancel_confirm",
+            ModalSubmissionType.CANCEL_CONFIRM,
             reservation.getId(),
             new PlainText("취소하기"),
             new PlainText("네"),

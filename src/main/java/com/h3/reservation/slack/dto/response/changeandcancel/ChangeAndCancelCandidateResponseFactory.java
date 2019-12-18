@@ -1,6 +1,7 @@
 package com.h3.reservation.slack.dto.response.changeandcancel;
 
 import com.h3.reservation.common.MeetingRoom;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.*;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
@@ -24,7 +25,7 @@ public class ChangeAndCancelCandidateResponseFactory {
     public static ModalUpdateResponse of(Reservations reservations) {
         return new ModalUpdateResponse(
             new ModalView(
-                "change_and_cancel_candidate",
+                ModalSubmissionType.CHANGE_AND_CANCEL_CANDIDATE,
                 new PlainText("변경/취소하기"),
                 new PlainText("확인"),
                 generateBlocks(reservations)

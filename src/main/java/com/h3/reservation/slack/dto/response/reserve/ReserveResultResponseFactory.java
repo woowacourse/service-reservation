@@ -1,5 +1,6 @@
 package com.h3.reservation.slack.dto.response.reserve;
 
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
@@ -22,7 +23,7 @@ public class ReserveResultResponseFactory {
     public static ModalUpdateResponse of(Reservation reserve) {
         return new ModalUpdateResponse(
             new ModalView(
-                "reserve_result",
+                ModalSubmissionType.RESERVE_RESULT,
                 new PlainText("예약하기"),
                 new PlainText("확인"),
                 generateBlocks(reserve)

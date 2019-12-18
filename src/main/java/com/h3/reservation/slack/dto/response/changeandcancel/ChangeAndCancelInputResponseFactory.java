@@ -1,6 +1,7 @@
 package com.h3.reservation.slack.dto.response.changeandcancel;
 
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.element.DatepickerElement;
@@ -18,7 +19,7 @@ public class ChangeAndCancelInputResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
-            "change_and_cancel_input",
+            ModalSubmissionType.CHANGE_AND_CANCEL_INPUT,
             new PlainText("변경/취소하기"),
             new PlainText("조회"),
             new PlainText("취소"),

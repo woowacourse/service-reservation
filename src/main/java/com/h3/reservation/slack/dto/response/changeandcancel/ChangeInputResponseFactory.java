@@ -3,6 +3,7 @@ package com.h3.reservation.slack.dto.response.changeandcancel;
 import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slack.dto.response.common.CommonResponseFactory;
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.Option;
@@ -26,7 +27,7 @@ public class ChangeInputResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("datepicker", reservation.getFormattedDate());
 
         ModalView modalView = new ModalView(
-            "change_input",
+            ModalSubmissionType.CHANGE_INPUT,
             reservation.getId(),
             new PlainText("변경하기"),
             new PlainText("변경"),

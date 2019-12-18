@@ -2,6 +2,7 @@ package com.h3.reservation.slack.dto.response.retrieve;
 
 import com.h3.reservation.slack.dto.response.common.CommonResponseFactory;
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.text.MrkdwnText;
@@ -26,7 +27,7 @@ public class RetrieveInputResponseFactory {
         DatepickerElement datePicker = new DatepickerElement("datepicker", generateNowDate());
 
         ModalView modalView = new ModalView(
-            "retrieve_input",
+            ModalSubmissionType.RETRIEVE_INPUT,
             new PlainText("조회하기"),
             new PlainText("조회"),
             new PlainText("취소"),
