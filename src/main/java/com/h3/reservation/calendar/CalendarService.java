@@ -7,6 +7,7 @@ import com.google.api.services.calendar.model.Events;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
+import com.h3.reservation.calendar.exception.DeletingEventFailedException;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
 import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.common.ReservationDetails;
@@ -92,25 +93,30 @@ public class CalendarService {
                 .setSummary(meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description);
     }
 
-    public void deleteEvent(final Event event, final CalendarId calendarId) throws IOException {
-        checkExistenceOfEvent(event, calendarId);
+    public void deleteEvent(final String eventId, final CalendarId calendarId) {
+        try {
+            // TODO: 18/12/2019 id 조회를 통해 가져온 후 status 확인하기
+            checkExistenceOfEvent(eventId, calendarId);
 
-        calendar.events()
-                .delete(calendarId.getId(), event.getId())
-                .execute();
+            calendar.events()
+                    .delete(calendarId.getId(), eventId)
+                    .execute();
+        } catch (IOException e) {
+            throw new DeletingEventFailedException(e);
+        }
     }
 
-    private void checkExistenceOfEvent(final Event event, final CalendarId calendarId) throws IOException {
+    private void checkExistenceOfEvent(final String eventId, final CalendarId calendarId) throws IOException {
         Events results = fetchEventsByCalendarId(calendarId);
         List<Event> items = results.getItems();
 
-        if (notExistsEventInItems(event, items)) {
+        if (notExistsEventInItems(eventId, items)) {
             throw new EventNotFoundException();
         }
     }
 
-    private boolean notExistsEventInItems(final Event event, final List<Event> items) {
+    private boolean notExistsEventInItems(final String eventId, final List<Event> items) {
         return items.stream()
-                .noneMatch(e -> e.getId().equals(event.getId()));
+                .noneMatch(e -> e.getId().equals(eventId));
     }
 }
