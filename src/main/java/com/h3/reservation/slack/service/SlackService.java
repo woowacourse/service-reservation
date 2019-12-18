@@ -6,6 +6,7 @@ import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.slack.EventType;
 import com.h3.reservation.slack.InitMenuType;
 import com.h3.reservation.slack.dto.request.BlockActionRequest;
+import com.h3.reservation.slack.dto.request.viewsubmission.CancelRequest;
 import com.h3.reservation.slack.dto.request.EventCallbackRequest;
 import com.h3.reservation.slack.dto.request.VerificationRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
@@ -87,7 +88,7 @@ public class SlackService {
             return;
         }
         if (dto.getActionId().startsWith("request_cancel")) {
-            send("/views.push", CancelPushResponseFactory.of(dto.getTriggerId()));
+            send("/views.push", pushCancelModal(dto));
         }
     }
 
@@ -101,6 +102,12 @@ public class SlackService {
         String ID_REG = "_";
         int ID_INDEX = 2;
         return id.split(ID_REG)[ID_INDEX];
+    }
+
+    private ModalResponse pushCancelModal(BlockActionRequest dto) {
+        String reservationId = parseReservationId(dto.getActionId());
+        Reservation reservation = slackCalendarService.retrieveById(reservationId);
+        return CancelPushResponseFactory.of(dto.getTriggerId(), reservation);
     }
 
     public ModalUpdateResponse updateRetrieveModal(RetrieveRequest request) {
@@ -143,8 +150,11 @@ public class SlackService {
         return ChangeFinishedResponseFactory.of(reservation);
     }
 
-    public ModalUpdateResponse updateCancelRequestModal() {
-        return CancelFinishedResponseFactory.of();
+    public ModalUpdateResponse updateCancelRequestModal(CancelRequest request) {
+        String reservationId = request.getPrivateMetadata();
+        Reservation reservation = slackCalendarService.retrieveById(reservationId);
+        slackCalendarService.cancel(reservation);
+        return CancelFinishedResponseFactory.of(reservation);
     }
 
     private WebClient initWebClient() {

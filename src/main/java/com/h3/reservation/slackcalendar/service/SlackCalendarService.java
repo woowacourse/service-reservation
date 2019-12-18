@@ -62,7 +62,7 @@ public class SlackCalendarService {
     }
 
     public Reservation retrieveById(String id) {
-        // TODO : Event event = calendarService.findReservation(id)
+        // TODO : Event event = calendarService.findReservation(id, calendarId)
         ReservationDetails details = ReservationDetails.of(MeetingRoom.ROOM1, "희봉", "그냥 넣었찌");
         DateTime dateTime = DateTime.of("2019-12-17", "17:00", "18:00");
         return Reservation.of(id, details, dateTime);
@@ -77,5 +77,10 @@ public class SlackCalendarService {
     public Reservation change(Reservation preReservation) {
         // TODO : Event event = calendarService.change(id ,ReservationDateTime, detail, calendarId)
         return preReservation;
+    }
+
+    public void cancel(Reservation reservation) {
+        // TODO : calendar.cancel(reservation.getId(), calendarId)
+
     }
 }
