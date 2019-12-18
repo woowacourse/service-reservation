@@ -12,7 +12,11 @@ import com.h3.reservation.slack.dto.request.viewsubmission.CancelRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ChangeRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.ReserveRequest;
 import com.h3.reservation.slack.dto.request.viewsubmission.RetrieveRequest;
-import com.h3.reservation.slack.dto.response.changeandcancel.*;
+import com.h3.reservation.slack.dto.response.changeandcancel.CancelConfirmResponseFactory;
+import com.h3.reservation.slack.dto.response.changeandcancel.CancelResultResponseFactory;
+import com.h3.reservation.slack.dto.response.changeandcancel.ChangeAndCancelCandidateResponseFactory;
+import com.h3.reservation.slack.dto.response.changeandcancel.ChangeInputResponseFactory;
+import com.h3.reservation.slack.dto.response.changeandcancel.ChangeResultResponseFactory;
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
 import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.init.InitHomeTabResponseFactory;
@@ -66,12 +70,10 @@ public class SlackService {
         String postUrl;
         switch (EventType.of(dto.getType())) {
             case APP_MENTION:
-                postUrl = "/chat.postMessage";
-                send(postUrl, InitResponseFactory.of(dto.getChannel()));
+                send("/chat.postMessage", InitResponseFactory.of(dto.getChannel()));
                 break;
             case APP_HOME_OPENED:
-                postUrl = "/views.publish";
-                send(postUrl, InitHomeTabResponseFactory.of(dto.getUserId()));
+                send("/views.publish", InitHomeTabResponseFactory.of(dto.getUserId()));
         }
     }
 

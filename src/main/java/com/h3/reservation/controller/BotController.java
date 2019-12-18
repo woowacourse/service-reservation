@@ -15,8 +15,6 @@ import com.h3.reservation.slack.dto.response.common.ModalClearResponse;
 import com.h3.reservation.slack.dto.response.common.ModalSubmissionResponse;
 import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
 import com.h3.reservation.slack.service.SlackService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,11 +32,6 @@ import java.util.Objects;
  */
 @RestController
 public class BotController {
-    private static final Logger logger = LoggerFactory.getLogger(BotController.class);
-
-    private static final String TYPE = "type";
-    private static final String PAYLOAD = "payload";
-
     private final ObjectMapper objectMapper;
     private final SlackService service;
 
@@ -49,7 +42,7 @@ public class BotController {
 
     @PostMapping("/slack/action")
     public ResponseEntity<String> action(@RequestBody JsonNode reqJson) throws JsonProcessingException {
-        switch (RequestType.of(reqJson.get(TYPE).asText())) {
+        switch (RequestType.of(reqJson.get("type").asText())) {
             case URL_VERIFICATION:
                 return ResponseEntity.ok(service.verify(jsonToDto(reqJson, VerificationRequest.class)));
             case EVENT_CALLBACK:
@@ -62,8 +55,8 @@ public class BotController {
 
     @PostMapping(value = "/slack/interaction")
     public ResponseEntity<?> interaction(@RequestParam Map<String, String> req) throws IOException {
-        JsonNode reqJson = objectMapper.readTree(req.get(PAYLOAD));
-        switch (RequestType.of(reqJson.get(TYPE).asText())) {
+        JsonNode reqJson = objectMapper.readTree(req.get("payload"));
+        switch (RequestType.of(reqJson.get("type").asText())) {
             case BLOCK_ACTIONS:
                 service.showModal(jsonToDto(reqJson, BlockActionRequest.class));
                 return ResponseEntity.ok().build();
