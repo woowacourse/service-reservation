@@ -19,17 +19,17 @@ public class CalendarEvents {
 
     public List<String> findSummaries() {
         return events.stream()
-            .map(Event::getSummary)
-            .collect(Collectors.toList());
+                .map(Event::getSummary)
+                .collect(Collectors.toList());
     }
 
     public List<MeetingRoom> findMeetingRooms(final String summaryDelimiter) {
         return findSummaries().stream()
-            .map(summary -> SummaryParser.parse(summary, summaryDelimiter))
-            .map(tokens -> tokens.get(INDEX_OF_MEETING_ROOM))
-            .map(roomName -> roomName.replace(" ", ""))
-            .map(MeetingRoom::findByName)
-            .collect(Collectors.toList());
+                .map(summary -> SummaryParser.parse(summary, summaryDelimiter))
+                .map(tokens -> tokens.get(INDEX_OF_MEETING_ROOM))
+                .map(roomName -> roomName.replace(" ", ""))
+                .map(MeetingRoom::findByName)
+                .collect(Collectors.toList());
     }
 
     public int size() {

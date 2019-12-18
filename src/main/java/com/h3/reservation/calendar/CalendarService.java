@@ -11,15 +11,21 @@ import com.h3.reservation.calendar.exception.DeletingEventFailedException;
 import com.h3.reservation.calendar.exception.FetchingEventsFailedException;
 import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.common.ReservationDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CalendarService {
+
+    private static final Logger log = LoggerFactory.getLogger(CalendarService.class);
+    protected static final String CANCELLED_EVENT_STATUS = "cancelled";
 
     @Value("${calendar.summary.delimiter:/}")
     private String summaryDelimiter;
@@ -32,6 +38,7 @@ public class CalendarService {
 
     public CalendarEvents findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
+            log.debug("find - fetching date : {}", fetchingDate);
             Events results = fetchEventsByCalendarId(calendarId);
 
             List<Event> events = results.getItems().stream()
@@ -56,7 +63,30 @@ public class CalendarService {
         return eventsInCalendar.list(calendarId.getId());
     }
 
+    public Optional<Event> findEventById(final String eventId, final CalendarId calendarId) {
+        try {
+            log.debug("find - fetching event : eventId={}", eventId);
+            Event fetchedEvent = calendar.events()
+                    .get(calendarId.getId(), eventId)
+                    .execute();
+
+            return isCancelled(eventId, fetchedEvent) ? Optional.empty() : Optional.of(fetchedEvent);
+        } catch (IOException e) {
+            throw new FetchingEventsFailedException(e);
+        }
+    }
+
+    private boolean isCancelled(final String eventId, final Event fetchedEvent) {
+        String eventStatus = fetchedEvent.getStatus();
+        if (CANCELLED_EVENT_STATUS.equals(eventStatus)) {
+            log.debug("event was cancelled : eventId={}", eventId);
+            return true;
+        }
+        return false;
+    }
+
     public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) throws IOException {
+        log.debug("insert - fetching date : {}, details : {}", fetchingDate, reservationDetails);
         checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
 
         EventDateTime startTime = fetchingDate.toEventDateTime(fetchingDate.getStartDateTime());
@@ -64,9 +94,11 @@ public class CalendarService {
 
         Event event = createEvent(reservationDetails, startTime, endTime);
 
-        return calendar.events()
+        Event insertedEvent = calendar.events()
                 .insert(calendarId.getId(), event)
                 .execute();
+        log.debug("inserted event : {}", insertedEvent.getId());
+        return insertedEvent;
     }
 
     private void checkAvailableReservation(final ReservationDateTime fetchingDate, MeetingRoom room, final CalendarId calendarId) {
@@ -95,8 +127,7 @@ public class CalendarService {
 
     public void deleteEvent(final String eventId, final CalendarId calendarId) {
         try {
-            // TODO: 18/12/2019 id 조회를 통해 가져온 후 status 확인하기
-            checkExistenceOfEvent(eventId, calendarId);
+            log.debug("cancel - eventId : {}", eventId);
 
             calendar.events()
                     .delete(calendarId.getId(), eventId)
@@ -104,19 +135,5 @@ public class CalendarService {
         } catch (IOException e) {
             throw new DeletingEventFailedException(e);
         }
-    }
-
-    private void checkExistenceOfEvent(final String eventId, final CalendarId calendarId) throws IOException {
-        Events results = fetchEventsByCalendarId(calendarId);
-        List<Event> items = results.getItems();
-
-        if (notExistsEventInItems(eventId, items)) {
-            throw new EventNotFoundException();
-        }
-    }
-
-    private boolean notExistsEventInItems(final String eventId, final List<Event> items) {
-        return items.stream()
-                .noneMatch(e -> e.getId().equals(eventId));
     }
 }
