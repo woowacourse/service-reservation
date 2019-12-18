@@ -172,7 +172,7 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
         when(events.delete(calendarId, event1.getId())).thenReturn(delete);
 
-        assertDoesNotThrow(() -> calendarService.deleteEvent(event1, CalendarId.from(calendarId)));
+        assertDoesNotThrow(() -> calendarService.deleteEvent(event1.getId(), CalendarId.from(calendarId)));
         verify(delete, times(1)).execute();
     }
 
@@ -190,6 +190,6 @@ class CalendarServiceTest {
 
         Event event3 = createEvent("2019-12-01", "13:00:00", "14:01:00", "wrongId");
 
-        assertThrows(EventNotFoundException.class, () -> calendarService.deleteEvent(event3, CalendarId.from(calendarId)));
+        assertThrows(EventNotFoundException.class, () -> calendarService.deleteEvent(event3.getId(), CalendarId.from(calendarId)));
     }
 }
