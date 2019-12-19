@@ -111,7 +111,7 @@ public class CalendarService {
     private void checkExistenceOfMeetingRoom(final MeetingRoom room, final CalendarEvents calendarEvents) {
         if (isReservedMeetingRoom(room, calendarEvents)) {
             log.debug("already reservation exists : room = {}", room);
-            throw new NotAvailableReserveEventException("이미 예약된 방이 있습니다!");
+            throw new NotAvailableReserveEventException("해당 회의실은 이미 예약되었습니다.");
         }
     }
 
