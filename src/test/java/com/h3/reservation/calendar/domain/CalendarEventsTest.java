@@ -15,9 +15,9 @@ class CalendarEventsTest {
 
     @BeforeEach
     void setUp() {
-        Event event1 = new Event().setSummary("회의실 1 / 버디 / 스터디");
-        Event event2 = new Event().setSummary("회의실 2 / 닉 / 프로젝트");
-        Event event3 = new Event().setSummary("회의실 3 / 코니 / 미션");
+        Event event1 = new Event().setSummary("회의실 1 / 버디 / 스터디").setId("event1");
+        Event event2 = new Event().setSummary("회의실 2 / 닉 / 프로젝트").setId("event2");
+        Event event3 = new Event().setSummary("회의실 3 / 코니 / 미션").setId("event3");
 
         events = Arrays.asList(event1, event2, event3);
     }
@@ -52,5 +52,13 @@ class CalendarEventsTest {
         assertThat(calendarEvents.getEvent(0)).isEqualTo(events.get(0));
         assertThat(calendarEvents.getEvent(1)).isEqualTo(events.get(1));
         assertThat(calendarEvents.getEvent(2)).isEqualTo(events.get(2));
+    }
+
+    @Test
+    void excludeEventBy() {
+        CalendarEvents calendarEvents = new CalendarEvents(events);
+        CalendarEvents filteredEvents = calendarEvents.excludeEventBy("event1");
+
+        assertThat(filteredEvents.getEvents()).isEqualTo(Arrays.asList(events.get(1), events.get(2)));
     }
 }
