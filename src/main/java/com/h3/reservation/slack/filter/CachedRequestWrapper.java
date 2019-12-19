@@ -43,12 +43,14 @@ public class CachedRequestWrapper extends HttpServletRequestWrapper {
         if (getContentType().equalsIgnoreCase(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
             String decodedBody = URLDecoder.decode(body, "UTF-8");
             return Stream.of((body.equals(decodedBody) ? body.split("&") : decodedBody.split("&")))
-                    .map(x -> x.split("=", 2))
-                    .collect(Collectors.groupingBy(x -> x[0], Collectors.mapping(x -> x[1], Collectors.toList())))
-                    .entrySet()
-                    .stream()
-                    .map(x -> new ParameterPair(x.getKey(), x.getValue().toArray(new String[0])))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                    .map(s -> s.split("=", 2))
+                    .collect(Collectors.groupingBy(
+                            s -> s[0],
+                            Collectors.mapping(
+                                    s -> s[1],
+                                    Collectors.collectingAndThen(Collectors.toList(), l -> l.toArray(new String[0])))
+                            )
+                    );
         }
         return new HashMap<>();
     }
