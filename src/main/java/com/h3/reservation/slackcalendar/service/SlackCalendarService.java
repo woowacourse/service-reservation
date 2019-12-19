@@ -5,16 +5,15 @@ import com.h3.reservation.calendar.CalendarService;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
-import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.slackcalendar.converter.ReservationConverter;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
+import com.h3.reservation.slackcalendar.exception.InvalidEventException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -62,14 +61,14 @@ public class SlackCalendarService {
     }
 
     public Reservation retrieveById(String id) {
-        // TODO : Event event = calendarService.findReservation(id, calendarId)
-        ReservationDetails details = ReservationDetails.of(MeetingRoom.ROOM1, "희봉", "그냥 넣었찌");
-        DateTime dateTime = DateTime.of("2019-12-17", "17:00", "18:00");
-        return Reservation.of(id, details, dateTime);
+        Event event = calendarService.findEventById(id, CalendarId.from(calendarId))
+            .orElseThrow(InvalidEventException::new);
+        return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 
-    public Reservation reserve(ReservationDetails details, DateTime dateTime) throws IOException {
-        Event event = calendarService.insertEvent(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
+    public Reservation reserve(ReservationDetails details, DateTime dateTime) {
+        Event event = calendarService.insertEvent(ReservationDateTime.of(dateTime.getFormattedDate(),
+            dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
             , details, CalendarId.from(calendarId));
         return ReservationConverter.toReservation(event, summaryDelimiter);
     }
