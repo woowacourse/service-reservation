@@ -38,15 +38,15 @@ public class CalendarService {
         this.calendar = calendar;
     }
 
-    public CalendarEvents findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
+    public CalendarEvents findEvents(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
             log.debug("find by date : fetching date = {}", fetchingDate);
             Events results = fetchEventsByCalendarId(calendarId);
 
             List<Event> events = results.getItems().stream()
-                    .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
-                    .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
-                    .collect(Collectors.toList());
+                .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
+                .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
+                .collect(Collectors.toList());
 
             return new CalendarEvents(events);
         } catch (IOException e) {
@@ -129,7 +129,7 @@ public class CalendarService {
     }
 
     private void checkAvailableReservation(final ReservationDateTime fetchingDate, MeetingRoom room, final CalendarId calendarId) {
-        CalendarEvents eventsByTime = findReservation(fetchingDate, calendarId);
+        CalendarEvents eventsByTime = findEvents(fetchingDate, calendarId);
         if (isReservedMeetingRoom(room, eventsByTime)) {
             log.debug("already reservation exists : fetching date = {} ,room = {}", fetchingDate, room);
             throw new NotAvailableReserveEventException("이미 예약된 방이 있습니다!");
@@ -138,11 +138,12 @@ public class CalendarService {
 
     private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
         return eventsByTime.findMeetingRooms(summaryDelimiter)
-                .stream()
-                .anyMatch(meetingRoom -> meetingRoom.equals(room));
+            .stream()
+            .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }
 
-    public Event updateEvent(final String eventId, final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) {
+    public Event changeEvent(final String eventId, final ReservationDateTime fetchingDate,
+                             ReservationDetails reservationDetails, final CalendarId calendarId) {
         try {
             log.debug("update : event id = {}, fetching date = {}, details = {}", eventId, fetchingDate, reservationDetails);
             checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
@@ -150,8 +151,8 @@ public class CalendarService {
             Event newEvent = createEventWith(fetchingDate, reservationDetails);
 
             Event updatedEvent = calendar.events()
-                    .update(calendarId.getId(), eventId, newEvent)
-                    .execute();
+                .update(calendarId.getId(), eventId, newEvent)
+                .execute();
             log.debug("updated event : event id = {}", updatedEvent.getId());
             return updatedEvent;
         } catch (IOException e) {
@@ -159,13 +160,13 @@ public class CalendarService {
         }
     }
 
-    public void deleteEvent(final String eventId, final CalendarId calendarId) {
+    public void cancelEvent(final String eventId, final CalendarId calendarId) {
         try {
             log.debug("cancel : event id = {}", eventId);
 
             calendar.events()
-                    .delete(calendarId.getId(), eventId)
-                    .execute();
+                .delete(calendarId.getId(), eventId)
+                .execute();
         } catch (IOException e) {
             throw new DeletingEventFailedException(e);
         }

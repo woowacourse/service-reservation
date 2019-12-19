@@ -37,7 +37,7 @@ public class SlackCalendarService {
     }
 
     public Reservations retrieve(DateTime dateTime) {
-        CalendarEvents reservation = calendarService.findReservation(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
+        CalendarEvents reservation = calendarService.findEvents(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
             , CalendarId.from(calendarId));
 
         return Reservations.of(
@@ -50,7 +50,7 @@ public class SlackCalendarService {
     }
 
     public Reservations retrieve(String date, String booker) {
-        CalendarEvents reservations = calendarService.findReservation(ReservationDateTime.of(date), CalendarId.from(calendarId));
+        CalendarEvents reservations = calendarService.findEvents(ReservationDateTime.of(date), CalendarId.from(calendarId));
         return Reservations.of(
             reservations.getEvents().stream()
                 .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
