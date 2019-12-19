@@ -27,7 +27,6 @@ public class CalendarService {
 
     private static final Logger log = LoggerFactory.getLogger(CalendarService.class);
     protected static final String CANCELLED_EVENT_STATUS = "cancelled";
-    public static final String CONFIRMED_EVENT_STATUS = "confirmed";
 
     @Value("${calendar.summary.delimiter:/}")
     private String summaryDelimiter;
@@ -58,6 +57,7 @@ public class CalendarService {
 
         return eventList.setTimeMin(fetchingDate.getStartDateTime())
             .setTimeMax(fetchingDate.getEndDateTime())
+            .setSingleEvents(true)
             .execute();
     }
 
