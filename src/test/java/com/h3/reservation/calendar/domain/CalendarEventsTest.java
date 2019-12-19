@@ -59,6 +59,6 @@ class CalendarEventsTest {
         CalendarEvents calendarEvents = new CalendarEvents(events);
         CalendarEvents filteredEvents = calendarEvents.excludeEventBy("event1");
 
-        assertThat(filteredEvents.getEvents()).isEqualTo(Arrays.asList(events.get(1), events.get(2)));
+        assertThat(filteredEvents.getEventsWithNotEmptySummary()).isEqualTo(Arrays.asList(events.get(1), events.get(2)));
     }
 }

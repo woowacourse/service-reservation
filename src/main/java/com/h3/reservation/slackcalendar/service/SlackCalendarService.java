@@ -40,7 +40,7 @@ public class SlackCalendarService {
             , CalendarId.from(calendarId));
 
         return Reservations.of(
-            reservation.getEvents().stream()
+            reservation.getEventsWithNotEmptySummary().stream()
                 .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
                 .map(event -> ReservationConverter.toReservation(event, summaryDelimiter))
                 .sorted(Comparator.comparing(Reservation::getFormattedStartTime))
@@ -51,7 +51,7 @@ public class SlackCalendarService {
     public Reservations retrieve(String date, String booker) {
         CalendarEvents reservations = calendarService.findEvents(ReservationDateTime.of(date), CalendarId.from(calendarId));
         return Reservations.of(
-            reservations.getEvents().stream()
+            reservations.getEventsWithNotEmptySummary().stream()
                 .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
                 .map(event -> ReservationConverter.toReservation(event, summaryDelimiter))
                 .filter(reservation -> reservation.isSameBooker(booker))
