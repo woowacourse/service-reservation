@@ -38,15 +38,15 @@ public class CalendarService {
         this.calendar = calendar;
     }
 
-    public CalendarEvents findReservation(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
+    public CalendarEvents findEvents(final ReservationDateTime fetchingDate, final CalendarId calendarId) {
         try {
             log.debug("find by date : fetching date = {}", fetchingDate);
             Events results = fetchEventsByCalendarId(calendarId);
 
             List<Event> events = results.getItems().stream()
-                    .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
-                    .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
-                    .collect(Collectors.toList());
+                .filter(item -> fetchingDate.isStartTimeEarlierThan(item.getEnd().getDateTime()))
+                .filter(item -> !fetchingDate.isEndTimeEarlierThanOrEqualTo(item.getStart().getDateTime()))
+                .collect(Collectors.toList());
 
             return new CalendarEvents(events);
         } catch (IOException e) {
@@ -56,7 +56,6 @@ public class CalendarService {
 
     private Events fetchEventsByCalendarId(final CalendarId calendarId) throws IOException {
         Calendar.Events.List eventList = findListByCalendarId(calendarId);
-
         return eventList.execute();
     }
 
@@ -70,8 +69,8 @@ public class CalendarService {
         try {
             log.debug("find by id : fetching event id = {}", eventId);
             Event fetchedEvent = calendar.events()
-                    .get(calendarId.getId(), eventId)
-                    .execute();
+                .get(calendarId.getId(), eventId)
+                .execute();
 
             return isCancelled(eventId, fetchedEvent) ? Optional.empty() : Optional.of(fetchedEvent);
         } catch (IOException e) {
@@ -88,19 +87,20 @@ public class CalendarService {
         return false;
     }
 
-    public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) {
+    public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails,
+                             final CalendarId calendarId) {
         try {
             log.debug("insert : fetching date = {}, details = {}", fetchingDate, reservationDetails);
 
             MeetingRoom room = reservationDetails.getMeetingRoom();
-            CalendarEvents calendarEvents = findReservation(fetchingDate, calendarId);
+            CalendarEvents calendarEvents = findEvents(fetchingDate, calendarId);
             checkExistenceOfMeetingRoom(room, calendarEvents);
 
             Event newEvent = createEventWith(fetchingDate, reservationDetails);
 
             Event insertedEvent = calendar.events()
-                    .insert(calendarId.getId(), newEvent)
-                    .execute();
+                .insert(calendarId.getId(), newEvent)
+                .execute();
             log.debug("inserted event : event id = {}", insertedEvent.getId());
             return insertedEvent;
         } catch (IOException e) {
@@ -117,8 +117,8 @@ public class CalendarService {
 
     private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
         return eventsByTime.findMeetingRooms(summaryDelimiter)
-                .stream()
-                .anyMatch(meetingRoom -> meetingRoom.equals(room));
+            .stream()
+            .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }
 
     private Event createEventWith(final ReservationDateTime fetchingDate, final ReservationDetails reservationDetails) {
@@ -132,9 +132,9 @@ public class CalendarService {
         String summary = createSummary(reservationDetails);
 
         return new Event()
-                .setStart(startTime)
-                .setEnd(endTime)
-                .setSummary(summary);
+            .setStart(startTime)
+            .setEnd(endTime)
+            .setSummary(summary);
     }
 
     private String createSummary(final ReservationDetails reservationDetails) {
@@ -145,20 +145,21 @@ public class CalendarService {
         return meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description;
     }
 
-    public Event updateEvent(final String eventId, final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) {
+    public Event changeEvent(final String eventId, final ReservationDateTime fetchingDate,
+                             ReservationDetails reservationDetails, final CalendarId calendarId) {
         try {
             log.debug("update : event id = {}, fetching date = {}, details = {}", eventId, fetchingDate, reservationDetails);
 
             MeetingRoom room = reservationDetails.getMeetingRoom();
-            CalendarEvents calendarEvents = findReservation(fetchingDate, calendarId);
+            CalendarEvents calendarEvents = findEvents(fetchingDate, calendarId);
             CalendarEvents calendarEventsExceptCurrentEvent = calendarEvents.excludeEventBy(eventId);
             checkExistenceOfMeetingRoom(room, calendarEventsExceptCurrentEvent);
 
             Event newEvent = createEventWith(fetchingDate, reservationDetails);
 
             Event updatedEvent = calendar.events()
-                    .update(calendarId.getId(), eventId, newEvent)
-                    .execute();
+                .update(calendarId.getId(), eventId, newEvent)
+                .execute();
             log.debug("updated event : event id = {}", updatedEvent.getId());
             return updatedEvent;
         } catch (IOException e) {
@@ -166,13 +167,13 @@ public class CalendarService {
         }
     }
 
-    public void deleteEvent(final String eventId, final CalendarId calendarId) {
+    public void cancelEvent(final String eventId, final CalendarId calendarId) {
         try {
             log.debug("cancel : event id = {}", eventId);
 
             calendar.events()
-                    .delete(calendarId.getId(), eventId)
-                    .execute();
+                .delete(calendarId.getId(), eventId)
+                .execute();
         } catch (IOException e) {
             throw new DeletingEventFailedException(e);
         }

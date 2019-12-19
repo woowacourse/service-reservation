@@ -51,7 +51,7 @@ class SlackCalendarServiceTest {
         googleEvents.add(createEvent("3", "회의실1/코니/회고", date, "13:00", "15:30"));
         googleEvents.add(createEvent("4", "회의실3/버디/회의", date, "17:00", "18:00"));
 
-        when(calendarService.findReservation(any(), any())).thenReturn(new CalendarEvents(googleEvents));
+        when(calendarService.findEvents(any(), any())).thenReturn(new CalendarEvents(googleEvents));
 
         String startTime = "10:00";
         String endTime = "18:00";

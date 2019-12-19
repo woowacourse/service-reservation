@@ -93,8 +93,8 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        CalendarEvents fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01")
-                , CalendarId.from(calendarId));
+        CalendarEvents fetchedSchedule = calendarService.findEvents(ReservationDateTime.of("2019-12-01")
+            , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(5);
         for (int index = 0; index < fetchedSchedule.size(); index++) {
@@ -111,8 +111,8 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
-        CalendarEvents fetchedSchedule = calendarService.findReservation(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
-                , CalendarId.from(calendarId));
+        CalendarEvents fetchedSchedule = calendarService.findEvents(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
+            , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(3);
         assertThat(fetchedSchedule.getEvent(0)).isEqualTo(dummyEvents.get(1));
@@ -211,7 +211,7 @@ class CalendarServiceTest {
         when(events.update(eq(calendarId), eq(event.getId()), any(Event.class))).thenReturn(update);
         when(update.execute()).thenReturn(updatedEvent);
 
-        assertDoesNotThrow(() -> calendarService.updateEvent(event.getId(), reservationDateTime, reservationDetails, CalendarId.from(calendarId)));
+        assertDoesNotThrow(() -> calendarService.changeEvent(event.getId(), reservationDateTime, reservationDetails, CalendarId.from(calendarId)));
         verify(update, times(1)).execute();
     }
 
@@ -227,7 +227,7 @@ class CalendarServiceTest {
         when(list.execute()).thenReturn(eventsInCalendar);
         when(events.delete(calendarId, event1.getId())).thenReturn(delete);
 
-        assertDoesNotThrow(() -> calendarService.deleteEvent(event1.getId(), CalendarId.from(calendarId)));
+        assertDoesNotThrow(() -> calendarService.cancelEvent(event1.getId(), CalendarId.from(calendarId)));
         verify(delete, times(1)).execute();
     }
 }

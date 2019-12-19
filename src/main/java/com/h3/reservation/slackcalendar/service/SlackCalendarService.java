@@ -5,16 +5,15 @@ import com.h3.reservation.calendar.CalendarService;
 import com.h3.reservation.calendar.domain.CalendarEvents;
 import com.h3.reservation.calendar.domain.CalendarId;
 import com.h3.reservation.calendar.domain.ReservationDateTime;
-import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.slackcalendar.converter.ReservationConverter;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
+import com.h3.reservation.slackcalendar.exception.InvalidEventException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -37,7 +36,7 @@ public class SlackCalendarService {
     }
 
     public Reservations retrieve(DateTime dateTime) {
-        CalendarEvents reservation = calendarService.findReservation(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
+        CalendarEvents reservation = calendarService.findEvents(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
             , CalendarId.from(calendarId));
 
         return Reservations.of(
@@ -50,7 +49,7 @@ public class SlackCalendarService {
     }
 
     public Reservations retrieve(String date, String booker) {
-        CalendarEvents reservations = calendarService.findReservation(ReservationDateTime.of(date), CalendarId.from(calendarId));
+        CalendarEvents reservations = calendarService.findEvents(ReservationDateTime.of(date), CalendarId.from(calendarId));
         return Reservations.of(
             reservations.getEvents().stream()
                 .filter(event -> ReservationConverter.isFormatted(event.getSummary(), summaryDelimiter))
@@ -62,25 +61,28 @@ public class SlackCalendarService {
     }
 
     public Reservation retrieveById(String id) {
-        // TODO : Event event = calendarService.findReservation(id, calendarId)
-        ReservationDetails details = ReservationDetails.of(MeetingRoom.ROOM1, "희봉", "그냥 넣었찌");
-        DateTime dateTime = DateTime.of("2019-12-17", "17:00", "18:00");
-        return Reservation.of(id, details, dateTime);
+        Event event = calendarService.findEventById(id, CalendarId.from(calendarId))
+            .orElseThrow(InvalidEventException::new);
+        return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 
-    public Reservation reserve(ReservationDetails details, DateTime dateTime) throws IOException {
-        Event event = calendarService.insertEvent(ReservationDateTime.of(dateTime.getFormattedDate(), dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
+    public Reservation reserve(ReservationDetails details, DateTime dateTime) {
+        Event event = calendarService.insertEvent(ReservationDateTime.of(dateTime.getFormattedDate(),
+            dateTime.getFormattedStartTime(), dateTime.getFormattedEndTime())
             , details, CalendarId.from(calendarId));
         return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 
     public Reservation change(Reservation preReservation) {
-        // TODO : Event event = calendarService.change(id ,ReservationDateTime, detail, calendarId)
-        return preReservation;
+        Event event = calendarService.changeEvent(
+            preReservation.getId(),
+            ReservationDateTime.of(preReservation.getFormattedDate(), preReservation.getFormattedStartTime(), preReservation.getFormattedEndTime()),
+            preReservation.getDetails(), CalendarId.from(calendarId)
+        );
+        return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 
     public void cancel(Reservation reservation) {
-        // TODO : calendar.cancel(reservation.getId(), calendarId)
-
+        calendarService.cancelEvent(reservation.getId(), CalendarId.from(calendarId));
     }
 }
