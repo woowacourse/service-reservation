@@ -80,7 +80,6 @@ public class SlackCalendarService {
     }
 
     public void cancel(Reservation reservation) {
-        // TODO : calendar.cancel(reservation.getId(), calendarId)
-
+        calendarService.cancelEvent(reservation.getId(), CalendarId.from(calendarId));
     }
 }
