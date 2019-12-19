@@ -74,8 +74,9 @@ public class SlackCalendarService {
     }
 
     public Reservation change(Reservation preReservation) {
-        // TODO : Event event = calendarService.change(id ,ReservationDateTime, detail, calendarId)
-        return preReservation;
+        Event event = calendarService.changeEvent(preReservation.getId(), ReservationDateTime.of(preReservation.getFormattedDate()),
+            preReservation.getDetails(), CalendarId.from(calendarId));
+        return ReservationConverter.toReservation(event, summaryDelimiter);
     }
 
     public void cancel(Reservation reservation) {
