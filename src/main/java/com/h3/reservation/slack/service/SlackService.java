@@ -67,7 +67,6 @@ public class SlackService {
     }
 
     public void showMenu(EventCallbackRequest dto) {
-        String postUrl;
         switch (EventType.of(dto.getType())) {
             case APP_MENTION:
                 send("/chat.postMessage", InitResponseFactory.of(dto.getChannel()));
