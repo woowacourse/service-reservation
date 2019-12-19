@@ -21,6 +21,7 @@ public class CalendarEvents {
     public List<String> findSummaries() {
         return events.stream()
             .map(Event::getSummary)
+            .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
     }
 

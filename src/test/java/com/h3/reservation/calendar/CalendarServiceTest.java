@@ -93,6 +93,7 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T00:00:00.000+09:00"))).thenReturn(list);
         when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T23:59:59.000+09:00"))).thenReturn(list);
+        when(list.setSingleEvents(true)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         CalendarEvents fetchedSchedule = calendarService.findEvents(ReservationDateTime.of("2019-12-01")
@@ -113,6 +114,7 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T14:00:00.000+09:00"))).thenReturn(list);
         when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T16:00:00.000+09:00"))).thenReturn(list);
+        when(list.setSingleEvents(true)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         CalendarEvents fetchedSchedule = calendarService.findEvents(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
@@ -158,6 +160,7 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T14:00:00.000+09:00"))).thenReturn(list);
         when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T15:00:00.000+09:00"))).thenReturn(list);
+        when(list.setSingleEvents(true)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
@@ -184,6 +187,7 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.setTimeMin(any())).thenReturn(list);
         when(list.setTimeMax(any())).thenReturn(list);
+        when(list.setSingleEvents(true)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
@@ -209,6 +213,7 @@ class CalendarServiceTest {
         when(events.list(calendarId)).thenReturn(list);
         when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T14:00:00.000+09:00"))).thenReturn(list);
         when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T15:00:00.000+09:00"))).thenReturn(list);
+        when(list.setSingleEvents(true)).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
