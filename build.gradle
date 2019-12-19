@@ -33,6 +33,7 @@ dependencies {
     implementation 'com.google.apis:google-api-services-calendar:v3-rev305-1.23.0'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
+    implementation 'org.apache.commons:commons-lang3:3.0'
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }
 

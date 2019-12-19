@@ -3,6 +3,7 @@ package com.h3.reservation.calendar.domain;
 import com.google.api.services.calendar.model.Event;
 import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.common.MeetingRoom;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,25 +20,31 @@ public class CalendarEvents {
 
     public List<String> findSummaries() {
         return events.stream()
-                .map(Event::getSummary)
-                .collect(Collectors.toList());
+            .map(Event::getSummary)
+            .collect(Collectors.toList());
     }
 
     public List<MeetingRoom> findMeetingRooms(final String summaryDelimiter) {
         return findSummaries().stream()
-                .map(summary -> SummaryParser.parse(summary, summaryDelimiter))
-                .map(tokens -> tokens.get(INDEX_OF_MEETING_ROOM))
-                .map(roomName -> roomName.replace(" ", ""))
-                .map(MeetingRoom::findByName)
-                .collect(Collectors.toList());
+            .map(summary -> SummaryParser.parse(summary, summaryDelimiter))
+            .map(tokens -> tokens.get(INDEX_OF_MEETING_ROOM))
+            .map(roomName -> roomName.replace(" ", ""))
+            .map(MeetingRoom::findByName)
+            .collect(Collectors.toList());
     }
 
     public CalendarEvents excludeEventBy(final String eventId) {
         List<Event> filteredEvents = this.events.stream()
-                .filter(e -> !e.getId().equals(eventId))
-                .collect(Collectors.toList());
+            .filter(e -> !e.getId().equals(eventId))
+            .collect(Collectors.toList());
 
         return new CalendarEvents(filteredEvents);
+    }
+
+    public List<Event> getEventsWithNotEmptySummary() {
+        return events.stream()
+            .filter(event -> StringUtils.isNotBlank(event.getSummary()))
+            .collect(Collectors.toList());
     }
 
     public int size() {
@@ -46,9 +53,5 @@ public class CalendarEvents {
 
     public Event getEvent(int index) {
         return events.get(index);
-    }
-
-    public List<Event> getEvents() {
-        return events;
     }
 }
