@@ -56,6 +56,7 @@ public class CalendarService {
 
     private Events fetchEventsByCalendarId(final CalendarId calendarId) throws IOException {
         Calendar.Events.List eventList = findListByCalendarId(calendarId);
+
         return eventList.execute();
     }
 
@@ -90,18 +91,34 @@ public class CalendarService {
     public Event insertEvent(final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) {
         try {
             log.debug("insert : fetching date = {}, details = {}", fetchingDate, reservationDetails);
-            checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
 
-            Event event = createEventWith(fetchingDate, reservationDetails);
+            MeetingRoom room = reservationDetails.getMeetingRoom();
+            CalendarEvents calendarEvents = findReservation(fetchingDate, calendarId);
+            checkExistenceOfMeetingRoom(room, calendarEvents);
+
+            Event newEvent = createEventWith(fetchingDate, reservationDetails);
 
             Event insertedEvent = calendar.events()
-                    .insert(calendarId.getId(), event)
+                    .insert(calendarId.getId(), newEvent)
                     .execute();
             log.debug("inserted event : event id = {}", insertedEvent.getId());
             return insertedEvent;
         } catch (IOException e) {
             throw new InsertingEventFailedException(e);
         }
+    }
+
+    private void checkExistenceOfMeetingRoom(final MeetingRoom room, final CalendarEvents calendarEvents) {
+        if (isReservedMeetingRoom(room, calendarEvents)) {
+            log.debug("already reservation exists : room = {}", room);
+            throw new NotAvailableReserveEventException("해당 회의실은 이미 예약되었습니다.");
+        }
+    }
+
+    private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
+        return eventsByTime.findMeetingRooms(summaryDelimiter)
+                .stream()
+                .anyMatch(meetingRoom -> meetingRoom.equals(room));
     }
 
     private Event createEventWith(final ReservationDateTime fetchingDate, final ReservationDetails reservationDetails) {
@@ -128,24 +145,14 @@ public class CalendarService {
         return meetingRoom.getName() + summaryDelimiter + booker + summaryDelimiter + description;
     }
 
-    private void checkAvailableReservation(final ReservationDateTime fetchingDate, MeetingRoom room, final CalendarId calendarId) {
-        CalendarEvents eventsByTime = findReservation(fetchingDate, calendarId);
-        if (isReservedMeetingRoom(room, eventsByTime)) {
-            log.debug("already reservation exists : fetching date = {} ,room = {}", fetchingDate, room);
-            throw new NotAvailableReserveEventException("이미 예약된 방이 있습니다!");
-        }
-    }
-
-    private boolean isReservedMeetingRoom(MeetingRoom room, CalendarEvents eventsByTime) {
-        return eventsByTime.findMeetingRooms(summaryDelimiter)
-                .stream()
-                .anyMatch(meetingRoom -> meetingRoom.equals(room));
-    }
-
     public Event updateEvent(final String eventId, final ReservationDateTime fetchingDate, ReservationDetails reservationDetails, final CalendarId calendarId) {
         try {
             log.debug("update : event id = {}, fetching date = {}, details = {}", eventId, fetchingDate, reservationDetails);
-            checkAvailableReservation(fetchingDate, reservationDetails.getMeetingRoom(), calendarId);
+
+            MeetingRoom room = reservationDetails.getMeetingRoom();
+            CalendarEvents calendarEvents = findReservation(fetchingDate, calendarId);
+            CalendarEvents calendarEventsExceptCurrentEvent = calendarEvents.excludeEventBy(eventId);
+            checkExistenceOfMeetingRoom(room, calendarEventsExceptCurrentEvent);
 
             Event newEvent = createEventWith(fetchingDate, reservationDetails);
 

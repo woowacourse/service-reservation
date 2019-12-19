@@ -32,6 +32,14 @@ public class CalendarEvents {
                 .collect(Collectors.toList());
     }
 
+    public CalendarEvents excludeEventBy(final String eventId) {
+        List<Event> filteredEvents = this.events.stream()
+                .filter(e -> !e.getId().equals(eventId))
+                .collect(Collectors.toList());
+
+        return new CalendarEvents(filteredEvents);
+    }
+
     public int size() {
         return events.size();
     }
