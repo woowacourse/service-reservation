@@ -91,10 +91,12 @@ class CalendarServiceTest {
 
         when(calendar.events()).thenReturn(events);
         when(events.list(calendarId)).thenReturn(list);
+        when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T00:00:00.000+09:00"))).thenReturn(list);
+        when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T23:59:59.000+09:00"))).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         CalendarEvents fetchedSchedule = calendarService.findEvents(ReservationDateTime.of("2019-12-01")
-            , CalendarId.from(calendarId));
+                , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(5);
         for (int index = 0; index < fetchedSchedule.size(); index++) {
@@ -109,10 +111,12 @@ class CalendarServiceTest {
 
         when(calendar.events()).thenReturn(events);
         when(events.list(calendarId)).thenReturn(list);
+        when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T14:00:00.000+09:00"))).thenReturn(list);
+        when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T16:00:00.000+09:00"))).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         CalendarEvents fetchedSchedule = calendarService.findEvents(ReservationDateTime.of("2019-12-01", "14:00", "16:00")
-            , CalendarId.from(calendarId));
+                , CalendarId.from(calendarId));
 
         assertThat(fetchedSchedule.size()).isEqualTo(3);
         assertThat(fetchedSchedule.getEvent(0)).isEqualTo(dummyEvents.get(1));
@@ -148,12 +152,12 @@ class CalendarServiceTest {
     @Test
     void 회의실_예약_성공() throws IOException {
         Events eventsInCalendar = new Events();
-        Event event = dummyEvents.get(0);
-        event.setSummary("회의실1/버디/프로젝트");
-        eventsInCalendar.setItems(Collections.singletonList(event));
+        eventsInCalendar.setItems(Collections.emptyList());
 
         when(calendar.events()).thenReturn(events);
         when(events.list(calendarId)).thenReturn(list);
+        when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T14:00:00.000+09:00"))).thenReturn(list);
+        when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T15:00:00.000+09:00"))).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
@@ -178,6 +182,8 @@ class CalendarServiceTest {
 
         when(calendar.events()).thenReturn(events);
         when(events.list(calendarId)).thenReturn(list);
+        when(list.setTimeMin(any())).thenReturn(list);
+        when(list.setTimeMax(any())).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
@@ -201,13 +207,15 @@ class CalendarServiceTest {
 
         when(calendar.events()).thenReturn(events);
         when(events.list(calendarId)).thenReturn(list);
+        when(list.setTimeMin(DateTime.parseRfc3339("2019-12-01T14:00:00.000+09:00"))).thenReturn(list);
+        when(list.setTimeMax(DateTime.parseRfc3339("2019-12-01T15:00:00.000+09:00"))).thenReturn(list);
         when(list.execute()).thenReturn(eventsInCalendar);
 
         ReservationDateTime reservationDateTime =
                 ReservationDateTime.of("2019-12-01", "14:00:00", "15:00:00");
         ReservationDetails reservationDetails = ReservationDetails.of(MeetingRoom.ROOM1, "닉", "스터디");
 
-        Event updatedEvent = createEvent("2019-12-01", "15:00:00", "16:00:00", "insertedEvent");
+        Event updatedEvent = createEvent("2019-12-01", "14:00:00", "15:00:00", event.getId());
         when(events.update(eq(calendarId), eq(event.getId()), any(Event.class))).thenReturn(update);
         when(update.execute()).thenReturn(updatedEvent);
 
