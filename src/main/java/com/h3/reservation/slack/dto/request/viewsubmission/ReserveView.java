@@ -4,6 +4,7 @@ import com.h3.reservation.slack.dto.request.viewsubmission.values.ReserveValues;
 
 public class ReserveView {
     class State {
+
         private ReserveValues values;
 
         public State() {
@@ -16,17 +17,24 @@ public class ReserveView {
         public ReserveValues getValues() {
             return values;
         }
+
     }
 
+    private String privateMetadata;
     private String callbackId;
     private State state;
 
     public ReserveView() {
     }
 
-    public ReserveView(String callbackId, State state) {
+    public ReserveView(String privateMetadata, String callbackId, State state) {
+        this.privateMetadata = privateMetadata;
         this.callbackId = callbackId;
         this.state = state;
+    }
+
+    public String getPrivateMetadata() {
+        return privateMetadata;
     }
 
     public String getCallbackId() {

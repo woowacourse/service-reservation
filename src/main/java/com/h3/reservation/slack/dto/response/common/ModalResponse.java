@@ -1,15 +1,15 @@
-package com.h3.reservation.slack.dto.response;
+package com.h3.reservation.slack.dto.response.common;
 
 import com.h3.reservation.slack.fragment.view.ModalView;
 
-public class ReserveResponse {
+public class ModalResponse {
     private String triggerId;
     private ModalView view;
 
-    public ReserveResponse() {
+    public ModalResponse() {
     }
 
-    public ReserveResponse(String triggerId, ModalView view) {
+    public ModalResponse(String triggerId, ModalView view) {
         this.triggerId = triggerId;
         this.view = view;
     }

@@ -1,4 +1,4 @@
-package com.h3.reservation.slack.dto.response;
+package com.h3.reservation.slack.dto.response.common;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ModalActionType {
     UPDATE("update"),
+    CLEAR("clear"),
     ERRORS("errors");
 
     @JsonValue

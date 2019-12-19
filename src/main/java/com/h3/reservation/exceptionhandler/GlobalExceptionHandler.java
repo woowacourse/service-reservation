@@ -2,7 +2,7 @@ package com.h3.reservation.exceptionhandler;
 
 import com.h3.reservation.calendar.NotAvailableReserveEventException;
 import com.h3.reservation.calendar.domain.exception.InvalidDateTimeRangeException;
-import com.h3.reservation.slack.dto.response.ModalErrorResponse;
+import com.h3.reservation.slack.dto.response.common.ModalErrorResponse;
 import com.h3.reservation.slack.fragment.error.DatePickerErrors;
 import com.h3.reservation.slack.fragment.error.MeetingRoomErrors;
 import com.h3.reservation.slack.fragment.error.TimeErrors;

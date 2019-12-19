@@ -1,6 +1,6 @@
-package com.h3.reservation.slack.dto.response.factory;
+package com.h3.reservation.slack.dto.response.init;
 
-import com.h3.reservation.slack.dto.response.InitialHomeTabResponse;
+import com.h3.reservation.slack.dto.response.init.InitialHomeTabResponse;
 import com.h3.reservation.slack.fragment.block.ActionsBlock;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.DividerBlock;

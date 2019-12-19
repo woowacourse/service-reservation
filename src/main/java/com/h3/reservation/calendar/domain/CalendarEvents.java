@@ -3,6 +3,7 @@ package com.h3.reservation.calendar.domain;
 import com.google.api.services.calendar.model.Event;
 import com.h3.reservation.calendar.utils.SummaryParser;
 import com.h3.reservation.common.MeetingRoom;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ public class CalendarEvents {
     public List<String> findSummaries() {
         return events.stream()
             .map(Event::getSummary)
+            .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
     }
 
@@ -32,15 +34,25 @@ public class CalendarEvents {
             .collect(Collectors.toList());
     }
 
+    public CalendarEvents excludeEventBy(final String eventId) {
+        List<Event> filteredEvents = this.events.stream()
+            .filter(e -> !e.getId().equals(eventId))
+            .collect(Collectors.toList());
+
+        return new CalendarEvents(filteredEvents);
+    }
+
+    public List<Event> getEventsWithNotEmptySummary() {
+        return events.stream()
+            .filter(event -> StringUtils.isNotBlank(event.getSummary()))
+            .collect(Collectors.toList());
+    }
+
     public int size() {
         return events.size();
     }
 
     public Event getEvent(int index) {
         return events.get(index);
-    }
-
-    public List<Event> getEvents() {
-        return events;
     }
 }

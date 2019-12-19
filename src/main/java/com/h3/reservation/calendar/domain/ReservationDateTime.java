@@ -18,12 +18,16 @@ public class ReservationDateTime {
     private final DateTime endDateTime;
 
     private ReservationDateTime(final DateTime startDateTime, final DateTime endDateTime) {
-        if (isFirstTimeEarlierThanOrEqualToSecondTime(endDateTime, startDateTime)) {
+        if (isFirstTimeLaterThanOrEqualToSecondTime(startDateTime, endDateTime)) {
             throw new InvalidDateTimeRangeException();
         }
 
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+    }
+
+    private boolean isFirstTimeLaterThanOrEqualToSecondTime(final DateTime firstDateTime, final DateTime secondDateTime) {
+        return firstDateTime.getValue() >= secondDateTime.getValue();
     }
 
     /**
@@ -64,30 +68,6 @@ public class ReservationDateTime {
         return tokens.length == MIN_COUNT_OF_TIME_TOKENS;
     }
 
-    private boolean isFirstTimeEarlierThanOrEqualToSecondTime(final DateTime firstDateTime, final DateTime secondDateTime) {
-        return firstDateTime.getValue() <= secondDateTime.getValue();
-    }
-
-    public boolean isStartTimeEarlierThanOrEqualTo(DateTime dateTime) {
-        return isFirstTimeEarlierThanOrEqualToSecondTime(startDateTime, dateTime);
-    }
-
-    public boolean isEndTimeEarlierThanOrEqualTo(DateTime dateTime) {
-        return isFirstTimeEarlierThanOrEqualToSecondTime(endDateTime, dateTime);
-    }
-
-    public boolean isStartTimeEarlierThan(DateTime dateTime) {
-        return isFirstTimeEarlierThanSecondTime(startDateTime, dateTime);
-    }
-
-    public boolean isEndTimeEarlierThan(DateTime dateTime) {
-        return isFirstTimeEarlierThanSecondTime(endDateTime, dateTime);
-    }
-
-    private boolean isFirstTimeEarlierThanSecondTime(final DateTime firstDateTime, final DateTime secondDateTime) {
-        return firstDateTime.getValue() < secondDateTime.getValue();
-    }
-
     public DateTime getStartDateTime() {
         return startDateTime;
     }
@@ -96,7 +76,23 @@ public class ReservationDateTime {
         return endDateTime;
     }
 
-    public EventDateTime toEventDateTime(DateTime dateTime) {
+    public EventDateTime createEventDateTimeFromStartDateTime() {
+        return toEventDateTime(startDateTime);
+    }
+
+    public EventDateTime createEventDateTimeFromEndDateTime() {
+        return toEventDateTime(endDateTime);
+    }
+
+    private EventDateTime toEventDateTime(DateTime dateTime) {
         return new EventDateTime().setDateTime(dateTime);
+    }
+
+    @Override
+    public String toString() {
+        return "ReservationDateTime{" +
+                "startDateTime=" + startDateTime +
+                ", endDateTime=" + endDateTime +
+                '}';
     }
 }

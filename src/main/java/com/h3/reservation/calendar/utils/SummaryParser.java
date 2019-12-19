@@ -11,7 +11,7 @@ public class SummaryParser {
 
     public static List<String> parse(final String summary, final String summaryDelimiter) {
         return Arrays.stream(summary.split(summaryDelimiter))
-            .map(String::trim)
-            .collect(Collectors.toList());
+                .map(String::trim)
+                .collect(Collectors.toList());
     }
 }

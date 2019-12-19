@@ -55,4 +55,8 @@ public class ReserveRequest {
     public String getName() {
         return view.getValues().getNameBlock().getValue();
     }
+
+    public String getPrivateMetadata() {
+        return view.getPrivateMetadata();
+    }
 }

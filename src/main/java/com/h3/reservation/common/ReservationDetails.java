@@ -18,6 +18,10 @@ public class ReservationDetails {
         return new ReservationDetails(meetingRoom, booker, description);
     }
 
+    public boolean isSameBooker(String booker) {
+        return this.booker.equals(booker);
+    }
+
     public MeetingRoom getMeetingRoom() {
         return meetingRoom;
     }
@@ -28,15 +32,6 @@ public class ReservationDetails {
 
     public String getDescription() {
         return description;
-    }
-
-    @Override
-    public String toString() {
-        return "ReservationDetails{" +
-            "meetingRoom=" + meetingRoom +
-            ", booker='" + booker + '\'' +
-            ", description='" + description + '\'' +
-            '}';
     }
 
     @Override
@@ -57,5 +52,14 @@ public class ReservationDetails {
         result = 31 * result + (booker != null ? booker.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ReservationDetails{" +
+                "meetingRoom=" + meetingRoom +
+                ", booker='" + booker + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

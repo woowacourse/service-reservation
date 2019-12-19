@@ -1,6 +1,7 @@
-package com.h3.reservation.slack.dto.response.factory.modalupdate;
+package com.h3.reservation.slack.dto.response.changeandcancel;
 
-import com.h3.reservation.slack.dto.response.ModalUpdateResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
+import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.fragment.block.Block;
 import com.h3.reservation.slack.fragment.block.DividerBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
@@ -13,19 +14,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author heebg
- * @version 1.0
- * @date 2019-12-11
- */
-public class ReserveModalUpdateResponseFactory {
-    public static ModalUpdateResponse of(Reservation reserve) {
+public class ChangeResultResponseFactory {
+    public static ModalUpdateResponse of(Reservation reservation) {
         return new ModalUpdateResponse(
             new ModalView(
-                "reservation_result",
-                new PlainText("예약하기"),
+                ModalSubmissionType.CHANGE_RESULT,
+                new PlainText("변경하기"),
                 new PlainText("확인"),
-                generateBlocks(reserve)
+                generateBlocks(reservation),
+                true
             )
         );
     }
@@ -38,7 +35,7 @@ public class ReserveModalUpdateResponseFactory {
     }
 
     private static void addTitleBlock(List<Block> blocks) {
-        blocks.add(new SectionBlock(new PlainText(":tada: 예약이 완료되었습니다!")));
+        blocks.add(new SectionBlock(new PlainText(":tada: 예약이 변경되었습니다!")));
         blocks.add(new DividerBlock());
     }
 
@@ -47,7 +44,8 @@ public class ReserveModalUpdateResponseFactory {
             , reservation.getFormattedDate(), reservation.getFormattedStartTime(), reservation.getFormattedEndTime()));
     }
 
-    private static SectionBlock generateReserve(String description, String booker, String room, String date, String startTime, String endTime) {
+    private static SectionBlock generateReserve(String description, String booker, String room,
+                                                String date, String startTime, String endTime) {
         return new SectionBlock(
             new MrkdwnText("*" + room + " / " + description + "*"),
             Arrays.asList(

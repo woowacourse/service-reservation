@@ -1,6 +1,6 @@
-package com.h3.reservation.slack.dto.response.factory;
+package com.h3.reservation.slack.dto.response.init;
 
-import com.h3.reservation.slack.dto.response.InitialResponse;
+import com.h3.reservation.slack.dto.response.init.InitialResponse;
 import com.h3.reservation.slack.fragment.block.ActionsBlock;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
 import com.h3.reservation.slack.fragment.element.ButtonElement;
