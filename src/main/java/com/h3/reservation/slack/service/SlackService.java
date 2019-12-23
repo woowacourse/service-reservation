@@ -18,11 +18,10 @@ import com.h3.reservation.slack.dto.response.changeandcancel.ChangeAndCancelCand
 import com.h3.reservation.slack.dto.response.changeandcancel.ChangeInputResponseFactory;
 import com.h3.reservation.slack.dto.response.changeandcancel.ChangeResultResponseFactory;
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
-import com.h3.reservation.slack.dto.response.common.ModalSubmissionResponse;
 import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.init.InitHomeTabResponseFactory;
 import com.h3.reservation.slack.dto.response.init.InitResponseFactory;
-import com.h3.reservation.slack.dto.response.reserve.ReserveAvailMeetingResponseFactory;
+import com.h3.reservation.slack.dto.response.reserve.ReserveAvailableMeetingResponseFactory;
 import com.h3.reservation.slack.dto.response.reserve.ReserveInputResponseFactory;
 import com.h3.reservation.slack.dto.response.reserve.ReserveResultResponseFactory;
 import com.h3.reservation.slack.dto.response.retrieve.RetrieveResultResponseFactory;
@@ -152,7 +151,7 @@ public class SlackService {
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
         List<MeetingRoom> meetingRooms = slackCalendarService.retrieveAvailableMeetingRoom(dateTime);
-        return ReserveAvailMeetingResponseFactory.of(meetingRooms, dateTime);
+        return ReserveAvailableMeetingResponseFactory.of(meetingRooms, dateTime);
     }
 
     public ModalUpdateResponse updateReserveResultModal2(ReserveRequest request) {

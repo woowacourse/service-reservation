@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2019-12-23
  */
-public class ReserveAvailMeetingResponseFactory {
+public class ReserveAvailableMeetingResponseFactory {
     public static ModalUpdateResponse of(List<MeetingRoom> meetingRooms, DateTime dateTime) {
         return new ModalUpdateResponse(
             new ModalView(
@@ -53,7 +53,7 @@ public class ReserveAvailMeetingResponseFactory {
 
     private static List<Block> generateAvailableMeetingRooms(List<MeetingRoom> meetingRooms) {
         return meetingRooms.stream()
-            .map(ReserveAvailMeetingResponseFactory::generateAvailableMeetingRoom)
+            .map(ReserveAvailableMeetingResponseFactory::generateAvailableMeetingRoom)
             .collect(Collectors.toList());
     }
 
