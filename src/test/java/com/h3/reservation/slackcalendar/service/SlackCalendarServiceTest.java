@@ -67,6 +67,29 @@ class SlackCalendarServiceTest {
         assertEquals(reservations, Reservations.of(reservationList));
     }
 
+    @Test
+    void retrieve_filter_invalid_summary() {
+        String date = "2019-12-10";
+
+        List<com.google.api.services.calendar.model.Event> googleEvents = new ArrayList<>();
+        googleEvents.add(createEvent("1", "회의실1/희봉/프로젝트", date, "10:30", "12:00"));
+        googleEvents.add(createEvent("2", "회의실2/도넛", date, "11:00", "12:00"));
+        googleEvents.add(createEvent("3", "회의실1//", date, "13:00", "15:30"));
+        googleEvents.add(createEvent("4", "회의실13/희봉/프로젝트", date, "17:00", "18:00"));
+
+        when(calendarService.findEvents(any(), any())).thenReturn(new CalendarEvents(googleEvents));
+
+        String startTime = "10:00";
+        String endTime = "18:00";
+        DateTime retrieveRangeDateTime = DateTime.of(date, startTime, endTime);
+
+        Reservations reservations = slackCalendarService.retrieve(retrieveRangeDateTime);
+        List<Reservation> reservationList = new ArrayList<>();
+        reservationList.add(Reservation.of("1", MeetingRoom.ROOM1, "희봉", "프로젝트", date, "10:30", "12:00"));
+
+        assertEquals(reservations, Reservations.of(reservationList));
+    }
+
     /**
      * @param summary   room/booker/purpose
      * @param date      yyyy-MM-dd
@@ -76,10 +99,10 @@ class SlackCalendarServiceTest {
      */
     private Event createEvent(String id, String summary, String date, String startTime, String endTime) {
         return new Event()
-            .setId(id)
-            .setSummary(summary)
-            .setStart(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
-            .setEnd(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));
+                .setId(id)
+                .setSummary(summary)
+                .setStart(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, startTime))))
+                .setEnd(new EventDateTime().setDateTime(com.google.api.client.util.DateTime.parseRfc3339(generateDateTime(date, endTime))));
     }
 
     /**

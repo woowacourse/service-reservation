@@ -11,7 +11,6 @@ import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 import com.h3.reservation.slackcalendar.exception.InvalidEventException;
-import com.h3.reservation.utils.InvalidSummaryException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
