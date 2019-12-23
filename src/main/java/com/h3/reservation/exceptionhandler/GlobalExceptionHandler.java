@@ -2,6 +2,7 @@ package com.h3.reservation.exceptionhandler;
 
 import com.h3.reservation.calendar.NotAvailableReserveEventException;
 import com.h3.reservation.calendar.domain.exception.InvalidDateTimeRangeException;
+import com.h3.reservation.common.NotFoundAvailableMeetingRoomException;
 import com.h3.reservation.slack.dto.response.common.ModalErrorResponse;
 import com.h3.reservation.slack.fragment.error.DatePickerErrors;
 import com.h3.reservation.slack.fragment.error.MeetingRoomErrors;
@@ -35,5 +36,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotAvailableReserveEventException.class)
     public ResponseEntity NotAvailableReserveEventException(NotAvailableReserveEventException e) {
         return ResponseEntity.ok(new ModalErrorResponse(new MeetingRoomErrors(e.getMessage())));
+    }
+
+    @ResponseBody
+    @ExceptionHandler(NotFoundAvailableMeetingRoomException.class)
+    public ResponseEntity NotFoundAvailableMeetingRoomException(NotFoundAvailableMeetingRoomException e) {
+        return ResponseEntity.ok(new ModalErrorResponse(new DatePickerErrors(e.getMessage())));
     }
 }

@@ -1,10 +1,13 @@
 package com.h3.reservation.slackcalendar.domain;
 
+import com.h3.reservation.common.MeetingRoom;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -29,6 +32,13 @@ public class Reservations implements Iterable<Reservation> {
 
     public boolean isEventEmpty() {
         return reservations.size() == 0;
+    }
+
+    public List<MeetingRoom> generateAvailableMeetingRooms() {
+        List<MeetingRoom> meetingRooms = reservations.stream()
+            .map(Reservation::getRoom)
+            .collect(Collectors.toList());
+        return MeetingRoom.removeAll(meetingRooms);
     }
 
     @Override

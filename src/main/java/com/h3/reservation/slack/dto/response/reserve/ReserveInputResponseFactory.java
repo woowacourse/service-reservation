@@ -49,6 +49,27 @@ public class ReserveInputResponseFactory {
         return new ModalResponse(triggerId, modalView);
     }
 
+    public static ModalResponse of2(String triggerId) {
+        DatepickerElement datePicker = CommonResponseFactory.generateNowDatePicker("datepicker");
+
+        ModalView modalView = new ModalView(
+            ModalSubmissionType.RESERVE_DATETIME_INPUT,
+            new PlainText("예약하기"),
+            new PlainText("예약"),
+            new PlainText("취소"),
+            Arrays.asList(
+                new InputBlock("datepicker_block", new PlainText("예약할 날짜를 선택하세요."), datePicker),
+                new SectionBlock(new MrkdwnText("*시작 시간을 선택하세요.*")),
+                CommonResponseFactory.generateHourPicker(PREFIX_START),
+                CommonResponseFactory.generateMinutePickerWithInitValue(PREFIX_START, 0),
+                new SectionBlock(new MrkdwnText("*종료 시간을 선택하세요.*")),
+                CommonResponseFactory.generateHourPicker(PREFIX_END),
+                CommonResponseFactory.generateMinutePickerWithInitValue(PREFIX_END, 0)
+            )
+        );
+        return new ModalResponse(triggerId, modalView);
+    }
+
     private static StaticSelectElement generateMeetingRoomSelectElement() {
         return new StaticSelectElement(
             new PlainText("회의실"),

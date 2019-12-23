@@ -6,6 +6,8 @@ public enum ModalSubmissionType {
     RETRIEVE_INPUT("retrieve_input"),
     RETRIEVE_RESULT("retrieve_result"),
     RESERVE_INPUT("reserve_input"),
+    RESERVE_DATETIME_INPUT("reserve_datetime_input"),
+    RESERVE_AVAILABLE_MEETINGROOM("reserve_available_meetingroom"),
     RESERVE_RESULT("reserve_result"),
     CHANGE_AND_CANCEL_INPUT("change_and_cancel_input"),
     CHANGE_AND_CANCEL_CANDIDATE("change_and_cancel_candidate"),

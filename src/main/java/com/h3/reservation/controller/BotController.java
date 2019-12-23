@@ -73,6 +73,8 @@ public class BotController {
                 return service.updateRetrieveResultModal(jsonToDto(reqJson, RetrieveRequest.class));
             case RESERVE_INPUT:
                 return service.updateReserveResultModal(jsonToDto(reqJson, ReserveRequest.class));
+            case RESERVE_DATETIME_INPUT:
+                return service.updateReserveAvailableMeetingRoomModal(jsonToDto(reqJson, ReserveRequest.class));
             case CHANGE_AND_CANCEL_INPUT:
                 return service.updateChangeAndCancelCandidateModal(jsonToDto(reqJson, ChangeRequest.class));
             case CHANGE_INPUT:
