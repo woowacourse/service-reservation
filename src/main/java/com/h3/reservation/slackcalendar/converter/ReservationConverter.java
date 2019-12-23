@@ -1,10 +1,14 @@
 package com.h3.reservation.slackcalendar.converter;
 
 import com.google.api.services.calendar.model.Event;
-import com.h3.reservation.common.MeetingRoom;
+import com.h3.reservation.common.ReservationDetails;
 import com.h3.reservation.slackcalendar.domain.Reservation;
+import com.h3.reservation.slackcalendar.exception.InvalidTimeRangeException;
+import com.h3.reservation.utils.BasicParser;
+import com.h3.reservation.utils.InvalidSummaryException;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author heebg
@@ -12,50 +16,35 @@ import java.util.Arrays;
  * @date 2019-12-10
  */
 public class ReservationConverter {
-    private static final int SUMMARY_VALID_SIZE = 3;
-    private static final int SUMMARY_ROOM_INDEX = 0;
-    private static final int SUMMARY_BOOKER_INDEX = 1;
-    private static final int SUMMARY_PURPOSE_INDEX = 2;
     private static final String DATETIME_REGEX = "[T|.]";
     private static final String TIME_REGEX = ":";
-    private static final int DATETIME_DATE_INDEX = 0;
-    private static final int DATETIME_TIME_INDEX = 1;
-    private static final int TIME_HOUR_INDEX = 0;
-    private static final int TIME_MINUTE_INDEX = 1;
+    private static final int INDEX_OF_DATETIME_DATE = 0;
+    private static final int INDEX_OF_DATETIME_TIME = 1;
+    private static final int INDEX_OF_HOUR = 0;
+    private static final int INDEX_OF_MINUTE = 1;
 
     private ReservationConverter() {
     }
 
-    public static boolean isFormatted(String summary, String summaryDelimiter) {
-        return isValidateFormat(splitWithTrim(summary, summaryDelimiter));
-    }
+    public static Optional<Reservation> toReservation(Event event, String summaryDelimiter) {
+        try {
+            String summary = event.getSummary();
+            ReservationDetails reservationDetails = ReservationDetailsConverter.toReservationDetails(summary, summaryDelimiter);
 
-    private static boolean isValidateFormat(String[] summaries) {
-        return isValidSize(summaries) && isValidMeetingRoom(summaries[SUMMARY_ROOM_INDEX].replace(" ", ""));
-    }
+            String startDateTime = event.getStart().getDateTime().toString();
+            String endDateTime = event.getEnd().getDateTime().toString();
 
-    private static boolean isValidSize(String[] summaries) {
-        return summaries.length == SUMMARY_VALID_SIZE;
-    }
-
-    private static boolean isValidMeetingRoom(String meetingRoom) {
-        return !MeetingRoom.NONE.equals(MeetingRoom.findByName(meetingRoom));
-    }
-
-    public static Reservation toReservation(Event event, String summaryDelimiter) {
-        String[] summary = splitWithTrim(event.getSummary(), summaryDelimiter);
-        String startDateTime = event.getStart().getDateTime().toString();
-        String endDateTime = event.getEnd().getDateTime().toString();
-
-        return Reservation.of(
-            event.getId(), MeetingRoom.findByName(summary[SUMMARY_ROOM_INDEX].replace(" ", "")), summary[SUMMARY_BOOKER_INDEX]
-            , summary[SUMMARY_PURPOSE_INDEX], parseDate(startDateTime), parseTime(startDateTime), parseTime(endDateTime)
-        );
+            return Optional.of(Reservation.of(event.getId(), reservationDetails, parseDate(startDateTime)
+                    , parseTime(startDateTime), parseTime(endDateTime)));
+        } catch (InvalidSummaryException | InvalidTimeRangeException e) {
+            return Optional.empty();
+        }
     }
 
     private static String parseDate(String dateTime) {
-        String[] dateTimes = splitWithTrim(dateTime, DATETIME_REGEX);
-        return dateTimes[DATETIME_DATE_INDEX];
+        List<String> tokens = BasicParser.parse(dateTime, DATETIME_REGEX);
+
+        return tokens.get(INDEX_OF_DATETIME_DATE);
     }
 
     /**
@@ -63,14 +52,9 @@ public class ReservationConverter {
      * @return
      */
     private static String parseTime(String dateTime) {
-        String[] times = splitWithTrim(dateTime, DATETIME_REGEX);
-        times = splitWithTrim(times[DATETIME_TIME_INDEX], TIME_REGEX);
-        return times[TIME_HOUR_INDEX] + ":" + times[TIME_MINUTE_INDEX];
-    }
+        List<String> tokens = BasicParser.parse(dateTime, DATETIME_REGEX);
+        tokens = BasicParser.parse(tokens.get(INDEX_OF_DATETIME_TIME), TIME_REGEX);
 
-    private static String[] splitWithTrim(String summary, String summaryDelimiter) {
-        return Arrays.stream(summary.split(summaryDelimiter))
-            .map(String::trim)
-            .toArray(String[]::new);
+        return tokens.get(INDEX_OF_HOUR) + ":" + tokens.get(INDEX_OF_MINUTE);
     }
 }

@@ -1,7 +1,7 @@
 package com.h3.reservation.calendar.domain;
 
 import com.google.api.services.calendar.model.Event;
-import com.h3.reservation.calendar.utils.SummaryParser;
+import com.h3.reservation.utils.BasicParser;
 import com.h3.reservation.common.MeetingRoom;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,7 +27,7 @@ public class CalendarEvents {
 
     public List<MeetingRoom> findMeetingRooms(final String summaryDelimiter) {
         return findSummaries().stream()
-            .map(summary -> SummaryParser.parse(summary, summaryDelimiter))
+            .map(summary -> BasicParser.parse(summary, summaryDelimiter))
             .map(tokens -> tokens.get(INDEX_OF_MEETING_ROOM))
             .map(roomName -> roomName.replace(" ", ""))
             .map(MeetingRoom::findByName)

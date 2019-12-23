@@ -45,6 +45,11 @@ public class Reservation {
         return new Reservation(id, details, time);
     }
 
+    public static Reservation of (final String id, final ReservationDetails details
+            , final String date, final String startTime, final String endTime) {
+        return new Reservation(id, details, DateTime.of(date, startTime, endTime));
+    }
+
     public boolean isSameBooker(String booker) {
         return details.isSameBooker(booker);
     }
