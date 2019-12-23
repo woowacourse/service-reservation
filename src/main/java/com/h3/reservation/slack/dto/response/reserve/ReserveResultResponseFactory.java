@@ -26,7 +26,8 @@ public class ReserveResultResponseFactory {
                 ModalSubmissionType.RESERVE_RESULT,
                 new PlainText("예약하기"),
                 new PlainText("확인"),
-                generateBlocks(reserve)
+                generateBlocks(reserve),
+                true
             )
         );
     }

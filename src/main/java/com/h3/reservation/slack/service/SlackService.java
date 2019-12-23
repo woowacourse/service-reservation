@@ -18,6 +18,7 @@ import com.h3.reservation.slack.dto.response.changeandcancel.ChangeAndCancelCand
 import com.h3.reservation.slack.dto.response.changeandcancel.ChangeInputResponseFactory;
 import com.h3.reservation.slack.dto.response.changeandcancel.ChangeResultResponseFactory;
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
+import com.h3.reservation.slack.dto.response.common.ModalSubmissionResponse;
 import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.init.InitHomeTabResponseFactory;
 import com.h3.reservation.slack.dto.response.init.InitResponseFactory;
@@ -152,6 +153,13 @@ public class SlackService {
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
         List<MeetingRoom> meetingRooms = slackCalendarService.retrieveAvailableMeetingRoom(dateTime);
         return ReserveAvailMeetingResponseFactory.of(meetingRooms, dateTime);
+    }
+
+    public ModalUpdateResponse updateReserveResultModal2(ReserveRequest request) {
+        List<String> tokens = BasicParser.parse(request.getPrivateMetadata(), "_");
+        DateTime dateTime = DateTime.of(tokens.get(0), tokens.get(1), tokens.get(2));
+        ReservationDetails details = ReservationDetails.of(MeetingRoom.findByName(tokens.get(3)), request.getName(), request.getDescription());
+        return ReserveResultResponseFactory.of(slackCalendarService.reserve(details, dateTime));
     }
 
     public ModalUpdateResponse updateChangeAndCancelCandidateModal(ChangeRequest request) {
