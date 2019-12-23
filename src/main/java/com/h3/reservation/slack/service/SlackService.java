@@ -22,12 +22,14 @@ import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.init.InitHomeTabResponseFactory;
 import com.h3.reservation.slack.dto.response.init.InitResponseFactory;
 import com.h3.reservation.slack.dto.response.reserve.ReserveAvailMeetingResponseFactory;
+import com.h3.reservation.slack.dto.response.reserve.ReserveInputResponseFactory;
 import com.h3.reservation.slack.dto.response.reserve.ReserveResultResponseFactory;
 import com.h3.reservation.slack.dto.response.retrieve.RetrieveResultResponseFactory;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 import com.h3.reservation.slackcalendar.service.SlackCalendarService;
+import com.h3.reservation.utils.BasicParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -83,6 +85,10 @@ public class SlackService {
             send("/views.open", InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
             return;
         }
+        if (dto.getActionId().startsWith("request_reserve")) {
+            send("/views.push", pushReserveModal(dto));
+            return;
+        }
         if (dto.getActionId().startsWith("request_change")) {
             send("/views.push", pushChangeModal(dto));
             return;
@@ -90,6 +96,13 @@ public class SlackService {
         if (dto.getActionId().startsWith("request_cancel")) {
             send("/views.push", pushCancelModal(dto));
         }
+    }
+
+    private ModalResponse pushReserveModal(BlockActionRequest request) {
+        MeetingRoom meetingRoom = MeetingRoom.findByName(parseReservationId(request.getActionId()));
+        List<String> tokens = BasicParser.parse(request.getPrivateMetadata(), "_");
+        DateTime dateTime = DateTime.of(tokens.get(0), tokens.get(1), tokens.get(2));
+        return ReserveInputResponseFactory.detail(request.getTriggerId(), dateTime, meetingRoom);
     }
 
     private ModalResponse pushChangeModal(BlockActionRequest dto) {

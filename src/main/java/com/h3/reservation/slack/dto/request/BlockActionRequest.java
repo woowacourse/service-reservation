@@ -10,19 +10,35 @@ import java.util.List;
  * @date 2019-12-03
  */
 public class BlockActionRequest {
+    class View {
+        private String privateMetadata;
+
+        public View() {
+        }
+
+        public View(String privateMetadata) {
+            this.privateMetadata = privateMetadata;
+        }
+
+        public String getPrivateMetadata() {
+            return privateMetadata;
+        }
+    }
     private String triggerId;
     private String responseUrl;
     private List<Action> actions;
     private String type;
+    private View view;
 
     public BlockActionRequest() {
     }
 
-    public BlockActionRequest(String triggerId, String responseUrl, List<Action> actions, String type) {
+    public BlockActionRequest(String triggerId, String responseUrl, List<Action> actions, String type, View view) {
         this.triggerId = triggerId;
         this.responseUrl = responseUrl;
         this.actions = actions;
         this.type = type;
+        this.view = view;
     }
 
     public String getTriggerId() {
@@ -49,13 +65,22 @@ public class BlockActionRequest {
         return actions.get(0).getBlockId();
     }
 
+    public View getView() {
+        return view;
+    }
+
+    public String getPrivateMetadata() {
+        return view.getPrivateMetadata();
+    }
+
     @Override
     public String toString() {
         return "BlockActionRequest{" +
-            "trigger_id='" + triggerId + '\'' +
-            ", response_url='" + responseUrl + '\'' +
+            "triggerId='" + triggerId + '\'' +
+            ", responseUrl='" + responseUrl + '\'' +
             ", actions=" + actions +
             ", type='" + type + '\'' +
+            ", view=" + view +
             '}';
     }
 }

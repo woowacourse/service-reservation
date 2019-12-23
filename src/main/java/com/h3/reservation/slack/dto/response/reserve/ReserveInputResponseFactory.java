@@ -4,6 +4,7 @@ import com.h3.reservation.common.MeetingRoom;
 import com.h3.reservation.slack.dto.response.common.CommonResponseFactory;
 import com.h3.reservation.slack.dto.response.common.ModalResponse;
 import com.h3.reservation.slack.dto.response.common.ModalSubmissionType;
+import com.h3.reservation.slack.fragment.block.DividerBlock;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.block.SectionBlock;
 import com.h3.reservation.slack.fragment.composition.Option;
@@ -13,6 +14,7 @@ import com.h3.reservation.slack.fragment.element.DatepickerElement;
 import com.h3.reservation.slack.fragment.element.PlainTextInputElement;
 import com.h3.reservation.slack.fragment.element.StaticSelectElement;
 import com.h3.reservation.slack.fragment.view.ModalView;
+import com.h3.reservation.slackcalendar.domain.DateTime;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +51,21 @@ public class ReserveInputResponseFactory {
         return new ModalResponse(triggerId, modalView);
     }
 
+    private static StaticSelectElement generateMeetingRoomSelectElement() {
+        return new StaticSelectElement(
+            new PlainText("회의실"),
+            "meeting_room",
+            generateMeetingRoomSelectOptions()
+        );
+    }
+
+    private static List<Option> generateMeetingRoomSelectOptions() {
+        return Arrays.stream(MeetingRoom.values())
+            .filter(meetingRoom -> !meetingRoom.equals(MeetingRoom.NONE))
+            .map(room -> new Option(new PlainText(room.getName()), room.getName()))
+            .collect(Collectors.toList());
+    }
+
     public static ModalResponse of2(String triggerId) {
         DatepickerElement datePicker = CommonResponseFactory.generateNowDatePicker("datepicker");
 
@@ -70,18 +87,25 @@ public class ReserveInputResponseFactory {
         return new ModalResponse(triggerId, modalView);
     }
 
-    private static StaticSelectElement generateMeetingRoomSelectElement() {
-        return new StaticSelectElement(
-            new PlainText("회의실"),
-            "meeting_room",
-            generateMeetingRoomSelectOptions()
+    public static ModalResponse detail(String triggerId, DateTime dateTime, MeetingRoom meetingRoom) {
+        String dateTimeWithMeetingRoom = dateTime.getFormattedDate() + "_" + dateTime.getFormattedStartTime()
+            + "_" + dateTime.getFormattedEndTime() + "_" + meetingRoom.getName();
+        ModalView modalView = new ModalView(
+            ModalSubmissionType.RESERVE_DETAIL_INPUT,
+            dateTimeWithMeetingRoom,
+            new PlainText("예약하기"),
+            new PlainText("예약"),
+            new PlainText("취소"),
+            Arrays.asList(
+                new SectionBlock(new MrkdwnText("*" + dateTimeWithMeetingRoom.replace("_", " ") + "* 예약입니다.")),
+                new DividerBlock(),
+                new InputBlock("description_block", new PlainText("회의 제목을 입력하세요."),
+                    new PlainTextInputElement("description", new PlainText("회의 제목"))),
+                new InputBlock("name_block", new PlainText("예약자 이름을 입력하세요."),
+                    new PlainTextInputElement("name", new PlainText("이름")))
+            )
         );
-    }
 
-    private static List<Option> generateMeetingRoomSelectOptions() {
-        return Arrays.stream(MeetingRoom.values())
-            .filter(meetingRoom -> !meetingRoom.equals(MeetingRoom.NONE))
-            .map(room -> new Option(new PlainText(room.getName()), room.getName()))
-            .collect(Collectors.toList());
+        return new ModalResponse(triggerId, modalView);
     }
 }
