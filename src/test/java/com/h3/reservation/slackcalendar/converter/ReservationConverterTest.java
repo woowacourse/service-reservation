@@ -1,14 +1,13 @@
 package com.h3.reservation.slackcalendar.converter;
 
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.h3.reservation.common.MeetingRoom;
+import com.h3.reservation.slackcalendar.domain.Reservation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author heebg
@@ -16,46 +15,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @date 2019-12-13
  */
 class ReservationConverterTest {
-    private final String summaryDelimiter = "/";
-    private static String[] unFormatted = {
-        "회의실/제목/목적"
-        , "회의실//목적"
-        , "회의실/제목/"
-        , "회의실2//"
-        , "//"
-        , "회의실2,//제목/"
-        , "회의실2,제목,목적제목/"
-        , "으아앙"
-    };
 
     @Test
-    void isFormatted() {
-        String summary = "회의실2/제목/목적";
-
-        assertTrue(ReservationConverter.isFormatted(summary, summaryDelimiter));
+    void toReservation() {
+        Event event = createEvent("1", "회의실1/희봉/프로젝트", "2019-12-10T10:30:00.000+09:00", "2019-12-10T12:00:00.000+09:00");
+        Reservation slackCalendarReservation = Reservation.of("1", MeetingRoom.ROOM1, "희봉", "프로젝트", "2019-12-10", "10:30", "12:00");
+        assertEquals(ReservationConverter.toReservation(event, "/").get(), slackCalendarReservation);
     }
 
-    @ParameterizedTest
-    @MethodSource("unFormattedSummaries")
-    void isFormattedError(final String summary) {
-        assertFalse(ReservationConverter.isFormatted(summary, summaryDelimiter));
-    }
-
-    private static Stream<String> unFormattedSummaries() {
-        return Stream.of(unFormatted);
-    }
-
-    @Test
-    void isFormatted_trim() {
-        String summary = " 회의실2 / 제목 / 목적 ";
-
-        assertTrue(ReservationConverter.isFormatted(summary, summaryDelimiter));
-    }
-
-    @Test
-    void isFormatted_trim_meetingroom() {
-        String summary = " 회의실 2 / 제목 / 목적 ";
-
-        assertTrue(ReservationConverter.isFormatted(summary, summaryDelimiter));
+    private Event createEvent(String id, String summary, String startTime, String endTime) {
+        return new Event()
+                .setId(id)
+                .setSummary(summary)
+                .setStart(new EventDateTime().setDateTime(new DateTime(startTime)))
+                .setEnd(new EventDateTime().setDateTime(DateTime.parseRfc3339(endTime)));
     }
 }

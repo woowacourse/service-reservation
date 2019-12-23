@@ -18,9 +18,13 @@ public enum MeetingRoom {
 
     public static MeetingRoom findByName(String name) {
         return Arrays.stream(values())
-                .filter(room -> room.name.equals(name))
+                .filter(room -> room.name.equals(removeBlank(name)))
                 .findFirst()
                 .orElse(NONE);
+    }
+
+    private static String removeBlank(final String name) {
+        return name.replace(" ", "");
     }
 
     public String getName() {
@@ -30,7 +34,7 @@ public enum MeetingRoom {
     @Override
     public String toString() {
         return "MeetingRoom{" +
-            "name='" + name + '\'' +
-            '}';
+                "name='" + name + '\'' +
+                '}';
     }
 }
