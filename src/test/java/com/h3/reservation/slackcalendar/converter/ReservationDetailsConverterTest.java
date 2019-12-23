@@ -17,16 +17,21 @@ class ReservationDetailsConverterTest {
     @Test
     void transferReservationDetails() {
         String summary = " 회의실 2 / 버디 / 프로젝트";
+        String summary2 = " 회의실 2 / 버디 /";
+        String summary3 = " 회의실 2 / 버디 ";
 
         ReservationDetails reservationDetails = ReservationDetailsConverter.toReservationDetails(summary, "/");
+        ReservationDetails reservationDetails2 = ReservationDetailsConverter.toReservationDetails(summary2, "/");
+        ReservationDetails reservationDetails3 = ReservationDetailsConverter.toReservationDetails(summary3, "/");
 
         assertEquals(reservationDetails, ReservationDetails.of(MeetingRoom.ROOM2, "버디", "프로젝트"));
+        assertEquals(reservationDetails2, ReservationDetails.of(MeetingRoom.ROOM2, "버디", ""));
+        assertEquals(reservationDetails3, ReservationDetails.of(MeetingRoom.ROOM2, "버디", ""));
     }
 
     private static String[] unFormatted = {
             "회의실/제목/목적"
             , "회의실//목적"
-            , "회의실/제목/"
             , "회의실2//"
             , "//"
             , "회의실2,//제목/"
