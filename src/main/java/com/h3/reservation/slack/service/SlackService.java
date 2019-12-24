@@ -40,7 +40,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -135,17 +134,6 @@ public class SlackService {
         return LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
     }
 
-    public ModalUpdateResponse updateReserveResultModal(ReserveRequest request) throws IOException {
-        ReservationDetails details = ReservationDetails.of(
-            MeetingRoom.findByName(request.getMeetingRoom()), request.getName(), request.getDescription()
-        );
-        DateTime dateTime = DateTime.of(request.getDate()
-            , generateLocalTime(request.getStartHour(), request.getStartMinute())
-            , generateLocalTime(request.getEndHour(), request.getEndMinute()));
-
-        return ReserveResultResponseFactory.of(slackCalendarService.reserve(details, dateTime));
-    }
-
     public ModalUpdateResponse updateReserveAvailableMeetingRoomModal(ReserveRequest request) {
         DateTime dateTime = DateTime.of(request.getDate()
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
@@ -154,7 +142,7 @@ public class SlackService {
         return ReserveAvailableMeetingResponseFactory.of(meetingRooms, dateTime);
     }
 
-    public ModalUpdateResponse updateReserveResultModal2(ReserveRequest request) {
+    public ModalUpdateResponse updateReserveResultModal(ReserveRequest request) {
         List<String> tokens = BasicParser.parse(request.getPrivateMetadata(), "_");
         DateTime dateTime = DateTime.of(tokens.get(0), tokens.get(1), tokens.get(2));
         ReservationDetails details = ReservationDetails.of(MeetingRoom.findByName(tokens.get(3)), request.getName(), request.getDescription());

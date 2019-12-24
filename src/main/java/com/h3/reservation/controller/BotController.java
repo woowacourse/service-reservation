@@ -71,12 +71,10 @@ public class BotController {
         switch (ModalSubmissionType.of(reqJson.get("view").get("callback_id").asText())) {
             case RETRIEVE_INPUT:
                 return service.updateRetrieveResultModal(jsonToDto(reqJson, RetrieveRequest.class));
-            case RESERVE_INPUT:
-                return service.updateReserveResultModal(jsonToDto(reqJson, ReserveRequest.class));
             case RESERVE_DATETIME_INPUT:
                 return service.updateReserveAvailableMeetingRoomModal(jsonToDto(reqJson, ReserveRequest.class));
             case RESERVE_DETAIL_INPUT:
-                return service.updateReserveResultModal2(jsonToDto(reqJson, ReserveRequest.class));
+                return service.updateReserveResultModal(jsonToDto(reqJson, ReserveRequest.class));
             case CHANGE_AND_CANCEL_INPUT:
                 return service.updateChangeAndCancelCandidateModal(jsonToDto(reqJson, ChangeRequest.class));
             case CHANGE_INPUT:
