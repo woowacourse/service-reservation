@@ -5,7 +5,7 @@ import com.h3.reservation.calendar.domain.exception.InvalidDateTimeRangeExceptio
 import com.h3.reservation.common.NotFoundAvailableMeetingRoomException;
 import com.h3.reservation.slack.dto.response.common.ModalErrorResponse;
 import com.h3.reservation.slack.fragment.error.DatePickerErrors;
-import com.h3.reservation.slack.fragment.error.MeetingRoomErrors;
+import com.h3.reservation.slack.fragment.error.DescriptionErrors;
 import com.h3.reservation.slack.fragment.error.TimeErrors;
 import com.h3.reservation.slackcalendar.exception.InvalidTimeRangeException;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(NotAvailableReserveEventException.class)
     public ResponseEntity NotAvailableReserveEventException(NotAvailableReserveEventException e) {
-        return ResponseEntity.ok(new ModalErrorResponse(new MeetingRoomErrors(e.getMessage())));
+        return ResponseEntity.ok(new ModalErrorResponse(new DescriptionErrors(e.getMessage())));
     }
 
     @ResponseBody
