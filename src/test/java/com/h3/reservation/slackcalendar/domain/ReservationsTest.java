@@ -41,4 +41,16 @@ class ReservationsTest {
         reservations = Reservations.of(reservationList);
         assertFalse(reservations.isEventEmpty());
     }
+
+    @Test
+    void generateAvailableMeetingRooms() {
+        List<Reservation> reservationList = new ArrayList<>();
+        reservationList.add(Reservation.of("1", MeetingRoom.ROOM1, "희봉", "프로젝트", "2019-12-10", "13:00", "14:00"));
+        reservationList.add(Reservation.of("2", MeetingRoom.ROOM3, "코니", "회의", "2019-12-10", "15:00", "16:00"));
+        reservationList.add(Reservation.of("3", MeetingRoom.ROOM3, "도넛", "굴러간다", "2019-12-10", "14:00", "14:30"));
+
+        Reservations reservations = Reservations.of(reservationList);
+        List<MeetingRoom> meetingRooms = reservations.generateAvailableMeetingRooms();
+        assertEquals(meetingRooms, Arrays.asList(MeetingRoom.ROOM2, MeetingRoom.ROOM4, MeetingRoom.ROOM5));
+    }
 }

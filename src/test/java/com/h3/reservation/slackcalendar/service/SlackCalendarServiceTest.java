@@ -86,6 +86,7 @@ class SlackCalendarServiceTest {
         Reservations reservations = slackCalendarService.retrieve(retrieveRangeDateTime);
         List<Reservation> reservationList = new ArrayList<>();
         reservationList.add(Reservation.of("1", MeetingRoom.ROOM1, "희봉", "프로젝트", date, "10:30", "12:00"));
+        reservationList.add(Reservation.of("2", MeetingRoom.ROOM2, "도넛", "", date, "11:00", "12:00"));
 
         assertEquals(reservations, Reservations.of(reservationList));
     }

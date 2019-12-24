@@ -21,12 +21,15 @@ import com.h3.reservation.slack.dto.response.common.ModalResponse;
 import com.h3.reservation.slack.dto.response.common.ModalUpdateResponse;
 import com.h3.reservation.slack.dto.response.init.InitHomeTabResponseFactory;
 import com.h3.reservation.slack.dto.response.init.InitResponseFactory;
+import com.h3.reservation.slack.dto.response.reserve.ReserveAvailableMeetingResponseFactory;
+import com.h3.reservation.slack.dto.response.reserve.ReserveInputResponseFactory;
 import com.h3.reservation.slack.dto.response.reserve.ReserveResultResponseFactory;
 import com.h3.reservation.slack.dto.response.retrieve.RetrieveResultResponseFactory;
 import com.h3.reservation.slackcalendar.domain.DateTime;
 import com.h3.reservation.slackcalendar.domain.Reservation;
 import com.h3.reservation.slackcalendar.domain.Reservations;
 import com.h3.reservation.slackcalendar.service.SlackCalendarService;
+import com.h3.reservation.utils.BasicParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -37,8 +40,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.IOException;
 import java.time.LocalTime;
+import java.util.List;
 
 /**
  * @author heebg
@@ -62,38 +65,49 @@ public class SlackService {
         this.webClient = initWebClient();
     }
 
-    public String verify(VerificationRequest dto) {
-        return dto.getChallenge();
+    public String verify(VerificationRequest request) {
+        return request.getChallenge();
     }
 
-    public void showMenu(EventCallbackRequest dto) {
-        switch (EventType.of(dto.getType())) {
+    public void showMenu(EventCallbackRequest request) {
+        switch (EventType.of(request.getType())) {
             case APP_MENTION:
-                send("/chat.postMessage", InitResponseFactory.of(dto.getChannel()));
+                send("/chat.postMessage", InitResponseFactory.of(request.getChannel()));
                 break;
             case APP_HOME_OPENED:
-                send("/views.publish", InitHomeTabResponseFactory.of(dto.getUserId()));
+                send("/views.publish", InitHomeTabResponseFactory.of(request.getUserId()));
         }
     }
 
-    public void showModal(BlockActionRequest dto) {
-        if (dto.getBlockId().equals("initial_block")) {
-            send("/views.open", InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+    public void showModal(BlockActionRequest request) {
+        if (request.getBlockId().equals("initial_block")) {
+            send("/views.open", InitMenuType.of(request.getActionId()).apply(request.getTriggerId()));
             return;
         }
-        if (dto.getActionId().startsWith("request_change")) {
-            send("/views.push", pushChangeModal(dto));
+        if (request.getActionId().startsWith("request_reserve")) {
+            send("/views.push", pushReserveModal(request));
             return;
         }
-        if (dto.getActionId().startsWith("request_cancel")) {
-            send("/views.push", pushCancelModal(dto));
+        if (request.getActionId().startsWith("request_change")) {
+            send("/views.push", pushChangeModal(request));
+            return;
+        }
+        if (request.getActionId().startsWith("request_cancel")) {
+            send("/views.push", pushCancelModal(request));
         }
     }
 
-    private ModalResponse pushChangeModal(BlockActionRequest dto) {
-        String reservationId = parseReservationId(dto.getActionId());
+    private ModalResponse pushReserveModal(BlockActionRequest request) {
+        MeetingRoom meetingRoom = MeetingRoom.findByName(parseReservationId(request.getActionId()));
+        List<String> tokens = BasicParser.parse(request.getPrivateMetadata(), "_");
+        DateTime dateTime = DateTime.of(tokens.get(0), tokens.get(1), tokens.get(2));
+        return ReserveInputResponseFactory.detail(request.getTriggerId(), dateTime, meetingRoom);
+    }
+
+    private ModalResponse pushChangeModal(BlockActionRequest request) {
+        String reservationId = parseReservationId(request.getActionId());
         Reservation reservation = slackCalendarService.retrieveById(reservationId);
-        return ChangeInputResponseFactory.of(dto.getTriggerId(), reservation);
+        return ChangeInputResponseFactory.of(request.getTriggerId(), reservation);
     }
 
     private String parseReservationId(String id) {
@@ -102,10 +116,10 @@ public class SlackService {
         return id.split(ID_REG)[ID_INDEX];
     }
 
-    private ModalResponse pushCancelModal(BlockActionRequest dto) {
-        String reservationId = parseReservationId(dto.getActionId());
+    private ModalResponse pushCancelModal(BlockActionRequest request) {
+        String reservationId = parseReservationId(request.getActionId());
         Reservation reservation = slackCalendarService.retrieveById(reservationId);
-        return CancelConfirmResponseFactory.of(dto.getTriggerId(), reservation);
+        return CancelConfirmResponseFactory.of(request.getTriggerId(), reservation);
     }
 
     public ModalUpdateResponse updateRetrieveResultModal(RetrieveRequest request) {
@@ -120,14 +134,18 @@ public class SlackService {
         return LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
     }
 
-    public ModalUpdateResponse updateReserveResultModal(ReserveRequest request) throws IOException {
-        ReservationDetails details = ReservationDetails.of(
-            MeetingRoom.findByName(request.getMeetingRoom()), request.getName(), request.getDescription()
-        );
+    public ModalUpdateResponse updateReserveAvailableMeetingRoomModal(ReserveRequest request) {
         DateTime dateTime = DateTime.of(request.getDate()
             , generateLocalTime(request.getStartHour(), request.getStartMinute())
             , generateLocalTime(request.getEndHour(), request.getEndMinute()));
+        List<MeetingRoom> meetingRooms = slackCalendarService.retrieveAvailableMeetingRoom(dateTime);
+        return ReserveAvailableMeetingResponseFactory.of(meetingRooms, dateTime);
+    }
 
+    public ModalUpdateResponse updateReserveResultModal(ReserveRequest request) {
+        List<String> tokens = BasicParser.parse(request.getPrivateMetadata(), "_");
+        DateTime dateTime = DateTime.of(tokens.get(0), tokens.get(1), tokens.get(2));
+        ReservationDetails details = ReservationDetails.of(MeetingRoom.findByName(tokens.get(3)), request.getName(), request.getDescription());
         return ReserveResultResponseFactory.of(slackCalendarService.reserve(details, dateTime));
     }
 

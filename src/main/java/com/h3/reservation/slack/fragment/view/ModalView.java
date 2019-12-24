@@ -41,6 +41,14 @@ public class ModalView {
         this.blocks = blocks;
     }
 
+    public ModalView(ModalSubmissionType callbackId, String privateMetadata, PlainText title, PlainText close, List<Block> blocks) {
+        this.callbackId = callbackId;
+        this.privateMetadata = privateMetadata;
+        this.title = title;
+        this.close = close;
+        this.blocks = blocks;
+    }
+
     public ModalView(ModalSubmissionType callbackId, String privateMetadata, PlainText title,
                      PlainText submit, PlainText close, List<Block> blocks) {
         this.callbackId = callbackId;
