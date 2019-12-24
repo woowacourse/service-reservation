@@ -3,12 +3,16 @@ package com.h3.reservation.slack.dto.response.common;
 import com.h3.reservation.slack.fragment.block.InputBlock;
 import com.h3.reservation.slack.fragment.composition.Option;
 import com.h3.reservation.slack.fragment.composition.text.PlainText;
+import com.h3.reservation.slack.fragment.element.DatepickerElement;
 import com.h3.reservation.slack.fragment.element.StaticSelectElement;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommonResponseFactory {
+    private static final String INIT_DATE_PATTERN = "yyyy-MM-dd";
     private static final String HOUR = "시";
     private static final String MINUTE = "분";
     private static final String SUFFIX_HOUR_BLOCK = "_hour_block";
@@ -20,6 +24,17 @@ public class CommonResponseFactory {
     private static final int MIN_MINUTE = 0;
     private static final int MAX_MINUTE = 50;
     private static final int MINUTE_INTERVAL = 10;
+
+    public static DatepickerElement generateDatePickerWithInitValue(String actionId, String initDate) {
+        return new DatepickerElement(actionId, initDate);
+    }
+    public static DatepickerElement generateNowDatePicker(String actionId) {
+        return generateDatePickerWithInitValue(actionId, generateNowDate());
+    }
+
+    private static String generateNowDate() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(INIT_DATE_PATTERN));
+    }
 
     public static InputBlock generateHourPickerWithInitValue(String prefix, int initialHour) {
         return new InputBlock(

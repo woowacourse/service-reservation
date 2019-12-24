@@ -29,20 +29,25 @@ public class Reservation {
      * @param endTime   HH:mm
      * @return
      */
-    public static Reservation of(final String id, final MeetingRoom room, final String booker, final String purpose
+    public static Reservation of(final String id, final MeetingRoom room, final String booker, final String description
         , final String date, final String startTime, final String endTime) {
-        return new Reservation(id, ReservationDetails.of(room, booker, purpose)
+        return new Reservation(id, ReservationDetails.of(room, booker, description)
             , DateTime.of(date, startTime, endTime));
     }
 
-    public static Reservation of(final String id, final MeetingRoom room, final String booker, final String purpose
+    public static Reservation of(final String id, final MeetingRoom room, final String booker, final String description
         , final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
-        return new Reservation(id, ReservationDetails.of(room, booker, purpose)
+        return new Reservation(id, ReservationDetails.of(room, booker, description)
             , DateTime.of(date, startTime, endTime));
     }
 
     public static Reservation of(final String id, final ReservationDetails details, final DateTime time) {
         return new Reservation(id, details, time);
+    }
+
+    public static Reservation of (final String id, final ReservationDetails details
+            , final String date, final String startTime, final String endTime) {
+        return new Reservation(id, details, DateTime.of(date, startTime, endTime));
     }
 
     public boolean isSameBooker(String booker) {

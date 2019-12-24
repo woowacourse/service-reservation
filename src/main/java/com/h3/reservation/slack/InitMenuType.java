@@ -13,7 +13,7 @@ import java.util.function.Function;
  */
 public enum InitMenuType {
     RETRIEVE(RetrieveInputResponseFactory::of),
-    RESERVE(ReserveInputResponseFactory::of),
+    RESERVE(ReserveInputResponseFactory::dateTime),
     CHANGE(ChangeAndCancelInputResponseFactory::of);
 
     private Function<String, Object> function;
