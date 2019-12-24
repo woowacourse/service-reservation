@@ -65,35 +65,35 @@ public class SlackService {
         this.webClient = initWebClient();
     }
 
-    public String verify(VerificationRequest dto) {
-        return dto.getChallenge();
+    public String verify(VerificationRequest request) {
+        return request.getChallenge();
     }
 
-    public void showMenu(EventCallbackRequest dto) {
-        switch (EventType.of(dto.getType())) {
+    public void showMenu(EventCallbackRequest request) {
+        switch (EventType.of(request.getType())) {
             case APP_MENTION:
-                send("/chat.postMessage", InitResponseFactory.of(dto.getChannel()));
+                send("/chat.postMessage", InitResponseFactory.of(request.getChannel()));
                 break;
             case APP_HOME_OPENED:
-                send("/views.publish", InitHomeTabResponseFactory.of(dto.getUserId()));
+                send("/views.publish", InitHomeTabResponseFactory.of(request.getUserId()));
         }
     }
 
-    public void showModal(BlockActionRequest dto) {
-        if (dto.getBlockId().equals("initial_block")) {
-            send("/views.open", InitMenuType.of(dto.getActionId()).apply(dto.getTriggerId()));
+    public void showModal(BlockActionRequest request) {
+        if (request.getBlockId().equals("initial_block")) {
+            send("/views.open", InitMenuType.of(request.getActionId()).apply(request.getTriggerId()));
             return;
         }
-        if (dto.getActionId().startsWith("request_reserve")) {
-            send("/views.push", pushReserveModal(dto));
+        if (request.getActionId().startsWith("request_reserve")) {
+            send("/views.push", pushReserveModal(request));
             return;
         }
-        if (dto.getActionId().startsWith("request_change")) {
-            send("/views.push", pushChangeModal(dto));
+        if (request.getActionId().startsWith("request_change")) {
+            send("/views.push", pushChangeModal(request));
             return;
         }
-        if (dto.getActionId().startsWith("request_cancel")) {
-            send("/views.push", pushCancelModal(dto));
+        if (request.getActionId().startsWith("request_cancel")) {
+            send("/views.push", pushCancelModal(request));
         }
     }
 
@@ -104,10 +104,10 @@ public class SlackService {
         return ReserveInputResponseFactory.detail(request.getTriggerId(), dateTime, meetingRoom);
     }
 
-    private ModalResponse pushChangeModal(BlockActionRequest dto) {
-        String reservationId = parseReservationId(dto.getActionId());
+    private ModalResponse pushChangeModal(BlockActionRequest request) {
+        String reservationId = parseReservationId(request.getActionId());
         Reservation reservation = slackCalendarService.retrieveById(reservationId);
-        return ChangeInputResponseFactory.of(dto.getTriggerId(), reservation);
+        return ChangeInputResponseFactory.of(request.getTriggerId(), reservation);
     }
 
     private String parseReservationId(String id) {
@@ -116,10 +116,10 @@ public class SlackService {
         return id.split(ID_REG)[ID_INDEX];
     }
 
-    private ModalResponse pushCancelModal(BlockActionRequest dto) {
-        String reservationId = parseReservationId(dto.getActionId());
+    private ModalResponse pushCancelModal(BlockActionRequest request) {
+        String reservationId = parseReservationId(request.getActionId());
         Reservation reservation = slackCalendarService.retrieveById(reservationId);
-        return CancelConfirmResponseFactory.of(dto.getTriggerId(), reservation);
+        return CancelConfirmResponseFactory.of(request.getTriggerId(), reservation);
     }
 
     public ModalUpdateResponse updateRetrieveResultModal(RetrieveRequest request) {
