@@ -2,7 +2,7 @@
 
 ## 간단 소개
 
-우아한 테크코스 1기의 마지막 step4 프로젝트입니다. Slack 내에서 Google Calendar에 접근하여 회의실 예약 및 조회 등의 업무를 간편하게 도와주는 
+우아한테크코스 1기의 마지막 step4 프로젝트입니다. Slack 내에서 Google Calendar에 접근하여 회의실 예약 및 조회 등의 업무를 간편하게 도와주는 
 슬랙봇입니다.  
 이제 더 이상 회의실 예약을 위해 힘들게 캘린더를 찾지 마세요! 회의실은 이제 내꺼라구요 :money_with_wings:
 
@@ -35,7 +35,7 @@
 </p>
 
 조회가 잘 되었네요! :open_hands:  
-각 회의실 별로 어느 시간대에 누가 예약을 했는지를 한눈에 알아볼 수 있습니다.  
+각 회의실별로 어느 시간대에 누가 예약을 했는지를 한눈에 알아볼 수 있습니다.  
 
 ### 예약 기능
 
@@ -87,8 +87,6 @@
   <img src="https://user-images.githubusercontent.com/44018338/71453659-aa792100-27cf-11ea-947b-c1f59f4c4551.png" alt="retrieve results" width="400"/>
 </p>
 
----
-
 <p align="center">
   <img src="https://user-images.githubusercontent.com/44018338/71453258-a3511380-27cd-11ea-9bf7-83b2980d9a13.png" alt="retrieve results" width="400"/>
 </p>
@@ -103,4 +101,4 @@
 
 ---
 
-**회의실 내껀데** 앱과 함께 즐겁게 회의실 사용하세요 😆
+이제부터 **회의실 내껀데**와 함께 즐겁게 회의실 이용하세요 😆
