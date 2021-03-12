@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.h3.reservation.common.MeetingRoom.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -18,19 +19,19 @@ class MeetingRoomTest {
     @Test
     void findByName() {
         MeetingRoom room = MeetingRoom.findByName("회의실1");
-        assertEquals(room, MeetingRoom.ROOM1);
+        assertEquals(room, ROOM1);
     }
 
     @Test
     void removeAll() {
-        List<MeetingRoom> rooms = Arrays.asList(MeetingRoom.ROOM3, MeetingRoom.ROOM4);
-        assertEquals(MeetingRoom.removeAll(rooms), Arrays.asList(MeetingRoom.ROOM1, MeetingRoom.ROOM2, MeetingRoom.ROOM5));
+        List<MeetingRoom> rooms = Arrays.asList(ROOM3, ROOM4, PAIR1, PAIR2, PAIR3, PAIR4);
+        assertEquals(MeetingRoom.removeAll(rooms), Arrays.asList(ROOM1, ROOM2, ROOM5, PAIR5));
     }
 
     @Test
     void removeAll_exception() {
         List<MeetingRoom> allRooms = new ArrayList<>(Arrays.asList(MeetingRoom.values()));
-        allRooms.remove(MeetingRoom.NONE);
+        allRooms.remove(NONE);
         assertThrows(NotFoundAvailableMeetingRoomException.class, () -> MeetingRoom.removeAll(allRooms));
     }
 }
