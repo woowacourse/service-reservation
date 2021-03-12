@@ -10,6 +10,11 @@ public enum MeetingRoom {
     ROOM3("회의실3"),
     ROOM4("회의실4"),
     ROOM5("회의실5"),
+    PAIR1("페어룸1"),
+    PAIR2("페어룸2"),
+    PAIR3("페어룸3"),
+    PAIR4("페어룸4"),
+    PAIR5("페어룸5"),
     NONE("");
 
     private String name;
